@@ -1,7 +1,11 @@
+import { ScrubButton } from "@/components/scrubButton";
+import { ScrubImage } from "@/components/scrubImage";
 import { useUserStore } from "@/store/userStore";
 import { theme } from "@/theme";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { Text, View, Button, StyleSheet } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { Text, StyleSheet } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();
@@ -12,10 +16,17 @@ export default function OnBoarding() {
     router.replace("/");
   };
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={[theme.colorGreen, theme.colorAppleGreen, theme.colorLimeGreen]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       <Text style={styles.text}>Hi, onboarding</Text>
-      <Button title="Let me in!" onPress={handlePress} />
-    </View>
+      <StatusBar style="light" />
+      <ScrubImage />
+      <ScrubButton title="Let me in!" onPress={handlePress} />
+    </LinearGradient>
   );
 }
 

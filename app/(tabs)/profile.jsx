@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, Button } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { theme } from "../../theme";
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/store/userStore";
+import { ScrubButton } from "@/components/scrubButton";
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile</Text>
-      <Button title="logout" onPress={handlePress} />
+      <ScrubButton title="logout" onPress={handlePress} />
     </View>
   );
 }
