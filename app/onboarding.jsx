@@ -5,7 +5,7 @@ import { theme } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();
@@ -17,15 +17,27 @@ export default function OnBoarding() {
   };
   return (
     <LinearGradient
-      colors={[theme.colorGreen, theme.colorAppleGreen, theme.colorLimeGreen]}
+      colors={[theme.colorWhite, theme.colorWhite, theme.colorWhite]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
     >
-      <Text style={styles.text}>Hi, onboarding</Text>
       <StatusBar style="light" />
       <ScrubImage />
-      <ScrubButton title="Let me in!" onPress={handlePress} />
+      <View style={styles.buttonContainer}>
+        <ScrubButton
+          title="Get Started"
+          onPress={handlePress}
+          color={theme.colorBlack}
+          width={"100%"}
+        />
+        <Text style={styles.termsText}>
+          By signing up you agree to our{" "}
+          <Text style={styles.highlightedText}>Terms</Text> and{" "}
+          <Text style={styles.highlightedText}>Privacy Policy</Text>. We protect
+          your personal data.
+        </Text>
+      </View>
     </LinearGradient>
   );
 }
@@ -33,11 +45,26 @@ export default function OnBoarding() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: theme.colorWhite,
   },
-  text: {
-    fontSize: 24,
+
+  buttonContainer: {
+    alignItems: "center",
+    width: "85%",
+    marginTop: -20,
+    marginBottom: -40,
+  },
+  termsText: {
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 30,
+    fontWeight: "500",
+    width: "95%",
+  },
+  highlightedText: {
+    color: "red",
+    fontWeight: "bold",
   },
 });
