@@ -57,7 +57,7 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("wordscrambled")}
+            onPress={() => handlePress("matching")}
           >
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
