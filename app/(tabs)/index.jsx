@@ -34,30 +34,31 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useRouter } from "expo-router";
+import ScrubLogo from "@/components/scrubLogo";
+import BackgroundImage from "@/components/backgroundImage";
 
 export default function App() {
+  const router = useRouter();
+  const handlePress = (screen) => {
+    router.navigate(`${screen}`);
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
 
       {/* Curvy Lines Background */}
-      <ImageBackground
-        source={require("@/assets/background.png")} // Path to your background image
-        style={styles.background}
-        resizeMode="contain"
-      >
+      <BackgroundImage>
         {/* Content Container */}
         <View style={styles.contentContainer}>
           {/* Logo */}
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("@/assets/scrubLogo.png")} // Replace with your logo URL or local file
-              style={styles.logoImage}
-            />
-          </View>
-
+          <ScrubLogo />
           {/* Buttons */}
-          <TouchableOpacity style={[styles.button]}>
+
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => handlePress("wordscrambled")}
+          >
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
             >
@@ -75,8 +76,12 @@ export default function App() {
               STUDY BY SYSTEM
             </Text>
           </TouchableOpacity>
+          {/* </Link> */}
 
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => handlePress("review")}
+          >
             <View
               style={[styles.yellowButton, styles.buttonStyle, styles.buttonFP]}
             >
@@ -137,7 +142,10 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => handlePress("casemystery")}
+          >
             <View
               style={[
                 styles.lightBlueButton,
@@ -164,7 +172,7 @@ export default function App() {
             </Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </BackgroundImage>
     </View>
   );
 }
@@ -172,13 +180,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colorWhite, 
-  },
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-    position: "absolute",
+    backgroundColor: theme.colorWhite,
   },
   contentContainer: {
     flex: 1,
@@ -206,33 +208,34 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  
+
   redButton: {
     backgroundColor: "#FF0000",
   },
-  
+
   buttonStyle: {
     paddingHorizontal: 15,
     paddingVertical: 15,
+    alignItems: "center",
     // paddingHorizontal: 10,
   },
-  
+
   buttonFP: {
     borderWidth: 1,
     borderRadius: 6,
     borderBottomRightRadius: 1,
     borderTopRightRadius: 1,
     flex: 1,
-    marginRight:10
+    marginRight: 10,
   },
-  
+
   buttonSP: {
     borderWidth: 1,
     borderRadius: 6,
     borderBottomLeftRadius: 1,
     borderTopLeftRadius: 1,
     flex: 7,
-    height: "100%"
+    height: "100%",
   },
   yellowButton: {
     backgroundColor: "#FFB800",
