@@ -39,6 +39,13 @@ export default function WordScrambled() {
 
               {/* Input Of Word  */}
               <View style={styles.inputContainer}>
+                <BlankInput />
+                <BlankInput />
+                <BlankInput />
+                <BlankInput />
+                <BlankInput />
+                <BlankInput />
+                {/* <InputBox />
                 <InputBox />
                 <InputBox />
                 <InputBox />
@@ -50,8 +57,7 @@ export default function WordScrambled() {
                 <InputBox />
                 <InputBox />
                 <InputBox />
-                <InputBox />
-                <InputBox />
+                <InputBox /> */}
               </View>
 
               {/* Letters to Choose */}
