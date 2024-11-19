@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
@@ -8,8 +8,87 @@ import InputBox from "@/components/inputBox";
 import BlankInput from "@/components/blankInput";
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+
+const Word = ["P", "O", "H", "S", "E", "E", "I", "S", "Y"];
 
 export default function WordScrambled() {
+  const translateValueX = Word.map(() => useSharedValue(0));
+  const translateValueY = Word.map(() => useSharedValue(0));
+
+  const [dropZoneLayout, setDropZoneLayout] = useState({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  });
+  const [dragZoneLayout, setDragZoneLayout] = useState({
+    width: 0,
+    height: 0,
+    x: 0,
+    y: 0,
+  });
+
+  const [letterLayout, setLetterLayout] = useState([]);
+
+  const CreatePanGesture = (index) => {
+    return Gesture.Pan()
+      .onUpdate((event) => {
+        translateValueX[index].value = event.translationX;
+        translateValueY[index].value = event.translationY;
+      })
+      .onEnd((event) => {
+        console.log(letterLayout[index]?.x + event.translationX);
+        console.log(letterLayout[index]?.y - event.translationY);
+
+        // const draggedX =
+        //   letterLayout[index]?.x +
+        //   event.translationX +
+        //   letterLayout[index]?.width;
+        // const draggedY =
+        //   letterLayout[index]?.y +
+        //   event.translationY +
+        //   letterLayout[index]?.height;
+        // console.log(draggedX);
+        // console.log(draggedY);
+        const draggedX = letterLayout[index]?.x + event.translationX;
+        const draggedY = letterLayout[index]?.y - event.translationY;
+        const dropXStart = dropZoneLayout.x - 3;
+        const dropXEnd = dropZoneLayout.x + dropZoneLayout.width + 3;
+        const dropYStart = dropZoneLayout.y - 3;
+        const dropYEnd = dropZoneLayout.y + dropZoneLayout.height + 3;
+        console.log(event.absoluteX);
+        console.log(event.absoluteY);
+
+        if (
+          draggedX >= dropXStart &&
+          draggedX <= dropXEnd &&
+          draggedY >= dropYStart &&
+          draggedY <= dropYEnd
+        ) {
+        } else {
+          // Reset position if not dropped within the target area
+          translateValueX[index].value = withSpring(0);
+          translateValueY[index].value = withSpring(0);
+        }
+      });
+  };
+  const panGestureHandler = Word.map((key, index) => CreatePanGesture(index));
+
+  const AnimatedStyle = (index) =>
+    useAnimatedStyle(() => {
+      return {
+        transform: [
+          { translateX: translateValueX[index].value },
+          { translateY: translateValueY[index].value },
+        ],
+      };
+    });
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -39,43 +118,39 @@ export default function WordScrambled() {
 
               {/* Input Of Word  */}
               <View style={styles.inputContainer}>
-                <BlankInput />
-                <BlankInput />
-                <BlankInput />
-                <BlankInput />
-                <BlankInput />
-                <BlankInput />
-                {/* <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox />
-                <InputBox /> */}
+                <BlankInput setDropZoneLayout={setDropZoneLayout} />
               </View>
 
               {/* Letters to Choose */}
-              <View style={styles.lettersContainer}>
-                <InputBox letter="A" />
-                <InputBox letter="S" />
-                <InputBox letter="I" />
-                <InputBox letter="E" />
-                <InputBox letter="N" />
-                <InputBox letter="O" />
-                <InputBox letter="C" />
-                <InputBox letter="R" />
-                <InputBox letter="T" />
-                <InputBox letter="E" />
-                <InputBox letter="I" />
-                <InputBox letter="U" />
-                <InputBox letter="P" />
-                <InputBox letter="R" />
+              <View
+                style={styles.lettersContainer}
+                onLayout={(e) => {
+                  const { x, y, width, height } = e.nativeEvent.layout;
+                  setDragZoneLayout({ x, y, width, height });
+                }}
+              >
+                {Word.map((val, index) => {
+                  return (
+                    <GestureDetector
+                      key={index}
+                      gesture={panGestureHandler[index]}
+                    >
+                      <Animated.View
+                        style={[
+                          AnimatedStyle(index),
+                          { width: 40, height: 50 },
+                        ]}
+                      >
+                        <InputBox
+                          letter={val}
+                          setLetterLayout={setLetterLayout}
+                          letterLayout={letterLayout}
+                          index={index}
+                        />
+                      </Animated.View>
+                    </GestureDetector>
+                  );
+                })}
               </View>
             </View>
             {/* LOWER CONTAINER */}
