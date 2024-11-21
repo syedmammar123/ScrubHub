@@ -43,33 +43,34 @@ export default function WordScrambled() {
         translateValueY[index].value = event.translationY;
       })
       .onEnd((event) => {
-        console.log(letterLayout[index]?.x + event.translationX);
-        console.log(letterLayout[index]?.y - event.translationY);
+        console.log(event.translationY);
 
-        // const draggedX =
-        //   letterLayout[index]?.x +
-        //   event.translationX +
-        //   letterLayout[index]?.width;
-        // const draggedY =
-        //   letterLayout[index]?.y +
-        //   event.translationY +
-        //   letterLayout[index]?.height;
-        // console.log(draggedX);
-        // console.log(draggedY);
+        console.log(
+          "AFTER DRAG X",
+          letterLayout[index]?.x + event.translationX
+        );
+        console.log(
+          "AFTER DRAG Y",
+          letterLayout[index]?.y - event.translationY
+        );
+        console.log("INITIAL X", letterLayout[index]?.x);
+        console.log("INITIAL Y", letterLayout[index]?.y);
+        // console.log("dragZoneLayoutX", dragZoneLayout.x);
+        // console.log("dragZoneLayoutY", dragZoneLayout.y);
         const draggedX = letterLayout[index]?.x + event.translationX;
-        const draggedY = letterLayout[index]?.y - event.translationY;
+        // console.log("DRAGGEDX", draggedX);
+
+        const draggedY = 0 - event.translationY;
         const dropXStart = dropZoneLayout.x - 3;
         const dropXEnd = dropZoneLayout.x + dropZoneLayout.width + 3;
         const dropYStart = dropZoneLayout.y - 3;
         const dropYEnd = dropZoneLayout.y + dropZoneLayout.height + 3;
-        console.log(event.absoluteX);
-        console.log(event.absoluteY);
 
         if (
           draggedX >= dropXStart &&
-          draggedX <= dropXEnd &&
+          draggedX + letterLayout[index]?.width <= dropXEnd &&
           draggedY >= dropYStart &&
-          draggedY <= dropYEnd
+          draggedY - letterLayout[index]?.height <= dropYEnd
         ) {
         } else {
           // Reset position if not dropped within the target area
@@ -135,19 +136,20 @@ export default function WordScrambled() {
                       key={index}
                       gesture={panGestureHandler[index]}
                     >
-                      <Animated.View
+                      {/* <Animated.View
                         style={[
                           AnimatedStyle(index),
                           { width: 40, height: 50 },
                         ]}
-                      >
-                        <InputBox
-                          letter={val}
-                          setLetterLayout={setLetterLayout}
-                          letterLayout={letterLayout}
-                          index={index}
-                        />
-                      </Animated.View>
+                      > */}
+                      <InputBox
+                        letter={val}
+                        setLetterLayout={setLetterLayout}
+                        letterLayout={letterLayout}
+                        index={index}
+                        AnimatedStyle={AnimatedStyle}
+                      />
+                      {/* </Animated.View> */}
                     </GestureDetector>
                   );
                 })}
@@ -196,13 +198,13 @@ const styles = StyleSheet.create({
   },
 
   lettersContainer: {
-    width: "95%",
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "#F5F5F5",
     borderRadius: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    // paddingVertical: 5,
+    // paddingHorizontal: 10,
     columnGap: 14,
     marginLeft: "auto",
     marginRight: "auto",
