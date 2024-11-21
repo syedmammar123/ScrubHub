@@ -35,6 +35,7 @@ export default function WordScrambled() {
   });
 
   const [letterLayout, setLetterLayout] = useState([]);
+  const [blankInputLayout, setBlankInputLayout] = useState(Array(5).fill(null));
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -43,37 +44,43 @@ export default function WordScrambled() {
         translateValueY[index].value = event.translationY;
       })
       .onEnd((event) => {
-        console.log(event.translationY);
-
-        console.log(
-          "AFTER DRAG X",
-          letterLayout[index]?.x + event.translationX
-        );
-        console.log(
-          "AFTER DRAG Y",
-          letterLayout[index]?.y - event.translationY
-        );
-        console.log("INITIAL X", letterLayout[index]?.x);
-        console.log("INITIAL Y", letterLayout[index]?.y);
-        // console.log("dragZoneLayoutX", dragZoneLayout.x);
-        // console.log("dragZoneLayoutY", dragZoneLayout.y);
         const draggedX = letterLayout[index]?.x + event.translationX;
-        // console.log("DRAGGEDX", draggedX);
-
         const draggedY = 0 - event.translationY;
-        const dropXStart = dropZoneLayout.x - 3;
-        const dropXEnd = dropZoneLayout.x + dropZoneLayout.width + 3;
-        const dropYStart = dropZoneLayout.y - 3;
-        const dropYEnd = dropZoneLayout.y + dropZoneLayout.height + 3;
+        console.log(draggedX);
+        console.log(draggedY);
 
-        if (
-          draggedX >= dropXStart &&
-          draggedX + letterLayout[index]?.width <= dropXEnd &&
-          draggedY >= dropYStart &&
-          draggedY - letterLayout[index]?.height <= dropYEnd
-        ) {
-        } else {
-          // Reset position if not dropped within the target area
+        let isDropped = false;
+
+        for (let i = 0; i < 5; i++) {
+          const blank = blankInputLayout[i];
+          console.log("BLANK", blank);
+          console.log(draggedX + letterLayout[index]?.width);
+          console.log(draggedX - letterLayout[index]?.height);
+
+          if (
+            blank &&
+            draggedX >= blank.x - 5 &&
+            draggedX + letterLayout[index]?.width <=
+              blank.x + blank.width + 5 &&
+            draggedY >= blank.y - 5 &&
+            draggedY - letterLayout[index]?.height <= blank.y + blank.height + 5
+          ) {
+            // Successfully dropped in the blank input
+            console.log("DROPPPED");
+
+            isDropped = true;
+            // translateValueX[index].value = withSpring(
+            //   blank.x - letterLayout[index].x
+            // );
+            // translateValueY[index].value = withSpring(
+            //   blank.y - letterLayout[index].y
+            // );
+            break;
+          }
+        }
+
+        if (!isDropped) {
+          // Reset position if not dropped in any blank input
           translateValueX[index].value = withSpring(0);
           translateValueY[index].value = withSpring(0);
         }
@@ -119,7 +126,14 @@ export default function WordScrambled() {
 
               {/* Input Of Word  */}
               <View style={styles.inputContainer}>
-                <BlankInput setDropZoneLayout={setDropZoneLayout} />
+                {blankInputLayout.map((blank, index) => (
+                  <BlankInput
+                    key={index}
+                    setBlankInputLayout={setBlankInputLayout}
+                    blankInputLayout={blankInputLayout}
+                    index={index}
+                  />
+                ))}
               </View>
 
               {/* Letters to Choose */}

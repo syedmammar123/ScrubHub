@@ -2,13 +2,20 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
 
-export default function blankInput({ setDropZoneLayout }) {
+export default function blankInput({
+  setDropZoneLayout,
+  setBlankInputLayout,
+  index,
+  blankInputLayout,
+}) {
   return (
     <View
       onLayout={(e) => {
         const { x, y, width, height } = e.nativeEvent.layout;
+        const updatedlayout = [...blankInputLayout];
+        updatedlayout[index] = { x, y, width, height };
+        setBlankInputLayout(updatedlayout);
         console.log("Drop ZONE LAYOUT", { x, y, width, height });
-        setDropZoneLayout({ x, y, width, height });
       }}
       style={styles.line}
     ></View>
