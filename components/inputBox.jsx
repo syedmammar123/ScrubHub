@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "white",
     zIndex: 10,
+    marginTop: 5,
   },
   outerBorder: {
     position: "absolute",

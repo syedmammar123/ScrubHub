@@ -3,7 +3,6 @@ import React from "react";
 import { theme } from "@/theme";
 
 export default function blankInput({
-  setDropZoneLayout,
   setBlankInputLayout,
   index,
   blankInputLayout,
@@ -15,7 +14,6 @@ export default function blankInput({
         const updatedlayout = [...blankInputLayout];
         updatedlayout[index] = { x, y, width, height };
         setBlankInputLayout(updatedlayout);
-        console.log("Drop ZONE LAYOUT", { x, y, width, height });
       }}
       style={styles.line}
     ></View>
