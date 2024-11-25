@@ -1,24 +1,4 @@
-// import { StatusBar } from "expo-status-bar";
-// import { StyleSheet, Text, View } from "react-native";
-// import { theme } from "../../theme";
-
-// export default function App() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Bismillah!</Text>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: theme.colorWhite,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import React from "react";
 import {
   StyleSheet,
@@ -123,7 +103,10 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => handlePress("friends")}
+          >
             <View
               style={[styles.blueButton, styles.buttonStyle, styles.buttonFP]}
             >

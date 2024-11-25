@@ -1,74 +1,38 @@
-import { View, StyleSheet, PanResponder, Animated, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
-import { useRef, useState } from "react";
+import Animated from "react-native-reanimated";
 
-export default function InputBox({ letter }) {
-  // Create a ref to store the position of the card
-  const position = useRef(new Animated.ValueXY()).current;
-
-  // State to track if the card is being dragged
-  const [dragging, setDragging] = useState(false);
-
-  // Create a pan responder to handle touch events
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: () => {
-        // When touch gesture starts,
-        //set dragging to true
-        setDragging(true);
-      },
-      onPanResponderMove: Animated.event(
-        [
-          null,
-          {
-            dx: position.x,
-            dy: position.y,
-          },
-        ],
-        { useNativeDriver: false }
-      ),
-      onPanResponderRelease: () => {
-        // When touch gesture is released,
-        //set dragging to false
-        setDragging(false);
-      },
-    })
-  ).current;
+export default function InputBox({
+  letter,
+  setLetterLayout,
+  letterLayout,
+  index,
+  AnimatedStyle,
+}) {
   return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.box,
-          {
-            transform: position.getTranslateTransform(),
-            opacity: dragging ? 0.8 : 1,
-          },
-        ]}
-        {...panResponder.panHandlers}
-      >
-        <Text style={{ fontWeight: "bold" }}>{letter}</Text>
-      </Animated.View>
-      <Animated.View
-        style={[
-          styles.outerBorder,
-          {
-            transform: position.getTranslateTransform(),
-            opacity: dragging ? 0.8 : 1,
-          },
-        ]}
-        {...panResponder.panHandlers}
-      ></Animated.View>
-    </View>
+    // <View style={styles.container}>
+    <Animated.View
+      onLayout={(e) => {
+        const { x, y, width, height } = e.nativeEvent.layout;
+        const updatedlayout = [...letterLayout];
+        updatedlayout[index] = { x, y, width, height };
+        setLetterLayout(updatedlayout);
+      }}
+      style={[styles.box, AnimatedStyle(index)]}
+    >
+      <Text style={{ fontWeight: "bold" }}>{letter}</Text>
+    </Animated.View>
+
+    //   <View style={[styles.outerBorder]}></View>
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    marginBottom: 20, // Space for the outer border
+    marginBottom: 20,
   },
   box: {
     width: 40,
@@ -80,10 +44,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "white",
     zIndex: 10,
+    marginTop: 5,
   },
   outerBorder: {
     position: "absolute",
-    bottom: -4, // Adjust the gap between the inner and outer borders
+    bottom: -4,
     width: 40,
     height: 50,
     borderRadius: 5,
