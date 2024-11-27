@@ -35,7 +35,7 @@ export default function WordScrambled() {
   });
 
   const [letterLayout, setLetterLayout] = useState([]);
-  const [blankInputLayout, setBlankInputLayout] = useState(Array(5).fill(null));
+  const [blankInputLayout, setBlankInputLayout] = useState(Array(8).fill(null));
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -46,16 +46,36 @@ export default function WordScrambled() {
       .onEnd((event) => {
         const draggedX = letterLayout[index]?.x + event.translationX;
         const draggedY = 0 - event.translationY;
-        console.log(draggedX);
-        console.log(draggedY);
-
+        const draggedY2 = letterLayout[index]?.y + event.translationY;
+        console.log("transX", event.translationX);
+        console.log("transY", event.translationY);
+        console.log("draggedX", draggedX);
+        console.log("draggedY", draggedY);
+        console.log("draggedY2 y-event:", draggedY2);
+        console.log(
+          "Initial X",
+          letterLayout[index]?.x,
+          letterLayout[index]?.width
+        );
+        console.log(
+          "Initial Y",
+          letterLayout[index]?.y,
+          letterLayout[index]?.height
+        );
         let isDropped = false;
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < blankInputLayout.length; i++) {
           const blank = blankInputLayout[i];
           console.log("BLANK", blank);
-          console.log(draggedX + letterLayout[index]?.width);
-          console.log(draggedX - letterLayout[index]?.height);
+          console.log("draggedX+width", draggedX + letterLayout[index]?.width);
+          console.log(
+            "draggedY-height",
+            draggedY - letterLayout[index]?.height
+          );
+          console.log(
+            "draggedY+height",
+            draggedY + letterLayout[index]?.height
+          );
 
           if (
             blank &&
@@ -66,7 +86,8 @@ export default function WordScrambled() {
             draggedY - letterLayout[index]?.height <= blank.y + blank.height + 5
           ) {
             // Successfully dropped in the blank input
-            console.log("DROPPPED");
+            console.log("DROPPPED", i);
+            console.log("==================================");
 
             isDropped = true;
             // translateValueX[index].value = withSpring(
@@ -150,12 +171,6 @@ export default function WordScrambled() {
                       key={index}
                       gesture={panGestureHandler[index]}
                     >
-                      {/* <Animated.View
-                        style={[
-                          AnimatedStyle(index),
-                          { width: 40, height: 50 },
-                        ]}
-                      > */}
                       <InputBox
                         letter={val}
                         setLetterLayout={setLetterLayout}
@@ -163,7 +178,6 @@ export default function WordScrambled() {
                         index={index}
                         AnimatedStyle={AnimatedStyle}
                       />
-                      {/* </Animated.View> */}
                     </GestureDetector>
                   );
                 })}
@@ -209,6 +223,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignSelf: "center",
     columnGap: 15,
+    rowGap: 15,
   },
 
   lettersContainer: {
