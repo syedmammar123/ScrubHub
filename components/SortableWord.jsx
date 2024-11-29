@@ -37,7 +37,28 @@ const SortableWord = ({ offsets, index, children, containerWidth }) => {
       translation.x.value = temptranslateX.value + translationX;
       translation.y.value = temptranslateY.value + translationY;
 
-      if (isInBank.value && translation.y.value < 100) {
+      if (
+        isInBank.value &&
+        translation.y.value < 100 &&
+        translation.y.value >= 0
+      ) {
+        console.log("YES");
+        offset.order.value = -1;
+        console.log("IN BETWEENTraslation x", translation.x.value);
+        console.log("Traslation y", translation.y.value);
+        // console.log("==================================");
+
+        // offset.order.value = lastOrder(offsets);
+        // calculateLayout(offsets, containerWidth);
+      } else if (
+        isInBank.value &&
+        translation.y.value < 100 &&
+        translation.y.value < 0
+      ) {
+        console.log("OUT OF BOUNDTraslation x", translation.x.value);
+        console.log("Traslation y", translation.y.value);
+        console.log("==================================");
+
         offset.order.value = lastOrder(offsets);
         calculateLayout(offsets, containerWidth);
       } else if (!isInBank.value && translation.y.value > 100) {
@@ -63,6 +84,9 @@ const SortableWord = ({ offsets, index, children, containerWidth }) => {
     })
     .onEnd(() => {
       isGestureActive.value = false;
+      console.log("ON END====Traslation x", translation.x.value);
+      console.log("Traslation y", translation.y.value);
+      console.log("==================================");
     });
 
   const translateX = useDerivedValue(() => {

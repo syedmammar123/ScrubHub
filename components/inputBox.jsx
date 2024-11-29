@@ -9,6 +9,7 @@ export default function InputBox({
   letterLayout,
   index,
   AnimatedStyle,
+  setReadyBoxes,
 }) {
   return (
     // <View style={styles.container}>
@@ -18,6 +19,7 @@ export default function InputBox({
         const updatedlayout = [...letterLayout];
         updatedlayout[index] = { x, y, width, height };
         setLetterLayout(updatedlayout);
+        index === 0 && setReadyBoxes(true);
       }}
       style={[styles.box, AnimatedStyle(index)]}
     >

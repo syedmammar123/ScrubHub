@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet } from "react-native";
 import React from "react";
 
-export default function backgroundImage({ children }) {
+export default function BackgroundImage({ children }) {
   return (
     <ImageBackground
       source={require("@/assets/background.png")} // Path to your background image
