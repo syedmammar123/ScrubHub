@@ -47,7 +47,7 @@ export default function WordScrambled() {
 
   const [letterLayout, setLetterLayout] = useState([]);
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null)
+    Array(answerLength).fill(null),
   );
   const line = useSharedValue(-1);
   const CreatePanGesture = (index) => {
@@ -57,7 +57,7 @@ export default function WordScrambled() {
         translateValueY[index].value = event.translationY;
         console.log(
           "TranslateY",
-          0 - translateValueY[index].value - letterLayout[index]?.y
+          0 - translateValueY[index].value - letterLayout[index]?.y,
         );
         if (translateValueY[index].value > 0) {
           line.value = -1;
@@ -95,7 +95,7 @@ export default function WordScrambled() {
 
             console.log(
               "Dragged X+width",
-              draggedX + letterLayout[index]?.width
+              draggedX + letterLayout[index]?.width,
             );
 
             break;

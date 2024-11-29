@@ -94,7 +94,7 @@ const SortableWord = ({ offsets, index, children, containerWidth }) => {
       return translation.x.value;
     }
     return withSpring(
-      isInBank.value ? offset.originalX.value - MARGIN_LEFT : offset.x.value
+      isInBank.value ? offset.originalX.value - MARGIN_LEFT : offset.x.value,
     );
   });
 
@@ -103,7 +103,7 @@ const SortableWord = ({ offsets, index, children, containerWidth }) => {
       return translation.y.value;
     }
     return withSpring(
-      isInBank.value ? offset.originalY.value + MARGIN_TOP : offset.y.value
+      isInBank.value ? offset.originalY.value + MARGIN_TOP : offset.y.value,
     );
   });
   const style = useAnimatedStyle(() => {

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "newArchEnabled": true,
     "name": "scrubhub",
     "slug": "scrubhub",
     "version": "1.0.0",
