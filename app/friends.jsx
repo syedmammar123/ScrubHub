@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,40 +9,40 @@ import {
   TextInput,
   Modal,
   FlatList,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
-import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
-import { theme } from "@/theme";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
-import RNPickerSelect from "react-native-picker-select";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { theme } from "@/theme";
 
 export default function Friends() {
   const [active, setActive] = useState("friends");
-  const [selectedValue, setSelectedValue] = useState("");
-  const [dropDownActive, setDropDownActive] = useState(true);
+  const [selectedValue, setSelectedValue] = useState("1");
+  const [dropDownActive, setDropDownActive] = useState(false);
+  const [inviteSent, setInviteSent] = useState(true);
 
-  const options = ["Option 1", "Option 2", "Option 3"];
+  const options = ["1", "2", "3", "4", "5"];
 
   const selectOption = (option) => {
     setSelectedValue(option);
-    setDropdownVisible(false);
+    setDropDownActive(false);
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <View>
-        <BackButton />
-      </View>
-
+      <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />
-
           {/* Tabs */}
           <View style={styles.tabs}>
             <Pressable onPress={() => setActive("friends")}>
@@ -65,7 +66,6 @@ export default function Friends() {
               </Text>
             </Pressable>
           </View>
-
           <View style={styles.tabDivider}>
             <View style={styles.fullUnderline}></View>
             <View
@@ -77,7 +77,7 @@ export default function Friends() {
             ></View>
           </View>
 
-          {/* Friends */}
+          {/* Tabs Content */}
           {active === "friends" ? (
             <ScrollView style={styles.friendContainer}>
               <Friend
@@ -86,7 +86,6 @@ export default function Friends() {
                   "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
                 }
               />
-
               <Friend
                 Name={"Oliver"}
                 photoUrl={
@@ -95,101 +94,121 @@ export default function Friends() {
               />
             </ScrollView>
           ) : (
-            <View style={styles.inviteFriendContainer}>
-              <View style={styles.titleinviteFriend}>
-                <Text
-                  style={{
-                    fontSize: 21,
-                    textAlign: "center",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Share the Scrub Hub Experience - Invite Today!
-                </Text>
-                <Text style={{ marginVertical: 20 }}>
-                  Enter your Friend's Mobile Number
-                </Text>
-              </View>
-              <View style={styles.numberinviteFriend}>
-                {/* Dropdown */}
-                <View style={{ width: "20%" }}>
-                  <TouchableOpacity
-                    onPress={() => setDropDownActive(true)}
-                    style={{
-                      backgroundColor: "black",
-                      width: "100%",
-                      paddingVertical: 12,
-                      borderRadius: 5,
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ color: "white", textAlign: "center" }}>
-                      1
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={styles.inviteFriendContainer}
+            >
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View>
+                  <View style={styles.titleinviteFriend}>
+                    <Text style={styles.titleText}>
+                      Share the Scrub Hub Experience - Invite Today!
                     </Text>
-                    <Ionicons name="chevron-down" size={21} color={"white"} />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Phone Number */}
-                <View style={{ flex: 1 }}>
-                  <TextInput
-                    placeholder="Enter Number..."
-                    placeholderTextColor={"white"}
-                    keyboardType="number-pad"
-                    style={styles.phoneInputStyles}
-                  />
-                </View>
-              </View>
-              <View style={styles.buttoninviteFriend}>
-                <TouchableOpacity
-                  style={{
-                    width: "100%",
-                    backgroundColor: "black",
-                    paddingVertical: 15,
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      textAlign: "center",
-                      fontSize: 15,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Send an invite
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {/* DropDown Modal */}
-              <Modal
-                visible={dropDownActive}
-                transparent
-                animationType="slide"
-                onRequestClose={() => setDropDownActive(false)}
-              >
-                <TouchableOpacity
-                  style={styles.overlay}
-                  onPress={() => setDropdownVisible(false)}
-                >
-                  <View style={styles.dropdown}>
-                    <FlatList
-                      data={options}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity
-                          style={styles.option}
-                          onPress={() => selectOption(item)}
-                        >
-                          <Text>{item}</Text>
-                        </TouchableOpacity>
-                      )}
-                    />
+                    <Text style={styles.subtitleText}>
+                      Enter your Friend's Mobile Number
+                    </Text>
                   </View>
-                </TouchableOpacity>
-              </Modal>
-            </View>
+                  <View style={styles.numberinviteFriend}>
+                    {/* Dropdown */}
+                    <TouchableOpacity
+                      onPress={() => setDropDownActive(true)}
+                      style={styles.dropdownButton}
+                    >
+                      <Text style={styles.dropdownText}>{selectedValue}</Text>
+                      <Ionicons
+                        name="chevron-down"
+                        size={20}
+                        color="white"
+                        style={styles.dropdownIcon}
+                      />
+                    </TouchableOpacity>
+
+                    {/* Phone Input */}
+                    <View style={{ flex: 1 }}>
+                      <TextInput
+                        placeholder="Enter Number..."
+                        placeholderTextColor={"white"}
+                        keyboardType="number-pad"
+                        style={styles.phoneInputStyles}
+                      />
+                    </View>
+                  </View>
+                  <TouchableOpacity style={styles.inviteButton}>
+                    <Text
+                      style={styles.inviteButtonText}
+                      onPress={() => setInviteSent(true)}
+                    >
+                      Send an invite
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Dropdown Modal */}
+                  <Modal
+                    visible={dropDownActive}
+                    transparent
+                    animationType="fade"
+                    onRequestClose={() => setDropDownActive(false)}
+                  >
+                    <TouchableOpacity
+                      style={styles.overlay}
+                      onPress={() => setDropDownActive(false)}
+                    >
+                      <View style={styles.dropdownContainer}>
+                        <FlatList
+                          data={options}
+                          keyExtractor={(item, index) => index.toString()}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              style={styles.dropdownOption}
+                              onPress={() => selectOption(item)}
+                            >
+                              <Text style={styles.dropdownOptionText}>
+                                {item}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </Modal>
+                  {/* {InviteSemtModal} */}
+                  <Modal
+                    visible={inviteSent}
+                    transparent
+                    animationType="fade"
+                    onRequestClose={() => setInviteSent(false)}
+                  >
+                    <TouchableOpacity
+                      style={styles.inviteSentoverlay}
+                      onPress={() => setInviteSent(false)}
+                    >
+                      <View style={styles.inviteSentContainer}>
+                        <View>
+                          <MaterialIcons
+                            name="mobile-friendly"
+                            size={40}
+                            color="skyblue"
+                          />
+                        </View>
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            textAlign: "center",
+                            fontSize: 19,
+                          }}
+                        >
+                          Invitation Sent Successfully!
+                        </Text>
+                        <Text style={{ textAlign: "center", width: "80%" }}>
+                          Your invite is on its way! Let your friend join the
+                          Scrub Hub fun and start exploring
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </Modal>
+                </View>
+              </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
           )}
         </BackgroundImage>
       </View>
@@ -201,29 +220,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colorWhite,
-    justifyContent: "center",
   },
   tabs: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    alignItems: "center",
     marginVertical: 10,
   },
   tabHeader: {
     fontSize: 16,
     textTransform: "uppercase",
   },
-  current: {
-    color: "blue",
-    fontWeight: "bold",
-  },
-  inactive: {
-    color: "#ADADAD",
-  },
+  current: { color: "blue", fontWeight: "bold" },
+  inactive: { color: "#ADADAD" },
   tabDivider: {
     position: "relative",
     height: 10,
-    alignItems: "center",
     justifyContent: "center",
   },
   fullUnderline: {
@@ -240,30 +251,35 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: "white",
     zIndex: 1,
-
-    transition: "left 0.1s",
   },
-  friendContainer: {
-    flex: 1,
-    flexDirection: "column",
-    marginTop: 15,
-    paddingBottom: 25,
-  },
+  friendContainer: { flex: 1, marginTop: 15 },
   inviteFriendContainer: {
     flex: 1,
     alignItems: "center",
-    width: "100%",
+    paddingHorizontal: 20,
     justifyContent: "center",
-    zIndex: 0,
   },
-  titleinviteFriend: { alignItems: "center", width: "80%" },
+  titleinviteFriend: { alignItems: "center", marginBottom: 20 },
+  titleText: { fontSize: 21, textAlign: "center", fontWeight: "bold" },
+  subtitleText: { marginVertical: 20 },
   numberinviteFriend: {
     flexDirection: "row",
-    width: "75%",
     alignItems: "center",
     columnGap: 20,
     marginBottom: 20,
   },
+  dropdownButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "black",
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    width: "20%",
+  },
+  dropdownText: { color: "white", textAlign: "center" },
+  dropdownIcon: { marginLeft: 5 },
   phoneInputStyles: {
     backgroundColor: "black",
     color: "white",
@@ -271,25 +287,58 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 20,
   },
-
+  inviteButton: {
+    width: "75%",
+    backgroundColor: "black",
+    paddingVertical: 15,
+    borderRadius: 5,
+  },
+  inviteButtonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 15,
+    fontWeight: "bold",
+  },
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
-  dropdown: {
-    width: "80%",
+  inviteSentoverlay: {
+    flex: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dropdownContainer: {
+    width: "90%",
     backgroundColor: "white",
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 10,
   },
-  option: {
-    padding: 10,
+  inviteSentContainer: {
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    paddingVertical: 60,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+
+    elevation: 6,
+    rowGap: 10,
+  },
+
+  dropdownOption: {
+    padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
-  buttoninviteFriend: {
-    width: "75%",
-  },
+  dropdownOptionText: { fontSize: 16, color: "black" },
 });

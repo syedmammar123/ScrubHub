@@ -6,14 +6,20 @@ export default function blankInput({
   setBlankInputLayout,
   index,
   blankInputLayout,
+  setReadyBlanks,
 }) {
   return (
     <View
       onLayout={(e) => {
         const { x, y, width, height } = e.nativeEvent.layout;
-        const updatedlayout = [...blankInputLayout];
-        updatedlayout[index] = { x, y, width, height };
-        setBlankInputLayout(updatedlayout);
+        const updatedLayout = [...blankInputLayout];
+        updatedLayout[index] = { x, y, width, height };
+
+        setBlankInputLayout(updatedLayout);
+
+        if (updatedLayout.every((layout) => layout !== null)) {
+          setReadyBlanks(true);
+        }
       }}
       style={styles.line}
     ></View>
@@ -22,10 +28,10 @@ export default function blankInput({
 
 const styles = StyleSheet.create({
   line: {
-    width: 60,
+    width: 50,
     height: 60,
     // marginTop: 150,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: theme.barColor,
     backgroundColor: "transparent",
   },
