@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import { View, Text, StatusBar, StyleSheet, Dimensions } from "react-native";
 import React, { useState } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
@@ -18,24 +18,23 @@ import Animated, {
 const Word = ["P", "O", "H", "S", "E", "E", "I", "S", "Y"];
 const answerLength = 14;
 
-function calcLines() {
-  let lines = 1;
-  let count = 1;
-  if (answerLength <= 6) {
-    return 1;
-  }
-  for (let i = 1; i <= answerLength; i++) {
-    count++;
-    if (count === 6) {
-      console.log(count);
+function calcLines(containerWidth, boxWidth, columnGap, totalBoxes) {
+  const boxWithGap = boxWidth + columnGap;
+  const boxesPerLine = Math.floor(containerWidth / boxWithGap);
+  if (boxesPerLine === 0) return totalBoxes;
+  const lines = Math.ceil(totalBoxes / boxesPerLine);
 
-      lines++;
-      count = 1;
-    }
-  }
   return lines;
 }
-let noflines = calcLines();
+
+// Example usage
+const screenWidth = Dimensions.get("window").width;
+const containerWidth = screenWidth * 0.95;
+const boxWidth = 40;
+const columnGap = 15;
+const totalBoxes = answerLength;
+
+const noflines = calcLines(containerWidth, boxWidth, columnGap, totalBoxes);
 console.log("Lines are", noflines);
 
 export default function WordScrambled() {
@@ -92,10 +91,11 @@ export default function WordScrambled() {
       })
       .onEnd((event) => {
         const draggedX = letterLayout[index]?.x + event.translationX;
+        const draggedY = letterLayout[index]?.y + event.translationY;
         console.log("Dragged X", draggedX);
+        console.log("Dragged Y", draggedY);
 
         let isDropped = false;
-        console.log(line.value);
 
         for (let i = (line.value - 1) * 6; i < line.value * 6; i++) {
           const blank = blankInputLayout[i];
@@ -108,16 +108,25 @@ export default function WordScrambled() {
           ) {
             // Successfully dropped in the blank input
             isDropped = true;
-            console.log(i);
-            console.log("DROPPED:=========");
-            console.log("blankx+width", blank.x + blank.width);
-            console.log("XVAL on drop", translateValueX[index].value);
-            console.log("YVAL on drop", translateValueY[index].value);
 
-            console.log(
-              "Dragged X+width",
-              draggedX + letterLayout[index]?.width
-            );
+            // Calculate the center of the blank box
+            const blankCenterX = blank.x + blank.width / 2;
+            const blankCenterY = blank.y + blank.height / 2;
+
+            // Calculate the center of the dragged box
+            const draggedCenterX =
+              draggedX + letterLayout[index]?.width / 2 || 0;
+            const draggedCenterY =
+              draggedY + letterLayout[index]?.height / 2 || 0;
+
+            // Adjust translation values to center the box
+            const offsetX = blankCenterX - draggedCenterX;
+            const offsetY = blankCenterY - draggedCenterY;
+
+            console.log("DROPPED:=========");
+            console.log("Target Blank Center:", blankCenterX, blankCenterY);
+            console.log("Dragged Box Center:", draggedCenterX, draggedCenterY);
+            console.log("Offsets:", offsetX, offsetY);
 
             break;
           }
