@@ -16,7 +16,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const Word = ["P", "O", "H", "S", "E", "E", "I", "S", "Y"];
-const answerLength = 7;
+const answerLength = 14;
 
 function calcLines() {
   let lines = 1;
@@ -42,12 +42,9 @@ export default function WordScrambled() {
   const translateValueX = Word.map(() => useSharedValue(0));
   const translateValueY = Word.map(() => useSharedValue(0));
 
-  const [readyBoxes, setReadyBoxes] = useState(false);
-  const [readyBlanks, setReadyBlanks] = useState(false);
-
   const [letterLayout, setLetterLayout] = useState([]);
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
   const line = useSharedValue(-1);
   const CreatePanGesture = (index) => {
@@ -57,17 +54,39 @@ export default function WordScrambled() {
         translateValueY[index].value = event.translationY;
         console.log(
           "TranslateY",
-          0 - translateValueY[index].value - letterLayout[index]?.y,
+          0 - translateValueY[index].value - letterLayout[index]?.y
         );
         if (translateValueY[index].value > 0) {
           line.value = -1;
-        } else if (
-          0 - translateValueY[index].value - letterLayout[index]?.y >
-          115
-        ) {
+        }
+        if (noflines === 1) {
           line.value = 1;
         } else {
-          line.value = 2;
+          if (noflines === 2) {
+            if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              115
+            ) {
+              line.value = 1;
+            } else {
+              line.value = 2;
+            }
+          } else if (noflines === 3) {
+            line.value = -1;
+            if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              182
+            ) {
+              line.value = 1;
+            } else if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              115
+            ) {
+              line.value = 2;
+            } else {
+              line.value = 3;
+            }
+          }
         }
         console.log(line.value);
       })
@@ -80,7 +99,7 @@ export default function WordScrambled() {
 
         for (let i = (line.value - 1) * 6; i < line.value * 6; i++) {
           const blank = blankInputLayout[i];
-          console.log(blank);
+          console.log("BLANK", i, blank);
 
           if (
             blank &&
@@ -92,10 +111,12 @@ export default function WordScrambled() {
             console.log(i);
             console.log("DROPPED:=========");
             console.log("blankx+width", blank.x + blank.width);
+            console.log("XVAL on drop", translateValueX[index].value);
+            console.log("YVAL on drop", translateValueY[index].value);
 
             console.log(
               "Dragged X+width",
-              draggedX + letterLayout[index]?.width,
+              draggedX + letterLayout[index]?.width
             );
 
             break;
@@ -156,32 +177,29 @@ export default function WordScrambled() {
                     key={index}
                     setBlankInputLayout={setBlankInputLayout}
                     blankInputLayout={blankInputLayout}
-                    setReadyBlanks={setReadyBlanks}
                     index={index}
                   />
                 ))}
               </View>
 
               {/* Letters to Choose */}
-              {readyBlanks && (
-                <View style={styles.lettersContainer}>
-                  {Word.map((val, index) => (
-                    <GestureDetector
-                      key={index}
-                      gesture={panGestureHandler[index]}
-                    >
-                      <InputBox
-                        letter={val}
-                        setLetterLayout={setLetterLayout}
-                        letterLayout={letterLayout}
-                        index={index}
-                        setReadyBoxes={setReadyBoxes}
-                        AnimatedStyle={AnimatedStyle}
-                      />
-                    </GestureDetector>
-                  ))}
-                </View>
-              )}
+
+              <View style={styles.lettersContainer}>
+                {Word.map((val, index) => (
+                  <GestureDetector
+                    key={index}
+                    gesture={panGestureHandler[index]}
+                  >
+                    <InputBox
+                      letter={val}
+                      setLetterLayout={setLetterLayout}
+                      letterLayout={letterLayout}
+                      index={index}
+                      AnimatedStyle={AnimatedStyle}
+                    />
+                  </GestureDetector>
+                ))}
+              </View>
             </View>
 
             {/* LOWER CONTAINER */}

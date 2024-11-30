@@ -12,14 +12,11 @@ export default function blankInput({
     <View
       onLayout={(e) => {
         const { x, y, width, height } = e.nativeEvent.layout;
-        const updatedLayout = [...blankInputLayout];
-        updatedLayout[index] = { x, y, width, height };
-
-        setBlankInputLayout(updatedLayout);
-
-        if (updatedLayout.every((layout) => layout !== null)) {
-          setReadyBlanks(true);
-        }
+        setBlankInputLayout((prevLayout) => {
+          const updatedlayout = [...prevLayout];
+          updatedlayout[index] = { x, y, width, height };
+          return updatedlayout;
+        });
       }}
       style={styles.line}
     ></View>

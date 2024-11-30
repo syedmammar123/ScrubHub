@@ -9,17 +9,17 @@ export default function InputBox({
   letterLayout,
   index,
   AnimatedStyle,
-  setReadyBoxes,
 }) {
   return (
     // <View style={styles.container}>
     <Animated.View
       onLayout={(e) => {
         const { x, y, width, height } = e.nativeEvent.layout;
-        const updatedlayout = [...letterLayout];
-        updatedlayout[index] = { x, y, width, height };
-        setLetterLayout(updatedlayout);
-        index === 0 && setReadyBoxes(true);
+        setLetterLayout((prevLayout) => {
+          const updatedlayout = [...prevLayout];
+          updatedlayout[index] = { x, y, width, height };
+          return updatedlayout;
+        });
       }}
       style={[styles.box, AnimatedStyle(index)]}
     >
