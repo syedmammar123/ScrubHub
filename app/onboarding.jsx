@@ -13,7 +13,7 @@ export default function OnBoarding() {
 
   const handlePress = () => {
     toggleHasOnboarded();
-    router.replace("/");
+    router.navigate("/");
   };
   return (
     <LinearGradient
