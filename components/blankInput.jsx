@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   line: {
     width: 50,
     height: 60,
-    // marginTop: 150,
+    zIndex: 0,
     borderWidth: 1,
     borderColor: theme.barColor,
     backgroundColor: "transparent",

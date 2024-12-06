@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, StyleSheet, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
@@ -17,35 +17,41 @@ import Animated, {
 
 const Word = ["P", "O", "H", "S", "E", "E", "I", "S", "Y"];
 const answerLength = 14;
+let boxesPerLine;
 
 function calcLines(containerWidth, boxWidth, columnGap, totalBoxes) {
+  console.log("CONTAINERWIDTH", containerWidth);
+
   const boxWithGap = boxWidth + columnGap;
-  const boxesPerLine = Math.floor(containerWidth / boxWithGap);
+  boxesPerLine = Math.floor(containerWidth / boxWithGap);
   if (boxesPerLine === 0) return totalBoxes;
   const lines = Math.ceil(totalBoxes / boxesPerLine);
 
   return lines;
 }
 
-// Example usage
 const screenWidth = Dimensions.get("window").width;
 const containerWidth = screenWidth * 0.95;
-const boxWidth = 40;
+const boxWidth = 50;
 const columnGap = 15;
 const totalBoxes = answerLength;
 
 const noflines = calcLines(containerWidth, boxWidth, columnGap, totalBoxes);
 console.log("Lines are", noflines);
+console.log("Boxes perLine", boxesPerLine);
 
 export default function WordScrambled() {
   const translateValueX = Word.map(() => useSharedValue(0));
   const translateValueY = Word.map(() => useSharedValue(0));
-
   const [letterLayout, setLetterLayout] = useState([]);
   const [blankInputLayout, setBlankInputLayout] = useState(
     Array(answerLength).fill(null)
   );
+
   const line = useSharedValue(-1);
+  const ytranslated = useSharedValue(-1);
+
+  console.log("Lines are", noflines);
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
@@ -77,6 +83,7 @@ export default function WordScrambled() {
               182
             ) {
               line.value = 1;
+              ytranslated.value = -205 - letterLayout[index]?.y;
             } else if (
               0 - translateValueY[index].value - letterLayout[index]?.y >
               115
@@ -97,7 +104,11 @@ export default function WordScrambled() {
 
         let isDropped = false;
 
-        for (let i = (line.value - 1) * 6; i < line.value * 6; i++) {
+        for (
+          let i = (line.value - 1) * boxesPerLine;
+          i < line.value * boxesPerLine;
+          i++
+        ) {
           const blank = blankInputLayout[i];
           console.log("BLANK", i, blank);
 
@@ -106,27 +117,17 @@ export default function WordScrambled() {
             draggedX >= blank.x - 5 &&
             draggedX + letterLayout[index]?.width <= blank.x + blank.width + 10
           ) {
-            // Successfully dropped in the blank input
             isDropped = true;
+            console.log("DROPPED IN :", i);
 
-            // Calculate the center of the blank box
-            const blankCenterX = blank.x + blank.width / 2;
-            const blankCenterY = blank.y + blank.height / 2;
+            translateValueY[index].value = withSpring(ytranslated.value);
+            const val = 5 + i * 65;
+            console.log("XPOSITION", val - letterLayout[index]?.x);
+            console.log(letterLayout[index]?.x);
 
-            // Calculate the center of the dragged box
-            const draggedCenterX =
-              draggedX + letterLayout[index]?.width / 2 || 0;
-            const draggedCenterY =
-              draggedY + letterLayout[index]?.height / 2 || 0;
-
-            // Adjust translation values to center the box
-            const offsetX = blankCenterX - draggedCenterX;
-            const offsetY = blankCenterY - draggedCenterY;
-
-            console.log("DROPPED:=========");
-            console.log("Target Blank Center:", blankCenterX, blankCenterY);
-            console.log("Dragged Box Center:", draggedCenterX, draggedCenterY);
-            console.log("Offsets:", offsetX, offsetY);
+            translateValueX[index].value = withSpring(
+              val - letterLayout[index]?.x + 10
+            );
 
             break;
           }
@@ -179,7 +180,6 @@ export default function WordScrambled() {
               </View>
 
               {/* Blanks */}
-              {/* Render BlankInput Always */}
               <View style={styles.inputContainer}>
                 {blankInputLayout.map((_, index) => (
                   <BlankInput
@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignSelf: "center",
     columnGap: 15,
+
     rowGap: 15,
   },
   lettersContainer: {
