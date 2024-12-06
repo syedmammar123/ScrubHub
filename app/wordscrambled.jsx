@@ -63,73 +63,70 @@ export default function WordScrambled() {
         );
         if (translateValueY[index].value > 0) {
           line.value = -1;
-        }
-        if (noflines === 1) {
+        } else if (noflines === 1) {
           line.value = 1;
-        } else {
-          if (noflines === 2) {
-            if (
-              0 - translateValueY[index].value - letterLayout[index]?.y >
-              115
-            ) {
-              line.value = 1;
-            } else {
-              line.value = 2;
-            }
-          } else if (noflines === 3) {
-            line.value = -1;
-            if (
-              0 - translateValueY[index].value - letterLayout[index]?.y >
-              182
-            ) {
-              line.value = 1;
-              ytranslated.value = -205 - letterLayout[index]?.y;
-            } else if (
-              0 - translateValueY[index].value - letterLayout[index]?.y >
-              115
-            ) {
-              line.value = 2;
-            } else {
-              line.value = 3;
-            }
+          ytranslated.value = -55 - letterLayout[index]?.y;
+        } else if (noflines === 2) {
+          if (0 - translateValueY[index].value - letterLayout[index]?.y > 115) {
+            line.value = 1;
+            ytranslated.value = -129 - letterLayout[index]?.y;
+          } else {
+            line.value = 2;
+            ytranslated.value = -55 - letterLayout[index]?.y;
+          }
+        } else if (noflines === 3) {
+          line.value = -1;
+          if (0 - translateValueY[index].value - letterLayout[index]?.y > 182) {
+            line.value = 1;
+            ytranslated.value = -205 - letterLayout[index]?.y;
+          } else if (
+            0 - translateValueY[index].value - letterLayout[index]?.y >
+            115
+          ) {
+            line.value = 2;
+            ytranslated.value = -129 - letterLayout[index]?.y;
+          } else {
+            line.value = 3;
+            ytranslated.value = -55 - letterLayout[index]?.y;
           }
         }
         console.log(line.value);
       })
       .onEnd((event) => {
         const draggedX = letterLayout[index]?.x + event.translationX;
-        const draggedY = letterLayout[index]?.y + event.translationY;
-        console.log("Dragged X", draggedX);
-        console.log("Dragged Y", draggedY);
 
         let isDropped = false;
-
-        for (
-          let i = (line.value - 1) * boxesPerLine;
-          i < line.value * boxesPerLine;
-          i++
-        ) {
-          const blank = blankInputLayout[i];
-          console.log("BLANK", i, blank);
-
-          if (
-            blank &&
-            draggedX >= blank.x - 5 &&
-            draggedX + letterLayout[index]?.width <= blank.x + blank.width + 10
+        if (line.value !== -1) {
+          for (
+            let i = (line.value - 1) * boxesPerLine;
+            i < line.value * boxesPerLine;
+            i++
           ) {
-            isDropped = true;
-            console.log("DROPPED IN :", i);
+            const blank = blankInputLayout[i];
+            console.log("BLANK", i, blank);
 
-            translateValueY[index].value = withSpring(ytranslated.value);
-            const val = 5 + i * 65;
-            console.log("XPOSITION", val - letterLayout[index]?.x);
-            console.log(letterLayout[index]?.x);
+            if (
+              blank &&
+              draggedX >= blank.x - 5 &&
+              draggedX + letterLayout[index]?.width <=
+                blank.x + blank.width + 10
+            ) {
+              isDropped = true;
+              console.log("DROPPED IN :", i);
 
-            translateValueX[index].value = withSpring(
-              val - letterLayout[index]?.x + 10
-            );
+              translateValueY[index].value = withSpring(ytranslated.value);
 
-            break;
+              //X Value For TranslateX,(Y Comes from Lines)
+              const ival = (line.value - 1) * boxesPerLine;
+              const off = i - ival;
+              const val = 5 + off * 65;
+
+              translateValueX[index].value = withSpring(
+                val - letterLayout[index]?.x + 10
+              );
+
+              break;
+            }
           }
         }
 
