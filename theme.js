@@ -1,3 +1,5 @@
+import { StyleSheet } from "react-native";
+
 export const theme = {
   colorGreen: "#29b365",
   colorWhite: "#fff",
@@ -10,3 +12,14 @@ export const theme = {
   barColor: "#93D334",
   barBgColor: "#DEDEDE",
 };
+
+// Shared Styles:
+export const savedStyles = StyleSheet.create({
+  // numberinviteFriend||Register Number
+  numberinviteFriend: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 20,
+    marginBottom: 20,
+  },
+});

@@ -6,14 +6,14 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-  TextInput,
   Modal,
-  FlatList,
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
+  FlatList,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -21,20 +21,19 @@ import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
-import { theme } from "@/theme";
+import { savedStyles, theme } from "@/theme";
+import countries from "world-countries";
+import NumberInput from "@/components/numberInput";
+import DropDownButton from "@/components/dropDownButton";
+import CountryPickerModal from "@/components/countryPickerModal";
 
 export default function Friends() {
   const [active, setActive] = useState("friends");
-  const [selectedValue, setSelectedValue] = useState("1");
+
   const [dropDownActive, setDropDownActive] = useState(false);
-  const [inviteSent, setInviteSent] = useState(true);
+  const [inviteSent, setInviteSent] = useState(false);
 
-  const options = ["1", "2", "3", "4", "5"];
-
-  const selectOption = (option) => {
-    setSelectedValue(option);
-    setDropDownActive(false);
-  };
+  const [countryCode, setCountryCode] = useState("+1");
 
   return (
     <View style={styles.container}>
@@ -108,28 +107,17 @@ export default function Friends() {
                       Enter your Friend's Mobile Number
                     </Text>
                   </View>
-                  <View style={styles.numberinviteFriend}>
+                  <View style={savedStyles.numberinviteFriend}>
                     {/* Dropdown */}
-                    <TouchableOpacity
-                      onPress={() => setDropDownActive(true)}
-                      style={styles.dropdownButton}
-                    >
-                      <Text style={styles.dropdownText}>{selectedValue}</Text>
-                      <Ionicons
-                        name="chevron-down"
-                        size={20}
-                        color="white"
-                        style={styles.dropdownIcon}
-                      />
-                    </TouchableOpacity>
-
+                    <DropDownButton
+                      setDropDownActive={setDropDownActive}
+                      countryCode={countryCode}
+                    />
                     {/* Phone Input */}
                     <View style={{ flex: 1 }}>
-                      <TextInput
-                        placeholder="Enter Number..."
+                      <NumberInput
                         placeholderTextColor={"white"}
-                        keyboardType="number-pad"
-                        style={styles.phoneInputStyles}
+                        bgColor="black"
                       />
                     </View>
                   </View>
@@ -143,34 +131,11 @@ export default function Friends() {
                   </TouchableOpacity>
 
                   {/* Dropdown Modal */}
-                  <Modal
-                    visible={dropDownActive}
-                    transparent
-                    animationType="fade"
-                    onRequestClose={() => setDropDownActive(false)}
-                  >
-                    <TouchableOpacity
-                      style={styles.overlay}
-                      onPress={() => setDropDownActive(false)}
-                    >
-                      <View style={styles.dropdownContainer}>
-                        <FlatList
-                          data={options}
-                          keyExtractor={(item, index) => index.toString()}
-                          renderItem={({ item }) => (
-                            <TouchableOpacity
-                              style={styles.dropdownOption}
-                              onPress={() => selectOption(item)}
-                            >
-                              <Text style={styles.dropdownOptionText}>
-                                {item}
-                              </Text>
-                            </TouchableOpacity>
-                          )}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </Modal>
+                  <CountryPickerModal
+                    setCountryCode={setCountryCode}
+                    setDropDownActive={setDropDownActive}
+                    dropDownActive={dropDownActive}
+                  />
                   {/* {InviteSemtModal} */}
                   <Modal
                     visible={inviteSent}
@@ -268,27 +233,9 @@ const styles = StyleSheet.create({
     columnGap: 20,
     marginBottom: 20,
   },
-  dropdownButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "black",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    width: "20%",
-  },
-  dropdownText: { color: "white", textAlign: "center" },
-  dropdownIcon: { marginLeft: 5 },
-  phoneInputStyles: {
-    backgroundColor: "black",
-    color: "white",
-    paddingVertical: 10,
-    borderRadius: 5,
-    paddingHorizontal: 20,
-  },
+
   inviteButton: {
-    width: "75%",
+    width: "90%",
     backgroundColor: "black",
     paddingVertical: 15,
     borderRadius: 5,
@@ -298,12 +245,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
   },
   inviteSentoverlay: {
     flex: 1,
@@ -316,29 +257,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 10,
+    maxHeight: 300,
   },
-  inviteSentContainer: {
-    width: "90%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    alignItems: "center",
-    paddingVertical: 60,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-
-    elevation: 6,
-    rowGap: 10,
-  },
-
-  dropdownOption: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  dropdownOptionText: { fontSize: 16, color: "black" },
 });

@@ -76,6 +76,13 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="register"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

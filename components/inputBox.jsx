@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 5,
     backgroundColor: "white",
-    zIndex: 10,
     marginTop: 5,
+    zIndex: 2,
   },
   outerBorder: {
     position: "absolute",
