@@ -60,15 +60,11 @@ export default function Register() {
                 />
               </View>
             </View>
-            <TouchableOpacity style={styles.inviteButton} 
-             onPress={() => router.navigate("/")}
+            <TouchableOpacity
+              style={styles.inviteButton}
+              onPress={() => router.navigate("/otpScreen")}
             >
-              <Text
-                style={styles.inviteButtonText}
-               
-              >
-                Confirm
-              </Text>
+              <Text style={styles.inviteButtonText}>Confirm</Text>
             </TouchableOpacity>
             <Text style={[styles.subtitleText, { color: "black" }]}>
               By providing my phone number, I hereby agree and accept the Terms
