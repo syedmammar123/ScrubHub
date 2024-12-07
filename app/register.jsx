@@ -25,7 +25,7 @@ export default function Register() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <BackButton />
+      {/* <BackButton /> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inviteFriendContainer}
@@ -60,13 +60,11 @@ export default function Register() {
                 />
               </View>
             </View>
-            <TouchableOpacity style={styles.inviteButton}>
-              <Text
-                style={styles.inviteButtonText}
-                onPress={() => router.navigate("/")}
-              >
-                Confirm
-              </Text>
+            <TouchableOpacity
+              style={styles.inviteButton}
+              onPress={() => router.navigate("/otpScreen")}
+            >
+              <Text style={styles.inviteButtonText}>Confirm</Text>
             </TouchableOpacity>
             <Text style={[styles.subtitleText, { color: "black" }]}>
               By providing my phone number, I hereby agree and accept the Terms

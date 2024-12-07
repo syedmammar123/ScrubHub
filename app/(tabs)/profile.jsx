@@ -10,7 +10,7 @@ export default function ProfileScreen() {
 
   const handlePress = () => {
     toggleHasOnboarded();
-    router.navigate("register");
+    router.navigate("/onboarding");
   };
   return (
     <View style={styles.container}>

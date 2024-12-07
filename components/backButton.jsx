@@ -10,7 +10,7 @@ export default function BackButton() {
   };
   return (
     <TouchableOpacity style={styles.buttonCircleStyle} onPress={handlePress}>
-      <Ionicons name="arrow-back" size={20} color="black" />
+      <Ionicons name="arrow-back" size={28} color="black" />
     </TouchableOpacity>
   );
 }
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: -20,
     zIndex: 1,
-    width: 20,
-    height: 20,
+    width: 40,
+    height: 40,
     marginTop: 60,
     borderRadius: 20,
     backgroundColor: "#F6F6F7",

@@ -34,16 +34,6 @@ export default function Layout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="getStarted"
-        options={{
-          title: "Get Started",
-          tabBarShowLabel: false,
-          tabBarIcon: ({ size, color }) => (
-            <AntDesign name="login" size={size} color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }

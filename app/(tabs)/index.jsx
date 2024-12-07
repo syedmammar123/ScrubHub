@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -30,7 +32,7 @@ export default function App() {
       {/* Curvy Lines Background */}
       <BackgroundImage>
         {/* Content Container */}
-        <View style={styles.contentContainer}>
+        <SafeAreaView style={styles.contentContainer}>
           {/* Logo */}
           <ScrubLogo />
           {/* Buttons */}
@@ -154,7 +156,7 @@ export default function App() {
               CASE MYSTERY
             </Text>
           </TouchableOpacity>
-        </View>
+        </SafeAreaView>
       </BackgroundImage>
     </View>
   );
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 50,
+    paddingTop: 20,
   },
 
   logoContainer: {
