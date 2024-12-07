@@ -25,7 +25,7 @@ export default function Register() {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <BackButton />
+      {/* <BackButton /> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inviteFriendContainer}
@@ -60,10 +60,12 @@ export default function Register() {
                 />
               </View>
             </View>
-            <TouchableOpacity style={styles.inviteButton}>
+            <TouchableOpacity style={styles.inviteButton} 
+             onPress={() => router.navigate("/")}
+            >
               <Text
                 style={styles.inviteButtonText}
-                onPress={() => router.navigate("/")}
+               
               >
                 Confirm
               </Text>

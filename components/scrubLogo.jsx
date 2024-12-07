@@ -7,6 +7,7 @@ export default function scrubLogo() {
       <Image
         source={require("@/assets/scrubLogo.png")}
         style={styles.logoImage}
+        resizeMode="contain"
       />
     </View>
   );
