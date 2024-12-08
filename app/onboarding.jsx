@@ -14,6 +14,7 @@ export default function OnBoarding() {
   const handlePress = () => {
     toggleHasOnboarded();
     router.navigate("/register");
+    // router.navigate("/fbtest");
   };
   return (
     <LinearGradient
