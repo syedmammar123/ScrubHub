@@ -6,7 +6,6 @@ import Animated from "react-native-reanimated";
 export default function InputBox({
   letter,
   setLetterLayout,
-  letterLayout,
   index,
   AnimatedStyle,
 }) {

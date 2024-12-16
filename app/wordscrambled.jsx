@@ -45,7 +45,7 @@ export default function WordScrambled() {
   const translateValueY = Word.map(() => useSharedValue(0));
   const [letterLayout, setLetterLayout] = useState([]);
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
 
   const line = useSharedValue(-1);
@@ -59,7 +59,7 @@ export default function WordScrambled() {
         translateValueY[index].value = event.translationY;
         console.log(
           "TranslateY",
-          0 - translateValueY[index].value - letterLayout[index]?.y,
+          0 - translateValueY[index].value - letterLayout[index]?.y
         );
         if (translateValueY[index].value > 0) {
           line.value = -1;
@@ -122,7 +122,7 @@ export default function WordScrambled() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10,
+                val - letterLayout[index]?.x + 10
               );
 
               break;
@@ -182,14 +182,12 @@ export default function WordScrambled() {
                   <BlankInput
                     key={index}
                     setBlankInputLayout={setBlankInputLayout}
-                    blankInputLayout={blankInputLayout}
                     index={index}
                   />
                 ))}
               </View>
 
               {/* Letters to Choose */}
-
               <View style={styles.lettersContainer}>
                 {Word.map((val, index) => (
                   <GestureDetector
@@ -199,7 +197,6 @@ export default function WordScrambled() {
                     <InputBox
                       letter={val}
                       setLetterLayout={setLetterLayout}
-                      letterLayout={letterLayout}
                       index={index}
                       AnimatedStyle={AnimatedStyle}
                     />

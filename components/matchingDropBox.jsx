@@ -1,27 +1,21 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
-import Animated from "react-native-reanimated";
 
-export default function matchingButton({
-  title,
-  AnimatedStyle,
-  index,
-  setMatchingOptionsLayout,
-}) {
+export default function MatchingDropBox({ setMatchingDropLayout, index }) {
   return (
-    <Animated.View
+    <View
       onLayout={(e) => {
         const { x, y, width, height } = e.nativeEvent.layout;
-        setMatchingOptionsLayout((prevLayout) => {
-          const updatedlayout = [...prevLayout];
+        setMatchingDropLayout((prev) => {
+          const updatedlayout = [...prev];
           updatedlayout[index] = { x, y, width, height };
           return updatedlayout;
         });
       }}
-      style={[styles.btn, AnimatedStyle(index)]}
+      style={styles.btn}
     >
-      <Text style={styles.btnTitle}>{title}</Text>
-    </Animated.View>
+      <Text style={styles.btnTitle}></Text>
+    </View>
   );
 }
 

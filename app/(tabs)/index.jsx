@@ -39,7 +39,7 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("wordscrambled")}
+            onPress={() => handlePress("incompleteProcess")}
           >
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
