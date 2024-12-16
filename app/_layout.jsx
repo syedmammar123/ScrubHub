@@ -97,6 +97,13 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="challengeLeaderboard"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

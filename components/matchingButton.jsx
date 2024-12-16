@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
 
     width: "45%",
-    backgroundColor: "white",
+    backgroundColor: "green",
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
