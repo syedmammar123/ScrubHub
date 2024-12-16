@@ -90,6 +90,13 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="incompleteProcess"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

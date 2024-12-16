@@ -2,12 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
 
-export default function blankInput({
-  setBlankInputLayout,
-  index,
-  blankInputLayout,
-  setReadyBlanks,
-}) {
+export default function blankInput({ setBlankInputLayout, index }) {
   return (
     <View
       onLayout={(e) => {

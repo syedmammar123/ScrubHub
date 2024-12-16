@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
@@ -8,8 +8,101 @@ import UpperBar from "@/components/upperBar";
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
 import MatchingButton from "@/components/matchingButton";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import MatchingDropBox from "@/components/matchingDropBox";
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from "react-native-reanimated";
+
+const options = [
+  "1. Vancomycin",
+  "2. Penicillin",
+  "3. Oral Vancomycin",
+  "4. Ceftriaxone",
+];
+
+const toMatch = [
+  "A. Methicillin-Resistant S. Aureus (MRSA)",
+  "B. Streptococcus pneumoniae",
+  "C. Clostridium difficile",
+  "D. Neisseria meningitidis",
+];
 
 export default function Matching() {
+  const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
+  const [matchingDropLayout, setMatchingDropLayout] = useState([]);
+  const translateValueX = options.map(() => useSharedValue(0));
+  const translateValueY = options.map(() => useSharedValue(0));
+  const box = useSharedValue(-1);
+  const yValue = useSharedValue(0);
+
+  const CreatePanGesture = (index) => {
+    return Gesture.Pan()
+      .onUpdate((event) => {
+        translateValueX[index].value = event.translationX;
+        translateValueY[index].value = event.translationY;
+        console.log("yDrag", 0 - translateValueY[index].value);
+        console.log(
+          "yDrag-y",
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
+        );
+
+        if (
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
+          200
+        ) {
+          box.value = 0;
+          yValue.value = -236.5 - matchingOptionsLayout[index]?.y;
+        } else if (
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
+          150
+        ) {
+          box.value = 1;
+          yValue.value = -175 - matchingOptionsLayout[index]?.y;
+        } else if (
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
+          90
+        ) {
+          box.value = 2;
+          yValue.value = -113 - matchingOptionsLayout[index]?.y;
+        } else if (
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
+          40
+        ) {
+          box.value = 3;
+          yValue.value = -54 - matchingOptionsLayout[index]?.y;
+        } else {
+          box.value = -1;
+        }
+      })
+      .onEnd((event) => {
+        const draggedX = event.translationX + matchingOptionsLayout[index]?.x;
+        console.log("DraggedX", draggedX);
+        if (box.value !== -1) {
+          console.log("DROPPED IN BOX", box.value);
+          translateValueX[index].value = withSpring(
+            200 - matchingOptionsLayout[index]?.x
+          );
+          translateValueY[index].value = withSpring(yValue.value);
+        } else {
+          translateValueX[index].value = withSpring(0);
+          translateValueY[index].value = withSpring(0);
+        }
+      });
+  };
+  const panGestureHandler = options.map((_, index) => CreatePanGesture(index));
+
+  const AnimatedStyle = (index) =>
+    useAnimatedStyle(() => {
+      return {
+        transform: [
+          { translateX: translateValueX[index].value },
+          { translateY: translateValueY[index].value },
+        ],
+      };
+    });
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -28,7 +121,7 @@ export default function Matching() {
             }}
           >
             {/* UPPER CONTAINER */}
-            <View style={{}}>
+            <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* Guideline */}
               <View>
                 <Text style={styles.Text}>
@@ -44,25 +137,33 @@ export default function Matching() {
 
               {/* Input Of Word  */}
               <View style={styles.matchablesContainer}>
-                <Text style={styles.TextMatching}>
-                  A. Methicillin-Resistant S. Aureus (MRSA)
-                </Text>
-                <Text style={styles.TextMatching}>
-                  B. Streptococcus pneumoniae
-                </Text>
-                <Text style={styles.TextMatching}>
-                  C. Clostridium difficile
-                </Text>
-                <Text style={styles.TextMatching}>
-                  D. Neisseria meningitidis
-                </Text>
+                {toMatch.map((val, index) => (
+                  <View style={styles.row} key={index}>
+                    <Text style={styles.TextMatching}>{val}</Text>
+
+                    {/* Drop Box */}
+                    <MatchingDropBox
+                      index={index}
+                      setMatchingDropLayout={setMatchingDropLayout}
+                    />
+                  </View>
+                ))}
               </View>
 
               <View style={styles.answerBtnContainer}>
-                <MatchingButton title={"1. Vancomycin"} />
-                <MatchingButton title={"2. Penicillin"} />
-                <MatchingButton title={"3. Oral Vancomycin"} />
-                <MatchingButton title={"4. Ceftriaxone"} />
+                {options.map((val, index) => (
+                  <GestureDetector
+                    key={index}
+                    gesture={panGestureHandler[index]}
+                  >
+                    <MatchingButton
+                      title={val}
+                      AnimatedStyle={AnimatedStyle}
+                      index={index}
+                      setMatchingOptionsLayout={setMatchingOptionsLayout}
+                    />
+                  </GestureDetector>
+                ))}
               </View>
             </View>
             {/* LOWER CONTAINER */}
@@ -99,17 +200,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     marginTop: 10,
+    marginBottom: 50,
   },
   matchablesContainer: {
-    width: "42.5%",
-    alignSelf: "left",
+    width: "95%",
+    justifyContent: "space-between",
+    flex: 1,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   TextMatching: {
     fontWeight: "bold",
     textAlign: "left",
-    fontSize: 18,
-    marginTop: 20,
+    fontSize: 17,
+    width: "50%",
   },
+
   answerBtnContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -123,30 +232,16 @@ const styles = StyleSheet.create({
     width: "95%",
     alignItems: "center",
     marginTop: 5,
-
     justifyContent: "flex-start",
     flexDirection: "row",
     flexWrap: "wrap",
     alignSelf: "center",
     columnGap: 15,
   },
-
-  lettersContainer: {
-    width: "95%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    backgroundColor: "#F5F5F5",
-    borderRadius: 10,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    columnGap: 14,
-    marginLeft: "auto",
-    marginRight: "auto",
-    alignItems: "center",
-  },
   btncontainer: {
     paddingBottom: 40,
     width: "95%",
     alignSelf: "center",
   },
+  dropBox: {},
 });
