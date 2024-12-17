@@ -91,7 +91,7 @@ export default function Matching() {
           console.log(answers);
 
           translateValueX[index].value = withSpring(
-            200 - matchingOptionsLayout[index]?.x
+            200 - matchingOptionsLayout[index]?.x,
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {

@@ -57,7 +57,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val
+        (word) => word.val === process[index].val,
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -242,3 +242,4 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
 });
+//
