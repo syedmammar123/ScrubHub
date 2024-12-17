@@ -12,17 +12,13 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
-  FlatList,
-  Image,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
 import { savedStyles, theme } from "@/theme";
-import countries from "world-countries";
 import NumberInput from "@/components/numberInput";
 import DropDownButton from "@/components/dropDownButton";
 import CountryPickerModal from "@/components/countryPickerModal";

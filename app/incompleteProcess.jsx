@@ -8,33 +8,75 @@ import UpperBar from "@/components/upperBar";
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
 import { ScrollView } from "react-native-gesture-handler";
+import IncompleteWordButtons from "@/components/incompleteWordButtons";
 
-let process = [
-  "Glucose→",
-  "(Hexokinase)→",
-  "Glucose-6-Phosphate (G6P)→",
-  "",
-  "→Fructose-6-Phosphate (F6P)→",
-  "(Phosphofructokinase-1)→",
-  "Fructose-1,6-Bisphosphate (F1,6BP)→",
-  "(Aldolase)→",
-  "Dihydroxyacetone Phosphate (DHAP) + Glyceraldehyde-3-Phosphate (G3P)→",
-  "",
-  "→1,3-Bisphosphoglycerate (1,3BPG) + NADH→",
-  "(Phosphoglycerate Kinase)→",
-  "3 - Phosphoglycerate (3PG) + ATP→",
-  "",
-  "→2 - Phosphoglycerate (2PG)→",
-  "(Enolase)→",
-  "Phosphoenolpyruvate (PEP)→",
-  "(Pyruvate Kinase)→",
-  "Pyruvate + ATP",
+let processWords = [
+  { val: "Glucose→", notknown: false },
+  { val: "(Hexokinase)→", notknown: false },
+  { val: "Glucose-6-Phosphate (G6P)→", notknown: false },
+  { val: "", notknown: true },
+  { val: "→Fructose-6-Phosphate (F6P)→", notknown: false },
+  { val: "(Phosphofructokinase-1)→", notknown: false },
+  { val: "Fructose-1,6-Bisphosphate (F1,6BP)→", notknown: false },
+  { val: "(Aldolase)→", notknown: false },
+  {
+    val: "Dihydroxyacetone Phosphate (DHAP) + Glyceraldehyde-3-Phosphate (G3P)→",
+    notknown: false,
+  },
+  { val: "", notknown: true },
+  { val: "→1,3-Bisphosphoglycerate (1,3BPG) + NADH→", notknown: false },
+  { val: "(Phosphoglycerate Kinase)→", notknown: false },
+  { val: "3 - Phosphoglycerate (3PG) + ATP→", notknown: false },
+  { val: "", notknown: true },
+  { val: "→2 - Phosphoglycerate (2PG)→", notknown: false },
+  { val: "(Enolase)→", notknown: false },
+  { val: "Phosphoenolpyruvate (PEP)→", notknown: false },
+  { val: "(Pyruvate Kinase)→", notknown: false },
+  { val: "Pyruvate + ATP", notknown: false },
+];
+
+let incompleteProcessWords = [
+  { val: "Phosphoglycerate Mutase → C", opacity: 1 },
+  { val: "Glyceraldehyde-3-PhosphateDehydrogenase → B", opacity: 1 },
+  { val: "Phosphoglucose Isomerase → A", opacity: 1 },
 ];
 
 export default function IncompleteProcess() {
   const [selected, setSelected] = useState(-1);
-  console.log(selected);
+  const [process, setProcess] = useState(processWords);
+  const [words, setWords] = useState(incompleteProcessWords);
+  console.log(words);
+  const handlePress = (index) => {
+    // setSelected(index);
+    if (selected === index && process[index].val === "") {
+      setSelected(-1);
+    } else if (selected !== index && process[index].val === "") {
+      setSelected(index);
+    }
 
+    if (process[index].val !== "") {
+      console.log("DROP BACK");
+      const wordIndex = words.findIndex(
+        (word) => word.val === process[index].val
+      );
+      setWords((prev) => {
+        const updatedWord = [...prev];
+        updatedWord[wordIndex] = { ...updatedWord[wordIndex], opacity: 1 };
+        return updatedWord;
+      });
+      setProcess((prev) => {
+        const updatedProcess = [...prev];
+        updatedProcess[index] = { ...updatedProcess[index], val: "" };
+        return updatedProcess;
+      });
+    }
+
+    // if (selected === -1) {
+    //   setSelected(index);
+    // } else if(selected ===index) {
+    //   setSelected(-1);
+    // }
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -89,16 +131,14 @@ export default function IncompleteProcess() {
                     justifyContent: "center",
                   }}
                 >
-                  {process.map((value, index) => (
-                    <View>
-                      {value !== "" ? (
-                        <Text key={index} style={styles.processText}>
-                          {value}
-                        </Text>
+                  {process.map((proc, index) => (
+                    <View key={index}>
+                      {!proc.notknown ? (
+                        <Text style={styles.processText}>{proc.val}</Text>
                       ) : (
                         <View>
                           <Pressable
-                            onPress={() => setSelected(index)}
+                            onPress={() => handlePress(index)}
                             style={[
                               styles.Blank,
                               {
@@ -109,8 +149,14 @@ export default function IncompleteProcess() {
                               },
                             ]}
                           >
-                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-                              ?
+                            <Text
+                              style={{
+                                fontWeight: "bold",
+                                fontSize: proc.val === "" ? 20 : 9,
+                                textAlign: "center",
+                              }}
+                            >
+                              {proc.val === "" ? "?" : proc.val}
                             </Text>
                           </Pressable>
                         </View>
@@ -119,8 +165,19 @@ export default function IncompleteProcess() {
                   ))}
                 </View>
               </View>
-              <View>
-                <Text>Buttons</Text>
+              {/* Buttons */}
+              <View style={styles.wordsCotainer}>
+                {words.map((word, index) => (
+                  <IncompleteWordButtons
+                    title={word.val}
+                    selected={selected}
+                    setProcess={setProcess}
+                    setSelected={setSelected}
+                    setWords={setWords}
+                    index={index}
+                    words={words}
+                  />
+                ))}
               </View>
             </View>
             {/* LOWER CONTAINER */}
@@ -169,6 +226,15 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingHorizontal: 50,
     borderRadius: 20,
+  },
+  wordsCotainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+    rowGap: 10,
+    columnGap: 2,
+    marginTop: 10,
   },
   btncontainer: {
     paddingBottom: 40,
