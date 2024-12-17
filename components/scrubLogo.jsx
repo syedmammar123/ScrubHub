@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginBottom: 20,
+    marginTop: 30,
   },
   logoImage: {
     width: "79%",

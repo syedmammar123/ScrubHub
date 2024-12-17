@@ -14,74 +14,82 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  runOnJS,
 } from "react-native-reanimated";
 
-const options = [
+let options = [
   "1. Vancomycin",
   "2. Penicillin",
   "3. Oral Vancomycin",
   "4. Ceftriaxone",
 ];
 
-const toMatch = [
+let toMatch = [
   "A. Methicillin-Resistant S. Aureus (MRSA)",
   "B. Streptococcus pneumoniae",
   "C. Clostridium difficile",
   "D. Neisseria meningitidis",
 ];
 
+let answers = [null, null, null, null];
+
 export default function Matching() {
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
+  // const [answers, setAnswers] = useState(
+  //   Array(4).fill({ val: "", realIndex: -1 })
+  // );
   const translateValueX = options.map(() => useSharedValue(0));
   const translateValueY = options.map(() => useSharedValue(0));
   const box = useSharedValue(-1);
   const yValue = useSharedValue(0);
+  console.log(answers);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
-        console.log("yDrag", 0 - translateValueY[index].value);
-        console.log(
-          "yDrag-y",
-          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y,
-        );
-
         if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           200
         ) {
           box.value = 0;
-          yValue.value = -236.5 - matchingOptionsLayout[index]?.y;
+          yValue.value = -246.5 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           150
         ) {
           box.value = 1;
-          yValue.value = -175 - matchingOptionsLayout[index]?.y;
+          yValue.value = -181 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           90
         ) {
           box.value = 2;
-          yValue.value = -113 - matchingOptionsLayout[index]?.y;
+          yValue.value = -118 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           40
         ) {
           box.value = 3;
-          yValue.value = -54 - matchingOptionsLayout[index]?.y;
+          yValue.value = -55 - matchingOptionsLayout[index]?.y;
         } else {
           box.value = -1;
         }
       })
-      .onEnd((event) => {
-        const draggedX = event.translationX + matchingOptionsLayout[index]?.x;
-        console.log("DraggedX", draggedX);
+      .onEnd(() => {
         if (box.value !== -1) {
-          console.log("DROPPED IN BOX", box.value);
+          console.log("DROPPED AT BOX", box.value);
+
+          let ans = [...answers];
+          ans[box.value] = {
+            val: options[index],
+            realIndex: index,
+          };
+          answers = ans;
+          console.log(answers);
+
           translateValueX[index].value = withSpring(
             200 - matchingOptionsLayout[index]?.x,
           );

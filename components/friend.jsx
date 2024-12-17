@@ -1,17 +1,22 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 
-export default function Friend({ photoUrl, Name }) {
+export default function Friend({ position, photoUrl, Name, marks }) {
   return (
     <>
       <View style={styles.container}>
         <View style={styles.imageName}>
+          {position && <Text style={styles.bluefont}>{position}</Text>}
           <Image style={styles.image} source={{ uri: photoUrl }} />
           <Text style={styles.friendName}>{Name}</Text>
         </View>
-        <Pressable style={styles.btn}>
-          <Text style={styles.btnText}>Remove</Text>
-        </Pressable>
+        {marks ? (
+          <Text style={styles.bluefont}>{marks}</Text>
+        ) : (
+          <Pressable style={styles.btn}>
+            <Text style={styles.btnText}>Remove</Text>
+          </Pressable>
+        )}
       </View>
       <View style={styles.divider}></View>
     </>
@@ -33,10 +38,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
   },
+  bluefont: {
+    fontSize: 16,
+    color: "#4374BA",
+    fontWeight: "bold",
+  },
   image: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    marginLeft: 10,
   },
   friendName: { marginLeft: 10, textTransform: "capitalize", fontSize: 16 },
   btn: {
@@ -52,6 +63,6 @@ const styles = StyleSheet.create({
   divider: {
     width: "100%",
     backgroundColor: "lightgray",
-    height: 2,
+    height: 1.5,
   },
 });
