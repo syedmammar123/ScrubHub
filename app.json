@@ -17,7 +17,6 @@
       "supportsTablet": true,
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.anonymous.scrubhub"
-
     },
     "android": {
       "adaptiveIcon": {
@@ -43,6 +42,14 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e5e04b01-7aa7-4d99-a085-cd385b63b2a1"
+      }
+    }
   }
 }

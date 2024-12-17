@@ -46,7 +46,7 @@ export default function Matching() {
         console.log("yDrag", 0 - translateValueY[index].value);
         console.log(
           "yDrag-y",
-          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y,
         );
 
         if (
@@ -83,7 +83,7 @@ export default function Matching() {
         if (box.value !== -1) {
           console.log("DROPPED IN BOX", box.value);
           translateValueX[index].value = withSpring(
-            200 - matchingOptionsLayout[index]?.x
+            200 - matchingOptionsLayout[index]?.x,
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {

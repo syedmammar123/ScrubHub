@@ -1,7 +1,13 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import React from "react";
 
-export default function NumberInput({ placeholderTextColor, bgColor, color }) {
+export default function NumberInput({
+  value,
+  onChangeText,
+  placeholderTextColor,
+  bgColor,
+  color,
+}) {
   return (
     <TextInput
       style={[
@@ -11,6 +17,8 @@ export default function NumberInput({ placeholderTextColor, bgColor, color }) {
       placeholder="Enter Number..."
       keyboardType="number-pad"
       placeholderTextColor={placeholderTextColor}
+      value={value}
+      onChangeText={onChangeText}
     />
   );
 }
