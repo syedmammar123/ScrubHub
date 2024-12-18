@@ -1,5 +1,5 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import { View, Text, StatusBar, StyleSheet, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
@@ -14,7 +14,6 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  runOnJS,
 } from "react-native-reanimated";
 
 let options = [
@@ -32,10 +31,15 @@ let toMatch = [
 ];
 
 let answers = [null, null, null, null];
+const screenheight = Dimensions.get("screen").height;
+console.log(screenheight);
 
 export default function Matching() {
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
+  const [matchingContainerY, setMatchingContainerY] = useState(null);
+  const [answerContainerY, setAnswerContainerY] = useState(null);
+  const [offsetValue, setOffsetValue] = useState(0);
   // const [answers, setAnswers] = useState(
   //   Array(4).fill({ val: "", realIndex: -1 })
   // );
@@ -43,37 +47,45 @@ export default function Matching() {
   const translateValueY = options.map(() => useSharedValue(0));
   const box = useSharedValue(-1);
   const yValue = useSharedValue(0);
-  console.log(answers);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
+        console.log(offsetValue);
+
+        console.log(
+          "DRAGY",
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
+        );
+
         if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          200
+          offsetValue - 20
         ) {
           box.value = 0;
-          yValue.value = -246.5 - matchingOptionsLayout[index]?.y;
+          yValue.value = -offsetValue - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          150
+          offsetValue - 47.5 - 20
         ) {
           box.value = 1;
-          yValue.value = -181 - matchingOptionsLayout[index]?.y;
+          yValue.value = -offsetValue + 47.5 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          90
+          offsetValue - 2 * 47.5 - 20
         ) {
           box.value = 2;
-          yValue.value = -118 - matchingOptionsLayout[index]?.y;
+          yValue.value =
+            -offsetValue + 2 * 47.5 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          40
+          offsetValue - 3 * 47.5 - 20
         ) {
           box.value = 3;
-          yValue.value = -55 - matchingOptionsLayout[index]?.y;
+          yValue.value =
+            -offsetValue + 3 * 47.5 - matchingOptionsLayout[index]?.y;
         } else {
           box.value = -1;
         }
@@ -91,7 +103,7 @@ export default function Matching() {
           console.log(answers);
 
           translateValueX[index].value = withSpring(
-            200 - matchingOptionsLayout[index]?.x,
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -111,6 +123,12 @@ export default function Matching() {
         ],
       };
     });
+
+  useEffect(() => {
+    if (matchingContainerY !== null && answerContainerY !== null) {
+      setOffsetValue(answerContainerY - matchingContainerY);
+    }
+  }, [matchingContainerY, answerContainerY]);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -144,7 +162,16 @@ export default function Matching() {
               </View>
 
               {/* Input Of Word  */}
-              <View style={styles.matchablesContainer}>
+              <View
+                onLayout={(e) => {
+                  console.log(
+                    "Starting of Matching Container",
+                    e.nativeEvent.layout.y
+                  );
+                  setMatchingContainerY(e.nativeEvent.layout.y);
+                }}
+                style={styles.matchablesContainer}
+              >
                 {toMatch.map((val, index) => (
                   <View style={styles.row} key={index}>
                     <Text style={styles.TextMatching}>{val}</Text>
@@ -158,7 +185,22 @@ export default function Matching() {
                 ))}
               </View>
 
-              <View style={styles.answerBtnContainer}>
+              <View
+                onLayout={(e) => {
+                  console.log(
+                    "Starting of Buttons Container",
+                    e.nativeEvent.layout.y
+                  );
+                  setAnswerContainerY(e.nativeEvent.layout.y);
+                  // console.log(
+                  //   "Screenheight -  starting of Match- height of Match",
+                  //   screenheight -
+                  //     e.nativeEvent.layout.y -
+                  //     e.nativeEvent.layout.height
+                  // );
+                }}
+                style={styles.answerBtnContainer}
+              >
                 {options.map((val, index) => (
                   <GestureDetector
                     key={index}
@@ -208,12 +250,12 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     marginTop: 10,
-    marginBottom: 50,
+    marginBottom: 0,
   },
   matchablesContainer: {
     width: "95%",
     justifyContent: "space-between",
-    flex: 1,
+    rowGap: 10,
   },
   row: {
     flexDirection: "row",
@@ -223,7 +265,7 @@ const styles = StyleSheet.create({
   TextMatching: {
     fontWeight: "bold",
     textAlign: "left",
-    fontSize: 17,
+    fontSize: 14,
     width: "50%",
   },
 

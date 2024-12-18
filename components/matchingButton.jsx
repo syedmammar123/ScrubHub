@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   btnTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",
   },
