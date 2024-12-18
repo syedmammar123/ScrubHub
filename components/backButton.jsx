@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F7",
     alignSelf: "flex-start",
     marginLeft: 25,
-    marginBottom: 30,
+    marginBottom: 10,
   },
 });

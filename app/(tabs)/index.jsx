@@ -39,7 +39,7 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("matching")}
+            onPress={() => handlePress("details")}
           >
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
@@ -82,7 +82,10 @@ export default function App() {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.button]}>
+          <TouchableOpacity
+            style={[styles.button]}
+            onPress={() => handlePress("fourOptQues")}
+          >
             <View
               style={[styles.purpleButton, styles.buttonStyle, styles.buttonFP]}
             >

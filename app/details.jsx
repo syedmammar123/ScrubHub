@@ -11,12 +11,13 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import Entypo from "@expo/vector-icons/Entypo";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+
 import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
+import useQuesStore from "@/store/quesStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
+import { router, useRouter } from "expo-router";
 
 const buttons = [
   { label: "CARDIOVASCULAR", icon: "graduation-cap", bgColor: "#EBA7A7" },
@@ -38,6 +39,16 @@ const buttons = [
 ];
 
 export default function App() {
+  const { questions, currentIndex } = useQuesStore((state) => state);
+  const nextScreen = getQuestionType(questions[currentIndex]);
+  const router = useRouter();
+  const handlePress = () => {
+    if (currentIndex < 8) {
+      router.navigate(nextScreen);
+    } else {
+      router.navigate("/");
+    }
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -51,7 +62,11 @@ export default function App() {
           <View style={styles.buttonContainer}>
             {/* Buttons */}
             {buttons.map((button, index) => (
-              <TouchableOpacity key={index} style={[styles.button]}>
+              <TouchableOpacity
+                onPress={handlePress}
+                key={index}
+                style={[styles.button]}
+              >
                 <View
                   style={[
                     styles.buttonCircleStyle,

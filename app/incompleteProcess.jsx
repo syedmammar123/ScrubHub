@@ -57,7 +57,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val,
+        (word) => word.val === process[index].val
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -169,6 +169,7 @@ export default function IncompleteProcess() {
               <View style={styles.wordsCotainer}>
                 {words.map((word, index) => (
                   <IncompleteWordButtons
+                    key={index}
                     title={word.val}
                     selected={selected}
                     setProcess={setProcess}
@@ -185,7 +186,7 @@ export default function IncompleteProcess() {
               {/* Button */}
               <View style={styles.btncontainer}>
                 <StatusIcon text={"Amazing!"} />
-                <StatusButton text={"Continue"} />
+                <StatusButton width={"70%"} text={"Continue"} />
               </View>
             </View>
           </ScrollView>

@@ -1,10 +1,24 @@
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
+import { theme } from "@/theme";
 
-export default function questionOption({ bgColor, Option }) {
+export default function questionOption({
+  selected,
+  bgColor,
+  Option,
+  setSelected,
+}) {
+  const handlePress = () => {
+    console.log(selected);
+    setSelected(Option);
+  };
   return (
     <TouchableOpacity
-      style={[styles.optionContainer, { backgroundColor: bgColor }]}
+      onPress={handlePress}
+      style={[
+        styles.optionContainer,
+        { backgroundColor: selected === Option ? theme.barBgColor : bgColor },
+      ]}
     >
       <Text
         style={{
