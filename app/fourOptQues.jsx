@@ -9,11 +9,14 @@ import StatusButton from "@/components/statusButton";
 import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 
+let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
+
 export default function fourOptQues() {
   const { currentIndex, questions } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [selected, setSelected] = useState("");
   const [error, setError] = useState(null);
+
   // console.log("Component Triggered with submitted", submitted);
   // useEffect(() => {
   //   setSubmitted(false);
@@ -43,27 +46,21 @@ export default function fourOptQues() {
                 </View>
                 {/* OPTIONS */}
                 <View style={styles.optionsContainer}>
-                  <QuestionOption
-                    setSelected={setSelected}
-                    bgColor={"#0038FF"}
-                    Option={`${questions[currentIndex].options[0]}`}
-                  />
-                  <QuestionOption
-                    selected={selected}
-                    setSelected={setSelected}
-                    bgColor={"#00C2FF"}
-                    Option={`${questions[currentIndex].options[1]}`}
-                  />
-                  <QuestionOption
-                    setSelected={setSelected}
-                    bgColor={"#FF0000"}
-                    Option={`${questions[currentIndex].options[2]}`}
-                  />
-                  <QuestionOption
-                    setSelected={setSelected}
-                    bgColor={"#9747FF"}
-                    Option={`${questions[currentIndex].options[3]}`}
-                  />
+                  {questions[currentIndex].options.map((opt, index) => (
+                    <QuestionOption
+                      key={index}
+                      setSelected={setSelected}
+                      bgColor={
+                        selected === opt ? theme.barColor : bgColors[index]
+                      }
+                      Option={`${opt}`}
+                    />
+                  ))}
+                </View>
+                <View>
+                  <Text style={{ color: "red", fontWeight: "bold" }}>
+                    {error ? "Select an Option to Continue!" : ""}
+                  </Text>
                 </View>
               </View>
               <View style={{ marginTop: 30 }}>

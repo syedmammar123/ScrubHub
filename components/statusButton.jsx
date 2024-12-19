@@ -33,25 +33,25 @@ export default function StatusButton({
   // }, [currentIndex]);
 
   const handlePress = () => {
-    setSubmitted(true);
-    // console.log("After Pressing Cont", currentIndex);
-    if (currentIndex + 1 < 9) {
-      increaseCurrentIndex();
-      const nextScreen = getQuestionType(questions[currentIndex + 1]);
-      console.log("Navigating to:", nextScreen);
-      // router.navigate(nextScreen);
-      router.replace(nextScreen);
+    if (selected === "") {
+      setError(true);
     } else {
-      router.navigate("/");
+      setError(false);
     }
+    // setSubmitted(true);
+    // // console.log("After Pressing Cont", currentIndex);
+    // if (currentIndex + 1 < 9) {
+    //   increaseCurrentIndex();
+    //   const nextScreen = getQuestionType(questions[currentIndex + 1]);
+    //   console.log("Navigating to:", nextScreen);
+    //   // router.navigate(nextScreen);
+    //   router.replace(nextScreen);
+    // } else {
+    //   router.navigate("/");
+    // }
 
     // const nextScreen = getQuestionType();
     // router.navigate(nextScreen);
-    // if (selected === "") {
-    //   setError(true);
-    // } else {
-    //   setError(false);
-    // }
   };
   return (
     <View style={[styles.container, { width: width }]}>

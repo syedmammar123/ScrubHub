@@ -1,24 +1,14 @@
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import React from "react";
-import { theme } from "@/theme";
 
-export default function questionOption({
-  selected,
-  bgColor,
-  Option,
-  setSelected,
-}) {
+export default function questionOption({ bgColor, Option, setSelected }) {
   const handlePress = () => {
-    console.log(selected);
     setSelected(Option);
   };
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={handlePress}
-      style={[
-        styles.optionContainer,
-        { backgroundColor: selected === Option ? theme.barBgColor : bgColor },
-      ]}
+      style={[styles.optionContainer, { backgroundColor: bgColor }]}
     >
       <Text
         style={{
@@ -30,7 +20,7 @@ export default function questionOption({
       >
         {Option}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
