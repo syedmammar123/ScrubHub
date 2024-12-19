@@ -1,50 +1,82 @@
 import { View, Text, StatusBar, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
 import QuestionOption from "@/components/questionOption";
 import StatusButton from "@/components/statusButton";
+import useQuesStore from "@/store/quesStore";
+import UpperBar from "@/components/upperBar";
 
 export default function fourOptQues() {
+  const { currentIndex, questions } = useQuesStore((state) => state);
+  const [submitted, setSubmitted] = useState(false);
+  const [selected, setSelected] = useState("");
+  const [error, setError] = useState(null);
+  // console.log("Component Triggered with submitted", submitted);
+  // useEffect(() => {
+  //   setSubmitted(false);
+  // }, [submitted]);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
       <BackButton />
+      <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />
-          <View style={styles.mainContainer}>
-            {/* Question */}
-            <View style={styles.questionContainer}>
-              <Text style={styles.question}>
-                WHAT ARE THREE DIFFERENTIAL DIAGNOSES FOR FEVER AND RASH IN A
-                6-YEAR-OLD?
-              </Text>
+          {submitted ? (
+            <View>
+              <Text>Loading..</Text>
             </View>
-            {/* OPTIONS */}
-            <View style={styles.optionsContainer}>
-              <QuestionOption bgColor={"#0038FF"} Option={"A. EPIGLOTTITIS"} />
-              <QuestionOption
-                bgColor={"#00C2FF"}
-                Option={"B. Croup (laryngotracheobronchitis)"}
-              />
-              <QuestionOption
-                bgColor={"#FF0000"}
-                Option={"C. Foreign body aspiration"}
-              />
-              <QuestionOption bgColor={"#9747FF"} Option={"D. Asthma"} />
-            </View>
-          </View>
-          <View style={{ marginTop: 30 }}>
-            <StatusButton
-              // setError={setError}
-              // selected={selected}
-              text={"Continue"}
-              width={"60%"}
-            />
-          </View>
+          ) : (
+            <>
+              <View style={styles.mainContainer}>
+                {/* Question */}
+                <View style={styles.questionContainer}>
+                  <Text style={styles.question}>
+                    {/* WHAT ARE THREE DIFFERENTIAL DIAGNOSES FOR FEVER AND RASH IN
+                    A 6-YEAR-OLD? */}
+                    {questions[currentIndex].question}
+                  </Text>
+                </View>
+                {/* OPTIONS */}
+                <View style={styles.optionsContainer}>
+                  <QuestionOption
+                    setSelected={setSelected}
+                    bgColor={"#0038FF"}
+                    Option={`${questions[currentIndex].options[0]}`}
+                  />
+                  <QuestionOption
+                    selected={selected}
+                    setSelected={setSelected}
+                    bgColor={"#00C2FF"}
+                    Option={`${questions[currentIndex].options[1]}`}
+                  />
+                  <QuestionOption
+                    setSelected={setSelected}
+                    bgColor={"#FF0000"}
+                    Option={`${questions[currentIndex].options[2]}`}
+                  />
+                  <QuestionOption
+                    setSelected={setSelected}
+                    bgColor={"#9747FF"}
+                    Option={`${questions[currentIndex].options[3]}`}
+                  />
+                </View>
+              </View>
+              <View style={{ marginTop: 30 }}>
+                <StatusButton
+                  setError={setError}
+                  selected={selected}
+                  setSubmitted={setSubmitted}
+                  text={"Continue"}
+                  width={"60%"}
+                />
+              </View>
+            </>
+          )}
         </BackgroundImage>
       </View>
     </View>

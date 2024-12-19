@@ -4,7 +4,6 @@ import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
 import UpperBar from "@/components/upperBar";
-
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
 import MatchingButton from "@/components/matchingButton";
@@ -15,6 +14,7 @@ import {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
+import { ScaledSheet } from "react-native-size-matters";
 
 let options = [
   "1. Vancomycin",
@@ -35,6 +35,8 @@ const screenheight = Dimensions.get("screen").height;
 console.log(screenheight);
 
 export default function Matching() {
+  const [submitted, setSubmitted] = useState(false);
+
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
   const [matchingContainerY, setMatchingContainerY] = useState(null);
@@ -146,82 +148,91 @@ export default function Matching() {
               alignSelf: "center",
             }}
           >
-            {/* UPPER CONTAINER */}
-            <View style={{ flex: 1, justifyContent: "space-between" }}>
-              {/* Guideline */}
+            {submitted ? (
               <View>
-                <Text style={styles.Text}>
-                  Given a set of four mirobes and a set of four treatments,
-                  match the microbe to the first line treatment:
-                </Text>
+                <Text>Loading..</Text>
               </View>
-
-              {/* Hint */}
-              <View>
-                <Text style={styles.heading}>Microbe First-Line Treatment</Text>
-              </View>
-
-              {/* Input Of Word  */}
-              <View
-                onLayout={(e) => {
-                  console.log(
-                    "Starting of Matching Container",
-                    e.nativeEvent.layout.y
-                  );
-                  setMatchingContainerY(e.nativeEvent.layout.y);
-                }}
-                style={styles.matchablesContainer}
-              >
-                {toMatch.map((val, index) => (
-                  <View style={styles.row} key={index}>
-                    <Text style={styles.TextMatching}>{val}</Text>
-
-                    {/* Drop Box */}
-                    <MatchingDropBox
-                      index={index}
-                      setMatchingDropLayout={setMatchingDropLayout}
-                    />
+            ) : (
+              <>
+                {/* UPPER CONTAINER */}
+                <View style={{ flex: 1, justifyContent: "space-between" }}>
+                  {/* Guideline */}
+                  <View>
+                    <Text style={styles.Text}>
+                      Given a set of four mirobes and a set of four treatments,
+                      match the microbe to the first line treatment:
+                    </Text>
                   </View>
-                ))}
-              </View>
 
-              <View
-                onLayout={(e) => {
-                  console.log(
-                    "Starting of Buttons Container",
-                    e.nativeEvent.layout.y
-                  );
-                  setAnswerContainerY(e.nativeEvent.layout.y);
-                  // console.log(
-                  //   "Screenheight -  starting of Match- height of Match",
-                  //   screenheight -
-                  //     e.nativeEvent.layout.y -
-                  //     e.nativeEvent.layout.height
-                  // );
-                }}
-                style={styles.answerBtnContainer}
-              >
-                {options.map((val, index) => (
-                  <GestureDetector
-                    key={index}
-                    gesture={panGestureHandler[index]}
+                  {/* Hint */}
+                  <View>
+                    <Text style={styles.heading}>
+                      Microbe First-Line Treatment
+                    </Text>
+                  </View>
+
+                  {/* Input Of Word  */}
+                  <View
+                    onLayout={(e) => {
+                      console.log(
+                        "Starting of Matching Container",
+                        e.nativeEvent.layout.y
+                      );
+                      setMatchingContainerY(e.nativeEvent.layout.y);
+                    }}
+                    style={styles.matchablesContainer}
                   >
-                    <MatchingButton
-                      title={val}
-                      AnimatedStyle={AnimatedStyle}
-                      index={index}
-                      setMatchingOptionsLayout={setMatchingOptionsLayout}
-                    />
-                  </GestureDetector>
-                ))}
-              </View>
-            </View>
+                    {toMatch.map((val, index) => (
+                      <View style={styles.row} key={index}>
+                        <Text style={styles.TextMatching}>{val}</Text>
+
+                        {/* Drop Box */}
+                        <MatchingDropBox
+                          index={index}
+                          setMatchingDropLayout={setMatchingDropLayout}
+                        />
+                      </View>
+                    ))}
+                  </View>
+
+                  <View
+                    onLayout={(e) => {
+                      console.log(
+                        "Starting of Buttons Container",
+                        e.nativeEvent.layout.y
+                      );
+                      setAnswerContainerY(e.nativeEvent.layout.y);
+                    }}
+                    style={styles.answerBtnContainer}
+                  >
+                    {options.map((val, index) => (
+                      <GestureDetector
+                        key={index}
+                        gesture={panGestureHandler[index]}
+                      >
+                        <MatchingButton
+                          title={val}
+                          AnimatedStyle={AnimatedStyle}
+                          index={index}
+                          setMatchingOptionsLayout={setMatchingOptionsLayout}
+                        />
+                      </GestureDetector>
+                    ))}
+                  </View>
+                </View>
+              </>
+            )}
+
             {/* LOWER CONTAINER */}
             <View>
               {/* Button */}
               <View style={styles.btncontainer}>
                 <StatusIcon text={"Amazing!"} />
-                <StatusButton width={"70%"} text={"Continue"} />
+                <StatusButton
+                  setSubmitted={setSubmitted}
+                  width={"70%"}
+                  text={"Continue"}
+                />
               </View>
             </View>
           </View>
@@ -231,7 +242,7 @@ export default function Matching() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colorWhite,
@@ -265,7 +276,7 @@ const styles = StyleSheet.create({
   TextMatching: {
     fontWeight: "bold",
     textAlign: "left",
-    fontSize: 14,
+    fontSize: "14@s",
     width: "50%",
   },
 

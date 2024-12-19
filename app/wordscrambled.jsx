@@ -41,6 +41,8 @@ console.log("Lines are", noflines);
 console.log("Boxes perLine", boxesPerLine);
 
 export default function WordScrambled() {
+  const [submitted, setSubmitted] = useState(false);
+
   const translateValueX = Word.map(() => useSharedValue(0));
   const translateValueY = Word.map(() => useSharedValue(0));
   const [letterLayout, setLetterLayout] = useState([]);
@@ -160,57 +162,70 @@ export default function WordScrambled() {
         <BackgroundImage>
           <View style={{ flex: 1, justifyContent: "space-between" }}>
             {/* UPPER CONTAINER */}
-            <View>
-              {/* Guideline */}
+            {submitted ? (
               <View>
-                <Text style={styles.guideline}>
-                  Given a hint with a series of empty spaces and 14 letter
-                  options, find out which word/term is being hinted at
-                </Text>
+                <Text>Loading..</Text>
               </View>
+            ) : (
+              <>
+                {/* UPPER CONTAINER */}
+                <View>
+                  {/* Guideline */}
+                  <View>
+                    <Text style={styles.guideline}>
+                      Given a hint with a series of empty spaces and 14 letter
+                      options, find out which word/term is being hinted at
+                    </Text>
+                  </View>
 
-              {/* Hint */}
-              <View>
-                <Text style={styles.guideline}>
-                  Process of converting glucose to energy.
-                </Text>
-              </View>
+                  {/* Hint */}
+                  <View>
+                    <Text style={styles.guideline}>
+                      Process of converting glucose to energy.
+                    </Text>
+                  </View>
 
-              {/* Blanks */}
-              <View style={styles.inputContainer}>
-                {blankInputLayout.map((_, index) => (
-                  <BlankInput
-                    key={index}
-                    setBlankInputLayout={setBlankInputLayout}
-                    index={index}
-                  />
-                ))}
-              </View>
+                  {/* Blanks */}
+                  <View style={styles.inputContainer}>
+                    {blankInputLayout.map((_, index) => (
+                      <BlankInput
+                        key={index}
+                        setBlankInputLayout={setBlankInputLayout}
+                        index={index}
+                      />
+                    ))}
+                  </View>
 
-              {/* Letters to Choose */}
-              <View style={styles.lettersContainer}>
-                {Word.map((val, index) => (
-                  <GestureDetector
-                    key={index}
-                    gesture={panGestureHandler[index]}
-                  >
-                    <InputBox
-                      letter={val}
-                      setLetterLayout={setLetterLayout}
-                      index={index}
-                      AnimatedStyle={AnimatedStyle}
-                    />
-                  </GestureDetector>
-                ))}
-              </View>
-            </View>
+                  {/* Letters to Choose */}
+                  <View style={styles.lettersContainer}>
+                    {Word.map((val, index) => (
+                      <GestureDetector
+                        key={index}
+                        gesture={panGestureHandler[index]}
+                      >
+                        <InputBox
+                          letter={val}
+                          setLetterLayout={setLetterLayout}
+                          index={index}
+                          AnimatedStyle={AnimatedStyle}
+                        />
+                      </GestureDetector>
+                    ))}
+                  </View>
+                </View>
+              </>
+            )}
 
             {/* LOWER CONTAINER */}
             <View>
               {/* Button */}
               <View style={styles.btncontainer}>
                 <StatusIcon text="Amazing!" />
-                <StatusButton width={"70%"} text="Continue" />
+                <StatusButton
+                  setSubmitted={setSubmitted}
+                  width={"70%"}
+                  text="Continue"
+                />
               </View>
             </View>
           </View>

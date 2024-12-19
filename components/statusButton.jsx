@@ -5,7 +5,13 @@ import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
 
-export default function StatusButton({ setError, selected, text, width }) {
+export default function StatusButton({
+  setSubmitted,
+  setError,
+  selected,
+  text,
+  width,
+}) {
   // const {increaseCurrentIndex,questions,currentIndex} = useQuesStore((state) => state.increaseCurrentIndex);
   // const { increaseCurrentIndex, questions, currentIndex } = useQuesStore(
   //   (state) => state
@@ -16,27 +22,28 @@ export default function StatusButton({ setError, selected, text, width }) {
     (state) => state
   );
   const router = useRouter();
-  useEffect(() => {
-    if (currentIndex < 8) {
-      const nextScreen = getQuestionType(questions[currentIndex]);
+  // useEffect(() => {
+  //   if (currentIndex < 8) {
+  //     const nextScreen = getQuestionType(questions[currentIndex + 1]);
+  //     console.log("Navigating to:", nextScreen);
+  //     router.navigate(nextScreen);
+  //   } else {
+  //     router.navigate("/");
+  //   }
+  // }, [currentIndex]);
+
+  const handlePress = () => {
+    setSubmitted(true);
+    // console.log("After Pressing Cont", currentIndex);
+    if (currentIndex + 1 < 9) {
+      increaseCurrentIndex();
+      const nextScreen = getQuestionType(questions[currentIndex + 1]);
       console.log("Navigating to:", nextScreen);
-      router.navigate(nextScreen);
+      // router.navigate(nextScreen);
+      router.replace(nextScreen);
     } else {
       router.navigate("/");
     }
-  }, [currentIndex]);
-
-  const handlePress = () => {
-    increaseCurrentIndex();
-    // console.log("After Pressing Cont", currentIndex);
-    // // const nextScreen = getQuestionType();
-    // if (currentIndex < 8) {
-    //   const nextScreen = getQuestionType(questions[currentIndex + 1]);
-    //   console.log("Navigating to:", nextScreen);
-    //   router.navigate(nextScreen);
-    // } else {
-    //   router.navigate("/");
-    // }
 
     // const nextScreen = getQuestionType();
     // router.navigate(nextScreen);
