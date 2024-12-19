@@ -1,11 +1,54 @@
 import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { theme } from "@/theme";
+import { useRouter } from "expo-router";
+import { getQuestionType } from "@/util/utilQuesFunc";
+import useQuesStore from "@/store/quesStore";
 
-export default function StatusButton({ text }) {
+export default function StatusButton({ setError, selected, text, width }) {
+  // const {increaseCurrentIndex,questions,currentIndex} = useQuesStore((state) => state.increaseCurrentIndex);
+  // const { increaseCurrentIndex, questions, currentIndex } = useQuesStore(
+  //   (state) => state
+  // );
+  // const router = useRouter();
+  // console.log("Before Pressing Cont", currentIndex);
+  const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
+    (state) => state
+  );
+  const router = useRouter();
+  useEffect(() => {
+    if (currentIndex < 8) {
+      const nextScreen = getQuestionType(questions[currentIndex]);
+      console.log("Navigating to:", nextScreen);
+      router.navigate(nextScreen);
+    } else {
+      router.navigate("/");
+    }
+  }, [currentIndex]);
+
+  const handlePress = () => {
+    increaseCurrentIndex();
+    // console.log("After Pressing Cont", currentIndex);
+    // // const nextScreen = getQuestionType();
+    // if (currentIndex < 8) {
+    //   const nextScreen = getQuestionType(questions[currentIndex + 1]);
+    //   console.log("Navigating to:", nextScreen);
+    //   router.navigate(nextScreen);
+    // } else {
+    //   router.navigate("/");
+    // }
+
+    // const nextScreen = getQuestionType();
+    // router.navigate(nextScreen);
+    // if (selected === "") {
+    //   setError(true);
+    // } else {
+    //   setError(false);
+    // }
+  };
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.btn}>
+    <View style={[styles.container, { width: width }]}>
+      <TouchableOpacity onPress={handlePress} style={styles.btn}>
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.lowerbox}></TouchableOpacity>
@@ -16,7 +59,6 @@ export default function StatusButton({ text }) {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    width: "70%",
     alignSelf: "center",
   },
   btn: {

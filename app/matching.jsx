@@ -221,7 +221,7 @@ export default function Matching() {
               {/* Button */}
               <View style={styles.btncontainer}>
                 <StatusIcon text={"Amazing!"} />
-                <StatusButton text={"Continue"} />
+                <StatusButton width={"70%"} text={"Continue"} />
               </View>
             </View>
           </View>
