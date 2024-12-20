@@ -15,6 +15,7 @@ import {
   withSpring,
 } from "react-native-reanimated";
 import { ScaledSheet } from "react-native-size-matters";
+import useQuesStore from "@/store/quesStore";
 
 let options = [
   "1. Vancomycin",
@@ -35,8 +36,15 @@ const screenheight = Dimensions.get("screen").height;
 console.log(screenheight);
 
 export default function Matching() {
-  const [submitted, setSubmitted] = useState(false);
+  //Question Fetch
+  const { currentIndex, questions } = useQuesStore((state) => state);
 
+  //Component Submission States
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  //Layout Calculation / X,Y Values States
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
   const [matchingContainerY, setMatchingContainerY] = useState(null);
@@ -67,27 +75,27 @@ export default function Matching() {
           offsetValue - 20
         ) {
           box.value = 0;
-          yValue.value = -offsetValue - matchingOptionsLayout[index]?.y;
+          yValue.value = -offsetValue + 3 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          offsetValue - 47.5 - 20
+          offsetValue - 47 - 20
         ) {
           box.value = 1;
-          yValue.value = -offsetValue + 47.5 - matchingOptionsLayout[index]?.y;
+          yValue.value = -offsetValue + 55 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          offsetValue - 2 * 47.5 - 20
+          offsetValue - 2 * 47 - 20
         ) {
           box.value = 2;
           yValue.value =
-            -offsetValue + 2 * 47.5 - matchingOptionsLayout[index]?.y;
+            -offsetValue + 2 * 53.5 - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
-          offsetValue - 3 * 47.5 - 20
+          offsetValue - 3 * 47 - 20
         ) {
           box.value = 3;
           yValue.value =
-            -offsetValue + 3 * 47.5 - matchingOptionsLayout[index]?.y;
+            -offsetValue + 3 * 52.5 - matchingOptionsLayout[index]?.y;
         } else {
           box.value = -1;
         }
@@ -167,7 +175,7 @@ export default function Matching() {
                   {/* Hint */}
                   <View>
                     <Text style={styles.heading}>
-                      Microbe First-Line Treatment
+                      {questions[currentIndex].question}
                     </Text>
                   </View>
 
@@ -182,9 +190,11 @@ export default function Matching() {
                     }}
                     style={styles.matchablesContainer}
                   >
-                    {toMatch.map((val, index) => (
-                      <View style={styles.row} key={index}>
-                        <Text style={styles.TextMatching}>{val}</Text>
+                    {questions[currentIndex].microbes?.map((val, index) => (
+                      <View style={styles.row} key={val.id}>
+                        <Text style={styles.TextMatching}>
+                          {val.id + "." + val.name}
+                        </Text>
 
                         {/* Drop Box */}
                         <MatchingDropBox
@@ -205,13 +215,13 @@ export default function Matching() {
                     }}
                     style={styles.answerBtnContainer}
                   >
-                    {options.map((val, index) => (
+                    {questions[currentIndex].treatments?.map((val, index) => (
                       <GestureDetector
                         key={index}
                         gesture={panGestureHandler[index]}
                       >
                         <MatchingButton
-                          title={val}
+                          title={val.name}
                           AnimatedStyle={AnimatedStyle}
                           index={index}
                           setMatchingOptionsLayout={setMatchingOptionsLayout}
@@ -226,9 +236,12 @@ export default function Matching() {
             {/* LOWER CONTAINER */}
             <View>
               {/* Button */}
-              <View style={styles.btncontainer}>
+              <View style={[styles.btncontainer, { rowGap: 15 }]}>
                 <StatusIcon text={"Amazing!"} />
                 <StatusButton
+                  setChecked={setChecked}
+                  checked={checked}
+                  setError={setError}
                   setSubmitted={setSubmitted}
                   width={"70%"}
                   text={"Continue"}
@@ -259,7 +272,7 @@ const styles = ScaledSheet.create({
   heading: {
     fontWeight: "bold",
     textAlign: "center",
-    fontSize: 24,
+    fontSize: "18@s",
     marginTop: 10,
     marginBottom: 0,
   },
@@ -287,7 +300,7 @@ const styles = ScaledSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    marginTop: 15,
+    marginVertical: 15,
   },
   inputContainer: {
     width: "95%",

@@ -11,46 +11,35 @@ export default function StatusButton({
   selected,
   text,
   width,
+  setChecked,
+  checked,
 }) {
-  // const {increaseCurrentIndex,questions,currentIndex} = useQuesStore((state) => state.increaseCurrentIndex);
-  // const { increaseCurrentIndex, questions, currentIndex } = useQuesStore(
-  //   (state) => state
-  // );
-  // const router = useRouter();
-  // console.log("Before Pressing Cont", currentIndex);
   const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
     (state) => state
   );
   const router = useRouter();
-  // useEffect(() => {
-  //   if (currentIndex < 8) {
-  //     const nextScreen = getQuestionType(questions[currentIndex + 1]);
-  //     console.log("Navigating to:", nextScreen);
-  //     router.navigate(nextScreen);
-  //   } else {
-  //     router.navigate("/");
-  //   }
-  // }, [currentIndex]);
 
   const handlePress = () => {
-    setSubmitted(true);
-    // console.log("After Pressing Cont", currentIndex);
-    if (currentIndex + 1 < 9) {
-      increaseCurrentIndex();
-      const nextScreen = getQuestionType(questions[currentIndex + 1]);
-      console.log("Navigating to:", nextScreen);
-      // router.navigate(nextScreen);
-      router.replace(nextScreen);
+    if (!checked) {
+      if (selected === "") {
+        setError(true);
+      } else {
+        setError(false);
+        setChecked(true);
+      }
     } else {
-      router.navigate("/");
+      setSubmitted(true);
+      console.log("After Pressing Cont", currentIndex);
+      if (currentIndex + 1 < 9) {
+        increaseCurrentIndex();
+        const nextScreen = getQuestionType(questions[currentIndex + 1]);
+        console.log("Navigating to:", nextScreen);
+
+        router.replace(nextScreen);
+      } else {
+        router.navigate("/");
+      }
     }
-
-    // if (selected === "") {
-    //   setError(true);
-    // } else {
-    //   setError(false);
-
-    // }
   };
   return (
     <View style={[styles.container, { width: width }]}>

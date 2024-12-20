@@ -1,13 +1,19 @@
 import { Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
-export default function questionOption({ bgColor, Option, setSelected }) {
+export default function questionOption({
+  bgColor,
+  Option,
+  setSelected,
+  checked,
+}) {
   const handlePress = () => {
     setSelected(Option);
   };
   return (
-    <Pressable
+    <TouchableOpacity
       onPress={handlePress}
+      disabled={checked}
       style={[styles.optionContainer, { backgroundColor: bgColor }]}
     >
       <Text
@@ -20,7 +26,7 @@ export default function questionOption({ bgColor, Option, setSelected }) {
       >
         {Option}
       </Text>
-    </Pressable>
+    </TouchableOpacity>
   );
 }
 

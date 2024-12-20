@@ -8,19 +8,18 @@ import QuestionOption from "@/components/questionOption";
 import StatusButton from "@/components/statusButton";
 import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
+import StatusIcon from "@/components/statusIcon";
 
 let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
 
 export default function fourOptQues() {
   const { currentIndex, questions } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [selected, setSelected] = useState("");
   const [error, setError] = useState(null);
+  console.log(questions[currentIndex].answer);
 
-  // console.log("Component Triggered with submitted", submitted);
-  // useEffect(() => {
-  //   setSubmitted(false);
-  // }, [submitted]);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -46,31 +45,60 @@ export default function fourOptQues() {
                 </View>
                 {/* OPTIONS */}
                 <View style={styles.optionsContainer}>
-                  {questions[currentIndex].options.map((opt, index) => (
+                  {questions[currentIndex].options?.map((opt, index) => (
                     <QuestionOption
+                      checked={checked}
                       key={index}
                       setSelected={setSelected}
-                      bgColor={
-                        selected === opt ? theme.barColor : bgColors[index]
-                      }
+                      bgColor={selected === opt ? "white" : bgColors[index]}
                       Option={`${opt}`}
                     />
                   ))}
                 </View>
-                <View>
-                  <Text style={{ color: "red", fontWeight: "bold" }}>
-                    {error ? "Select an Option to Continue!" : ""}
-                  </Text>
-                </View>
               </View>
-              <View style={{ marginTop: 30 }}>
-                <StatusButton
-                  setError={setError}
-                  selected={selected}
-                  setSubmitted={setSubmitted}
-                  text={"Continue"}
-                  width={"60%"}
-                />
+              <View style={{ rowGap: 15 }}>
+                {error ? (
+                  <StatusIcon icon="cancel" text={"No Option Selected!"} />
+                ) : (
+                  ""
+                )}
+                {checked && selected !== "" && !error ? (
+                  <StatusIcon
+                    icon={
+                      selected === questions[currentIndex].answer
+                        ? "correct"
+                        : "cancel"
+                    }
+                    text={
+                      selected === questions[currentIndex].answer
+                        ? "Correct Answer!"
+                        : "Wrong Answer!"
+                    }
+                  />
+                ) : (
+                  ""
+                )}
+                {checked ? (
+                  <StatusButton
+                    setError={setError}
+                    selected={selected}
+                    setSubmitted={setSubmitted}
+                    setChecked={setChecked}
+                    checked={checked}
+                    text={"Continue"}
+                    width={"60%"}
+                  />
+                ) : (
+                  <StatusButton
+                    setChecked={setChecked}
+                    checked={checked}
+                    setError={setError}
+                    selected={selected}
+                    setSubmitted={setSubmitted}
+                    text={"Submit"}
+                    width={"60%"}
+                  />
+                )}
               </View>
             </>
           )}
@@ -91,7 +119,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginTop: 10,
-    flexDirection: "col",
+    flexDirection: "column",
   },
   questionContainer: {
     width: "90%",
@@ -99,7 +127,7 @@ const styles = StyleSheet.create({
   question: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 15,
   },
   optionsContainer: {
     alignItems: "center",
