@@ -42,6 +42,8 @@ let incompleteProcessWords = [
 ];
 
 export default function IncompleteProcess() {
+  const [submitted, setSubmitted] = useState(false);
+
   const [selected, setSelected] = useState(-1);
   const [process, setProcess] = useState(processWords);
   const [words, setWords] = useState(incompleteProcessWords);
@@ -86,110 +88,122 @@ export default function IncompleteProcess() {
 
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrollView
-            style={{
-              flex: 1,
+          {submitted ? (
+            <View>
+              <Text>Loading..</Text>
+            </View>
+          ) : (
+            <>
+              <ScrollView
+                style={{
+                  flex: 1,
 
-              width: "95%",
-              alignSelf: "center",
-            }}
-          >
-            {/* UPPER CONTAINER */}
-            <View
-              style={{
-                width: "100%",
-                flex: 1,
-                justifyContent: "space-between",
-              }}
-            >
-              {/* Guideline */}
-              <View>
-                <Text style={styles.Text}>
-                  Given an incomplete flowchart of a process that occurs in the
-                  human body or in a disease, complete the missing parts of the
-                  flowchart by dragging the answer choices to their correct
-                  position
-                </Text>
-              </View>
-
-              {/* Hint */}
-              <View>
-                <Text style={styles.hint}>
-                  What is the sequence of glycolysis? Complete the missing step
-                  in the diagram using the choices below:
-                </Text>
-              </View>
-
-              {/* Process */}
-              <View style={{ flex: 1, width: "90%", alignSelf: "center" }}>
+                  width: "95%",
+                  alignSelf: "center",
+                }}
+              >
+                {/* UPPER CONTAINER */}
                 <View
                   style={{
-                    flexDirection: "row",
                     width: "100%",
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    flex: 1,
+                    justifyContent: "space-between",
                   }}
                 >
-                  {process.map((proc, index) => (
-                    <View key={index}>
-                      {!proc.notknown ? (
-                        <Text style={styles.processText}>{proc.val}</Text>
-                      ) : (
-                        <View>
-                          <Pressable
-                            onPress={() => handlePress(index)}
-                            style={[
-                              styles.Blank,
-                              {
-                                backgroundColor:
-                                  selected === index
-                                    ? `${theme.barColor}`
-                                    : `${theme.barBgColor}`,
-                              },
-                            ]}
-                          >
-                            <Text
-                              style={{
-                                fontWeight: "bold",
-                                fontSize: proc.val === "" ? 20 : 9,
-                                textAlign: "center",
-                              }}
-                            >
-                              {proc.val === "" ? "?" : proc.val}
-                            </Text>
-                          </Pressable>
+                  {/* Guideline */}
+                  <View>
+                    <Text style={styles.Text}>
+                      Given an incomplete flowchart of a process that occurs in
+                      the human body or in a disease, complete the missing parts
+                      of the flowchart by dragging the answer choices to their
+                      correct position
+                    </Text>
+                  </View>
+
+                  {/* Hint */}
+                  <View>
+                    <Text style={styles.hint}>
+                      What is the sequence of glycolysis? Complete the missing
+                      step in the diagram using the choices below:
+                    </Text>
+                  </View>
+
+                  {/* Process */}
+                  <View style={{ flex: 1, width: "90%", alignSelf: "center" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        width: "100%",
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {process.map((proc, index) => (
+                        <View key={index}>
+                          {!proc.notknown ? (
+                            <Text style={styles.processText}>{proc.val}</Text>
+                          ) : (
+                            <View>
+                              <Pressable
+                                onPress={() => handlePress(index)}
+                                style={[
+                                  styles.Blank,
+                                  {
+                                    backgroundColor:
+                                      selected === index
+                                        ? `${theme.barColor}`
+                                        : `${theme.barBgColor}`,
+                                  },
+                                ]}
+                              >
+                                <Text
+                                  style={{
+                                    fontWeight: "bold",
+                                    fontSize: proc.val === "" ? 20 : 9,
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {proc.val === "" ? "?" : proc.val}
+                                </Text>
+                              </Pressable>
+                            </View>
+                          )}
                         </View>
-                      )}
+                      ))}
                     </View>
-                  ))}
+                  </View>
+                  {/* Buttons */}
+                  <View style={styles.wordsCotainer}>
+                    {words.map((word, index) => (
+                      <IncompleteWordButtons
+                        key={index}
+                        title={word.val}
+                        selected={selected}
+                        setProcess={setProcess}
+                        setSelected={setSelected}
+                        setWords={setWords}
+                        index={index}
+                        words={words}
+                      />
+                    ))}
+                  </View>
                 </View>
-              </View>
-              {/* Buttons */}
-              <View style={styles.wordsCotainer}>
-                {words.map((word, index) => (
-                  <IncompleteWordButtons
-                    key={index}
-                    title={word.val}
-                    selected={selected}
-                    setProcess={setProcess}
-                    setSelected={setSelected}
-                    setWords={setWords}
-                    index={index}
-                    words={words}
-                  />
-                ))}
-              </View>
-            </View>
-            {/* LOWER CONTAINER */}
-            <View>
-              {/* Button */}
-              <View style={styles.btncontainer}>
-                <StatusIcon text={"Amazing!"} />
-                <StatusButton width={"70%"} text={"Continue"} />
-              </View>
-            </View>
-          </ScrollView>
+                {/* LOWER CONTAINER */}
+                <View>
+                  {/* Button */}
+                  <View style={styles.btncontainer}>
+                    <StatusIcon text={"Amazing!"} />
+                    <StatusButton
+                      setSubmitted={setSubmitted}
+                      width={"70%"}
+                      text={"Continue"}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
+            </>
+          )}
         </BackgroundImage>
       </View>
     </View>

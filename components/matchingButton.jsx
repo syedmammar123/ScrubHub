@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import Animated from "react-native-reanimated";
+import { ScaledSheet } from "react-native-size-matters";
 
 export default function matchingButton({
   title,
@@ -20,18 +21,26 @@ export default function matchingButton({
       }}
       style={[styles.btn, AnimatedStyle(index)]}
     >
-      <Text style={styles.btnTitle}>{title}</Text>
+      <Text
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.5}
+        style={styles.btnTitle}
+      >
+        {title}
+      </Text>
     </Animated.View>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   btn: {
     alignSelf: "center",
-    paddingVertical: 8,
 
+    height: 37,
     width: "45%",
-    backgroundColor: "green",
+    paddingHorizontal: 3,
+    backgroundColor: "#ffffff",
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -41,9 +50,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     borderRadius: 10,
+    justifyContent: "center",
   },
   btnTitle: {
-    fontSize: 14,
+    fontSize: "10@s",
     fontWeight: "bold",
     textAlign: "center",
   },

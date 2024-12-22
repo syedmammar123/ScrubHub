@@ -1,24 +1,20 @@
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
-import { theme } from "@/theme";
+import { Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
+import React, { useState } from "react";
 
 export default function questionOption({
-  selected,
   bgColor,
   Option,
   setSelected,
+  checked,
 }) {
   const handlePress = () => {
-    console.log(selected);
     setSelected(Option);
   };
   return (
     <TouchableOpacity
       onPress={handlePress}
-      style={[
-        styles.optionContainer,
-        { backgroundColor: selected === Option ? theme.barBgColor : bgColor },
-      ]}
+      disabled={checked}
+      style={[styles.optionContainer, { backgroundColor: bgColor }]}
     >
       <Text
         style={{

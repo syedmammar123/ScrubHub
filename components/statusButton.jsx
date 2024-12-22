@@ -5,46 +5,41 @@ import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
 
-export default function StatusButton({ setError, selected, text, width }) {
-  // const {increaseCurrentIndex,questions,currentIndex} = useQuesStore((state) => state.increaseCurrentIndex);
-  // const { increaseCurrentIndex, questions, currentIndex } = useQuesStore(
-  //   (state) => state
-  // );
-  // const router = useRouter();
-  // console.log("Before Pressing Cont", currentIndex);
+export default function StatusButton({
+  setSubmitted,
+  setError,
+  selected,
+  text,
+  width,
+  setChecked,
+  checked,
+}) {
   const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
     (state) => state
   );
   const router = useRouter();
-  useEffect(() => {
-    if (currentIndex < 8) {
-      const nextScreen = getQuestionType(questions[currentIndex]);
-      console.log("Navigating to:", nextScreen);
-      router.navigate(nextScreen);
-    } else {
-      router.navigate("/");
-    }
-  }, [currentIndex]);
 
   const handlePress = () => {
-    increaseCurrentIndex();
-    // console.log("After Pressing Cont", currentIndex);
-    // // const nextScreen = getQuestionType();
-    // if (currentIndex < 8) {
-    //   const nextScreen = getQuestionType(questions[currentIndex + 1]);
-    //   console.log("Navigating to:", nextScreen);
-    //   router.navigate(nextScreen);
-    // } else {
-    //   router.navigate("/");
-    // }
+    if (!checked) {
+      if (selected === "") {
+        setError(true);
+      } else {
+        setError(false);
+        setChecked(true);
+      }
+    } else {
+      setSubmitted(true);
+      console.log("After Pressing Cont", currentIndex);
+      if (currentIndex + 1 < 9) {
+        increaseCurrentIndex();
+        const nextScreen = getQuestionType(questions[currentIndex + 1]);
+        console.log("Navigating to:", nextScreen);
 
-    // const nextScreen = getQuestionType();
-    // router.navigate(nextScreen);
-    // if (selected === "") {
-    //   setError(true);
-    // } else {
-    //   setError(false);
-    // }
+        router.replace(nextScreen);
+      } else {
+        router.navigate("/");
+      }
+    }
   };
   return (
     <View style={[styles.container, { width: width }]}>

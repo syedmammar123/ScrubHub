@@ -22,7 +22,7 @@ export default function MatchingDropBox({ setMatchingDropLayout, index }) {
 const styles = StyleSheet.create({
   btn: {
     alignSelf: "center",
-    paddingVertical: 8,
+    height: 37,
 
     width: "45%",
     backgroundColor: "red",
