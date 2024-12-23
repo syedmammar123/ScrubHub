@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import { View, Text, StatusBar, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
@@ -33,7 +33,7 @@ export default function fourOptQues() {
               <Text>Loading..</Text>
             </View>
           ) : (
-            <>
+            <ScrollView style={{ paddingBottom: 20 }}>
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
@@ -100,7 +100,7 @@ export default function fourOptQues() {
                   />
                 )}
               </View>
-            </>
+            </ScrollView>
           )}
         </BackgroundImage>
       </View>
