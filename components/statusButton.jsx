@@ -5,6 +5,15 @@ import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
 
+const checkAnswerArray = (selected) => {
+  for (let i = 0; i < selected.length; i++) {
+    if (selected[i] === -1) {
+      return false;
+    }
+  }
+  return true;
+};
+
 export default function StatusButton({
   setSubmitted,
   setError,
@@ -21,7 +30,10 @@ export default function StatusButton({
 
   const handlePress = () => {
     if (!checked) {
-      if (selected === "") {
+      if (
+        (typeof selected === "string" && selected === "") ||
+        (Array.isArray(selected) && checkAnswerArray(selected) === false)
+      ) {
         setError(true);
       } else {
         setError(false);

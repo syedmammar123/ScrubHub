@@ -38,9 +38,7 @@ export default function fourOptQues() {
                 {/* Question */}
                 <View style={styles.questionContainer}>
                   <Text style={styles.question}>
-                    {/* WHAT ARE THREE DIFFERENTIAL DIAGNOSES FOR FEVER AND RASH IN
-                    A 6-YEAR-OLD? */}
-                    {questions[currentIndex].question}
+                    {questions[currentIndex]?.question}
                   </Text>
                 </View>
                 {/* OPTIONS */}

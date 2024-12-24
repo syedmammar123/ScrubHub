@@ -8,6 +8,7 @@ export default function matchingButton({
   AnimatedStyle,
   index,
   setMatchingOptionsLayout,
+  bgColor,
 }) {
   return (
     <Animated.View
@@ -19,7 +20,7 @@ export default function matchingButton({
           return updatedlayout;
         });
       }}
-      style={[styles.btn, AnimatedStyle(index)]}
+      style={[styles.btn, AnimatedStyle(index), { backgroundColor: bgColor }]}
     >
       <Text
         numberOfLines={2}
@@ -40,7 +41,6 @@ const styles = ScaledSheet.create({
     height: 37,
     width: "45%",
     paddingHorizontal: 3,
-    backgroundColor: "#ffffff",
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,

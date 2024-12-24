@@ -1,5 +1,12 @@
-import { View, Text, StatusBar, StyleSheet, Dimensions } from "react-native";
-import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
 import { theme } from "@/theme";
@@ -13,6 +20,7 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  runOnJS,
 } from "react-native-reanimated";
 import { ScaledSheet } from "react-native-size-matters";
 import useQuesStore from "@/store/quesStore";
@@ -31,7 +39,6 @@ let toMatch = [
   "D. Neisseria meningitidis",
 ];
 
-let answers = [null, null, null, null];
 const screenheight = Dimensions.get("screen").height;
 console.log(screenheight);
 
@@ -39,10 +46,14 @@ export default function Matching() {
   //Question Fetch
   const { currentIndex, questions } = useQuesStore((state) => state);
 
+  // Answer States
+  const [answers, setAnswers] = useState(Array(4).fill(-1));
+
   //Component Submission States
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [isMatchesCorrect, setIsMatchesCorrect] = useState(true);
 
   //Layout Calculation / X,Y Values States
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
@@ -50,13 +61,18 @@ export default function Matching() {
   const [matchingContainerY, setMatchingContainerY] = useState(null);
   const [answerContainerY, setAnswerContainerY] = useState(null);
   const [offsetValue, setOffsetValue] = useState(0);
-  // const [answers, setAnswers] = useState(
-  //   Array(4).fill({ val: "", realIndex: -1 })
-  // );
   const translateValueX = options.map(() => useSharedValue(0));
   const translateValueY = options.map(() => useSharedValue(0));
   const box = useSharedValue(-1);
   const yValue = useSharedValue(0);
+
+  const updateAnswers = (index, boxValue) => {
+    setAnswers((prev) => {
+      const updatedAns = [...prev];
+      updatedAns[boxValue] = index;
+      return updatedAns;
+    });
+  };
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -103,20 +119,31 @@ export default function Matching() {
       .onEnd(() => {
         if (box.value !== -1) {
           console.log("DROPPED AT BOX", box.value);
-
-          let ans = [...answers];
-          ans[box.value] = {
-            val: options[index],
-            realIndex: index,
-          };
-          answers = ans;
-          console.log(answers);
+          // Checking if box has value Already
+          let presentBox = answers[box.value];
+          if (presentBox !== -1) {
+            translateValueX[presentBox].value = withSpring(0);
+            translateValueY[presentBox].value = withSpring(0);
+          }
+          runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
             matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
+          console.log("DETECTED AFTER BOX DROPPPED");
+          let i;
+          let flag = false;
+          for (i = 0; i < 4; i++) {
+            if (index === answers[i]) {
+              flag = true;
+              break;
+            }
+          }
+          if (flag) {
+            runOnJS(updateAnswers)(-1, answers[i]);
+          }
           translateValueX[index].value = withSpring(0);
           translateValueY[index].value = withSpring(0);
         }
@@ -133,6 +160,26 @@ export default function Matching() {
         ],
       };
     });
+
+  useEffect(() => {
+    if (checked && questions[currentIndex]?.correctMatches) {
+      let correctAnswers = Object.values(
+        questions[currentIndex].correctMatches
+      );
+
+      const updatedAnswers = answers.map((val, index) => {
+        if (val + 1 === correctAnswers[index]) {
+          val;
+        } else {
+          setIsMatchesCorrect(false);
+          return -1;
+        }
+      });
+      console.log(updateAnswers);
+
+      setAnswers(updatedAnswers);
+    }
+  }, [checked]);
 
   useEffect(() => {
     if (matchingContainerY !== null && answerContainerY !== null) {
@@ -221,6 +268,13 @@ export default function Matching() {
                         gesture={panGestureHandler[index]}
                       >
                         <MatchingButton
+                          bgColor={
+                            !checked
+                              ? "#ffffff"
+                              : answers[index] !== -1
+                                ? theme.barColor
+                                : "#EF5555"
+                          }
                           title={val.name}
                           AnimatedStyle={AnimatedStyle}
                           index={index}
@@ -237,15 +291,46 @@ export default function Matching() {
             <View>
               {/* Button */}
               <View style={[styles.btncontainer, { rowGap: 15 }]}>
-                <StatusIcon text={"Amazing!"} />
-                <StatusButton
-                  setChecked={setChecked}
-                  checked={checked}
-                  setError={setError}
-                  setSubmitted={setSubmitted}
-                  width={"70%"}
-                  text={"Continue"}
-                />
+                {error ? (
+                  <StatusIcon
+                    icon="cancel"
+                    text={"All Boxes should be filled!"}
+                  />
+                ) : (
+                  <StatusIcon icon="none" text={""} />
+                )}
+                {checked && !error ? (
+                  <StatusIcon
+                    icon={isMatchesCorrect ? "correct" : "cancel"}
+                    text={
+                      isMatchesCorrect ? "Correct Macthes!" : "Wrong Matches!"
+                    }
+                  />
+                ) : (
+                  <StatusIcon icon="none" text={""} />
+                )}
+
+                {checked ? (
+                  <StatusButton
+                    setError={setError}
+                    selected={answers}
+                    setSubmitted={setSubmitted}
+                    setChecked={setChecked}
+                    checked={checked}
+                    text={"Continue"}
+                    width={"60%"}
+                  />
+                ) : (
+                  <StatusButton
+                    setChecked={setChecked}
+                    checked={checked}
+                    setError={setError}
+                    selected={answers}
+                    setSubmitted={setSubmitted}
+                    text={"Submit"}
+                    width={"60%"}
+                  />
+                )}
               </View>
             </View>
           </View>
