@@ -22,6 +22,7 @@ export default function StatusButton({
   width,
   setChecked,
   checked,
+  questionType,
 }) {
   const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
     (state) => state
@@ -29,10 +30,13 @@ export default function StatusButton({
   const router = useRouter();
 
   const handlePress = () => {
+    console.log("Type", questionType);
+
     if (!checked) {
       if (
-        (typeof selected === "string" && selected === "") ||
-        (Array.isArray(selected) && checkAnswerArray(selected) === false)
+        (questionType === "fourOpt" && selected === "") ||
+        (questionType === "matching" && checkAnswerArray(selected) === false) ||
+        (questionType === "multipleOpt" && selected.length === 0)
       ) {
         setError(true);
       } else {

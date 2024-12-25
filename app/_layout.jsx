@@ -49,6 +49,13 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
+          name="multipleOptSelect"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
           name="questionmark"
           options={{
             headerShown: false,

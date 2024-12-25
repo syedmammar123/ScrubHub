@@ -12,12 +12,43 @@ import StatusIcon from "@/components/statusIcon";
 
 let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
 
-export default function fourOptQues() {
+export default function MultipleOptSelect() {
   const { currentIndex, questions } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState([]);
   const [error, setError] = useState(null);
+  const [correctOptions, setCorrectOptions] = useState([]);
+  const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
+
+  console.log("CHECKED", checked);
+
+  useEffect(() => {
+    const correctAnswers = questions[currentIndex].options.reduce(
+      (indices, opt, index) => {
+        if (opt.isCorrect) {
+          indices.push(index);
+        }
+        return indices;
+      },
+      []
+    );
+    setCorrectOptions(correctAnswers);
+  }, []);
+
+  useEffect(() => {
+    if (checked) {
+      const areMatchesCorrect = correctOptions.every(
+        (value, index) => value === selected[index]
+      );
+
+      if (!areMatchesCorrect) {
+        setIsMatchesCorrect(false);
+      } else {
+        setIsMatchesCorrect(true);
+      }
+    }
+  }, [checked]);
 
   return (
     <View style={styles.container}>
@@ -32,12 +63,15 @@ export default function fourOptQues() {
               <Text>Loading..</Text>
             </View>
           ) : (
-            <ScrollView style={{ paddingBottom: 20 }}>
+            <ScrollView style={{ paddingBottom: 40 }}>
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
                   <Text style={styles.question}>
-                    {questions[currentIndex]?.question}
+                    {questions[currentIndex]?.description}
+                  </Text>
+                  <Text style={[styles.question, { fontSize: 20 }]}>
+                    "{questions[currentIndex]?.name}"
                   </Text>
                 </View>
                 {/* OPTIONS */}
@@ -45,54 +79,50 @@ export default function fourOptQues() {
                   {questions[currentIndex].options?.map((opt, index) => (
                     <QuestionOption
                       checked={checked}
-                      key={index}
-                      selected={selected}
-                      setSelected={setSelected}
+                      index={index}
                       opacity={
                         !checked
                           ? 1
-                          : opt === selected ||
-                              opt === questions[currentIndex].answer
+                          : selected.includes(index) ||
+                              correctOptions.includes(index)
                             ? 1
                             : 0.4
                       }
                       bgColor={
                         !checked
-                          ? selected === opt
+                          ? selected.includes(index)
                             ? "white"
-                            : bgColors[index]
-                          : opt !== questions[currentIndex].answer &&
-                              opt !== selected
-                            ? bgColors[index]
-                            : selected === questions[currentIndex].answer
-                              ? theme.barColor
-                              : opt === questions[currentIndex].answer &&
-                                  opt !== selected
-                                ? theme.barColor
-                                : "#EF5555"
+                            : bgColors[index % bgColors.length]
+                          : (selected.includes(index) &&
+                                correctOptions.includes(index)) ||
+                              (!selected.includes(index) &&
+                                correctOptions.includes(index))
+                            ? theme.barColor
+                            : selected.includes(index) &&
+                                !correctOptions.includes(index)
+                              ? "#EF5555"
+                              : bgColors[index % bgColors.length]
                       }
-                      Option={`${opt}`}
+                      key={index}
+                      setSelected={setSelected}
+                      Option={`${opt.option}`}
                     />
                   ))}
                 </View>
               </View>
-              <View style={{ rowGap: 15 }}>
+              <View style={{ rowGap: 15, paddingBottom: 40 }}>
                 {error ? (
                   <StatusIcon icon="cancel" text={"No Option Selected!"} />
                 ) : (
                   ""
                 )}
-                {checked && selected !== "" && !error ? (
+                {checked && !error ? (
                   <StatusIcon
-                    icon={
-                      selected === questions[currentIndex].answer
-                        ? "correct"
-                        : "cancel"
-                    }
+                    icon={isMatchesCorrect ? "correct" : "cancel"}
                     text={
-                      selected === questions[currentIndex].answer
-                        ? "Correct Answer!"
-                        : "Wrong Answer!"
+                      isMatchesCorrect
+                        ? "Correct Selections!"
+                        : "Wrong Selections!"
                     }
                   />
                 ) : (
@@ -116,8 +146,8 @@ export default function fourOptQues() {
                     selected={selected}
                     setSubmitted={setSubmitted}
                     text={"Submit"}
+                    questionType={"multipleOpt"}
                     width={"60%"}
-                    questionType={"fourOpt"}
                   />
                 )}
               </View>
@@ -144,6 +174,7 @@ const styles = StyleSheet.create({
   },
   questionContainer: {
     width: "90%",
+    rowGap: 5,
   },
   question: {
     textAlign: "center",
@@ -154,6 +185,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "column",
-    marginTop: 40,
+    marginTop: 20,
   },
 });

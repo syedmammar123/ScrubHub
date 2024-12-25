@@ -43,7 +43,8 @@ let incompleteProcessWords = [
 
 export default function IncompleteProcess() {
   const [submitted, setSubmitted] = useState(false);
-
+  const [checked, setChecked] = useState(false);
+  const [error, setError] = useState(null);
   const [selected, setSelected] = useState(-1);
   const [process, setProcess] = useState(processWords);
   const [words, setWords] = useState(incompleteProcessWords);
@@ -194,11 +195,28 @@ export default function IncompleteProcess() {
                   {/* Button */}
                   <View style={styles.btncontainer}>
                     <StatusIcon text={"Amazing!"} />
-                    <StatusButton
-                      setSubmitted={setSubmitted}
-                      width={"70%"}
-                      text={"Continue"}
-                    />
+                    {checked ? (
+                      <StatusButton
+                        setError={setError}
+                        selected={selected}
+                        setSubmitted={setSubmitted}
+                        setChecked={setChecked}
+                        checked={checked}
+                        text={"Continue"}
+                        width={"60%"}
+                      />
+                    ) : (
+                      <StatusButton
+                        setChecked={setChecked}
+                        checked={checked}
+                        setError={setError}
+                        selected={selected}
+                        setSubmitted={setSubmitted}
+                        text={"Submit"}
+                        questionType={""}
+                        width={"60%"}
+                      />
+                    )}
                   </View>
                 </View>
               </ScrollView>

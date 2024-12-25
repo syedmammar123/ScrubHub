@@ -14,6 +14,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
+import useQuesStore from "@/store/quesStore";
 
 const Word = ["P", "O", "H", "S", "E", "E", "I", "S", "Y"];
 const answerLength = 14;
@@ -41,10 +42,17 @@ console.log("Lines are", noflines);
 console.log("Boxes perLine", boxesPerLine);
 
 export default function WordScrambled() {
+  //Question Fetch
+  const { currentIndex, questions } = useQuesStore((state) => state);
+
   const [submitted, setSubmitted] = useState(false);
 
-  const translateValueX = Word.map(() => useSharedValue(0));
-  const translateValueY = Word.map(() => useSharedValue(0));
+  const translateValueX = questions[currentIndex]?.letterChoices?.map(() =>
+    useSharedValue(0)
+  );
+  const translateValueY = questions[currentIndex]?.letterChoices?.map(() =>
+    useSharedValue(0)
+  );
   const [letterLayout, setLetterLayout] = useState([]);
   const [blankInputLayout, setBlankInputLayout] = useState(
     Array(answerLength).fill(null)
@@ -140,7 +148,9 @@ export default function WordScrambled() {
       });
   };
 
-  const panGestureHandler = Word.map((_, index) => CreatePanGesture(index));
+  const panGestureHandler = questions[currentIndex]?.letterChoices?.map(
+    (_, index) => CreatePanGesture(index)
+  );
 
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
@@ -151,6 +161,8 @@ export default function WordScrambled() {
         ],
       };
     });
+
+  console.log(questions[currentIndex]);
 
   return (
     <View style={styles.container}>
@@ -173,7 +185,8 @@ export default function WordScrambled() {
                   {/* Guideline */}
                   <View>
                     <Text style={styles.guideline}>
-                      Given a hint with a series of empty spaces and 14 letter
+                      Given a hint with a series of empty spaces and{" "}
+                      {questions[currentIndex]?.letterChoices?.length} letter
                       options, find out which word/term is being hinted at
                     </Text>
                   </View>
@@ -181,7 +194,7 @@ export default function WordScrambled() {
                   {/* Hint */}
                   <View>
                     <Text style={styles.guideline}>
-                      Process of converting glucose to energy.
+                      {questions[currentIndex]?.hint}
                     </Text>
                   </View>
 
@@ -198,19 +211,21 @@ export default function WordScrambled() {
 
                   {/* Letters to Choose */}
                   <View style={styles.lettersContainer}>
-                    {Word.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <InputBox
-                          letter={val}
-                          setLetterLayout={setLetterLayout}
-                          index={index}
-                          AnimatedStyle={AnimatedStyle}
-                        />
-                      </GestureDetector>
-                    ))}
+                    {questions[currentIndex]?.letterChoices?.map(
+                      (val, index) => (
+                        <GestureDetector
+                          key={index}
+                          gesture={panGestureHandler[index]}
+                        >
+                          <InputBox
+                            letter={val}
+                            setLetterLayout={setLetterLayout}
+                            index={index}
+                            AnimatedStyle={AnimatedStyle}
+                          />
+                        </GestureDetector>
+                      )
+                    )}
                   </View>
                 </View>
               </>

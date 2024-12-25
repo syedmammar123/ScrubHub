@@ -303,7 +303,7 @@ export default function Matching() {
                   <StatusIcon
                     icon={isMatchesCorrect ? "correct" : "cancel"}
                     text={
-                      isMatchesCorrect ? "Correct Macthes!" : "Wrong Matches!"
+                      isMatchesCorrect ? "Correct Matches!" : "Wrong Matches!"
                     }
                   />
                 ) : (
@@ -328,6 +328,7 @@ export default function Matching() {
                     selected={answers}
                     setSubmitted={setSubmitted}
                     text={"Submit"}
+                    questionType={"matching"}
                     width={"60%"}
                   />
                 )}
