@@ -35,13 +35,6 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
-          name="casemystery"
-          options={{
-            headerShown: false,
-            animation: "fade",
-          }}
-        />
-        <Stack.Screen
           name="fourOptQues"
           options={{
             headerShown: false,

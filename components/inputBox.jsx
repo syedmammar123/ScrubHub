@@ -8,6 +8,8 @@ export default function InputBox({
   setLetterLayout,
   index,
   AnimatedStyle,
+  bgColor,
+  borderColor,
 }) {
   return (
     // <View style={styles.container}>
@@ -20,7 +22,11 @@ export default function InputBox({
           return updatedlayout;
         });
       }}
-      style={[styles.box, AnimatedStyle(index)]}
+      style={[
+        styles.box,
+        AnimatedStyle(index),
+        { borderWidth: 1, borderColor: borderColor, backgroundColor: bgColor },
+      ]}
     >
       <Text style={{ fontWeight: "bold" }}>{letter}</Text>
     </Animated.View>
@@ -38,12 +44,11 @@ const styles = StyleSheet.create({
   box: {
     width: 40,
     height: 50,
-    borderWidth: 1,
-    borderColor: theme.barColor,
+
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    backgroundColor: "white",
+
     marginTop: 5,
     zIndex: 2,
   },

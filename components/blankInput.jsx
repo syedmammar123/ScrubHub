@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
 
-export default function blankInput({ setBlankInputLayout, index }) {
+export default function blankInput({ setBlankInputLayout, index, checked }) {
   return (
     <View
       onLayout={(e) => {
@@ -13,7 +13,7 @@ export default function blankInput({ setBlankInputLayout, index }) {
           return updatedlayout;
         });
       }}
-      style={styles.line}
+      style={[styles.line, { opacity: checked ? 0 : 1 }]}
     ></View>
   );
 }
