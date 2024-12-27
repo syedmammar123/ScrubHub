@@ -41,6 +41,12 @@
             "useFrameworks": "static"
           }
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/Poppins-Regular.ttf"]
+        }
       ]
     ],
     "extra": {

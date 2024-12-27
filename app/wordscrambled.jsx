@@ -41,10 +41,12 @@ export default function WordScrambled() {
   const answer = useMemo(() => {
     return questions[currentIndex]?.answer?.split(" ").join("").toLowerCase();
   }, [questions[currentIndex].answer]);
-  const noflines = calcLines(answerLength);
+  const noflines = useMemo(() => {
+    return calcLines(answerLength);
+  }, []);
 
   // Submission States
-  const [finalAnswer, setFinalAnswer] = useState("");
+  const [answerCalculated, setAnswerCalculated] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -63,6 +65,7 @@ export default function WordScrambled() {
     useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
+
   const [blankInputLayout, setBlankInputLayout] = useState(
     Array(answerLength).fill(null)
   );
@@ -203,19 +206,68 @@ export default function WordScrambled() {
 
   useEffect(() => {
     if (checked) {
-      const selectedString = selected.reduce((string, curr) => {
-        string.push(curr.value);
-        return string;
+      console.log("Checking");
+
+      let flag = false;
+      const selectedString = selected.reduce((array, curr, index) => {
+        let val = curr.value.toLowerCase();
+        console.log(val);
+
+        if (val === answer[index]) {
+          array.push({
+            value: val,
+            realIndex: curr.realIndex,
+            backgroundColor: theme.barColor,
+          });
+          return array;
+        } else {
+          flag = true;
+          array.push({
+            value: val,
+            realIndex: curr.realIndex,
+            backgroundColor: "#EF5555",
+          });
+          return array;
+        }
       }, []);
 
-      setFinalAnswer(selectedString.join("").toLowerCase());
-      console.log(selectedString.join(""));
+      console.log("Selected", selectedString);
+      const selectedIndices = selectedString.map((item) => item.realIndex);
+      const missingIndices = questions[currentIndex]?.letterChoices?.reduce(
+        (array, _, index) => {
+          if (!selectedIndices.includes(index)) {
+            array.push(index);
+          }
+          return array;
+        },
+        []
+      );
 
-      if (selectedString.join("").toLowerCase().localeCompare(answer) === 0) {
-        setIsMatchesCorrect(true);
-      } else {
+      console.log("MISSING", missingIndices);
+      const missingArray = missingIndices.map((item) => {
+        return {
+          realIndex: item,
+          backgroundColor: "white",
+          value: questions[currentIndex]?.letterChoices[item],
+        };
+      });
+
+      console.log("MISSINGARRAY", missingArray);
+      console.log([...selectedString, ...missingArray]);
+      const sortedArray = [...selectedString, ...missingArray].sort(
+        (a, b) => a.realIndex - b.realIndex
+      );
+      console.log("Sorted Array", sortedArray);
+
+      setSelected(sortedArray);
+
+      // setFinalAnswer(finalIndices);
+      if (flag) {
         setIsMatchesCorrect(false);
+      } else {
+        setIsMatchesCorrect(true);
       }
+      setAnswerCalculated(true);
     }
   }, [checked]);
 
@@ -274,19 +326,11 @@ export default function WordScrambled() {
                           gesture={panGestureHandler[index]}
                         >
                           <InputBox
+                            answerCalculated={answerCalculated}
                             bgColor={
-                              !checked
+                              !answerCalculated
                                 ? "white"
-                                : answer[index] === finalAnswer[index]
-                                  ? theme.barColor
-                                  : "#EF5555"
-                            }
-                            borderColor={
-                              !checked
-                                ? theme.barColor
-                                : answer[index] === finalAnswer[index]
-                                  ? theme.barColor
-                                  : "#EF5555"
+                                : selected[index].backgroundColor
                             }
                             letter={val}
                             setLetterLayout={setLetterLayout}
@@ -317,7 +361,9 @@ export default function WordScrambled() {
                   <StatusIcon
                     icon={isMatchesCorrect ? "correct" : "cancel"}
                     text={
-                      isMatchesCorrect ? "Correct Matches!" : "Wrong Matches!"
+                      isMatchesCorrect
+                        ? "Amazing!"
+                        : `${questions[currentIndex]?.answer}`
                     }
                   />
                 ) : (
