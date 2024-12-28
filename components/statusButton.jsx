@@ -22,6 +22,15 @@ const checkAnswerArray2 = (selected) => {
   return true;
 };
 
+const checkAnswerArray3 = (selected) => {
+  for (let i = 0; i < selected.length; i++) {
+    if (selected[i].value === "") {
+      return false;
+    }
+  }
+  return true;
+};
+
 export default function StatusButton({
   setSubmitted,
   setError,
@@ -46,7 +55,8 @@ export default function StatusButton({
         (questionType === "matching" && checkAnswerArray(selected) === false) ||
         (questionType === "multipleOpt" && selected.length === 0) ||
         (questionType === "wordscramble" &&
-          checkAnswerArray2(selected) === false)
+          checkAnswerArray2(selected) === false) ||
+        (questionType === "incomplete" && checkAnswerArray3(selected) === false)
       ) {
         setError(true);
       } else {

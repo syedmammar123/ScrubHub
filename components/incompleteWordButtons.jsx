@@ -9,6 +9,7 @@ export default function IncompleteWordButtons({
   setSelected,
   setWords,
   index,
+  setAnswers,
   words,
 }) {
   const handlePress = () => {
@@ -23,6 +24,19 @@ export default function IncompleteWordButtons({
         const updatedWord = [...prev];
         updatedWord[index] = { ...updatedWord[index], opacity: 0 };
         return updatedWord;
+      });
+      setAnswers((prev) => {
+        const previous = [...prev];
+        const foundIndex = previous.findIndex(
+          (obj) => obj.realIndex === selected
+        );
+        console.log("FOUND AT", foundIndex);
+
+        previous[foundIndex] = { ...previous[foundIndex], val: title };
+
+        console.log("Update", previous);
+
+        return previous;
       });
       setSelected(-1);
     }
