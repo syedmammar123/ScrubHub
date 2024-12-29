@@ -40,7 +40,14 @@ const buttons = [
 
 export default function App() {
   const { questions, currentIndex } = useQuesStore((state) => state);
-  const nextScreen = getQuestionType(questions[currentIndex]);
+  // console.log("QUESTIONS", questions);
+  if (questions === 0) {
+    console.log("0");
+  } else {
+    console.log(questions[currentIndex]);
+  }
+
+  // const nextScreen = getQuestionType(questions[currentIndex]);
   const router = useRouter();
   const handlePress = () => {
     if (currentIndex < 8) {
@@ -49,6 +56,9 @@ export default function App() {
       router.navigate("/");
     }
   };
+
+  // console.log("QUESTIONS", questions);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

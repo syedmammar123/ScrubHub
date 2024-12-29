@@ -50,12 +50,16 @@ export default function IncompleteProcess() {
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [answers, setAnswers] = useState([]);
-  const [correctMatches, setCorrectMatches] = useState([]);
   const [error, setError] = useState(null);
   const [selected, setSelected] = useState(-1);
   const [process, setProcess] = useState([]);
   const [words, setWords] = useState([]);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
+
+  // State for showing final Answer Colors on screen
+  const [wrongMatches, setWrongMatches] = useState([]);
+  const [correctMatches, setCorrectMatches] = useState([]);
+  const [isColorsSet, setIsColorsSet] = useState(false);
 
   console.log("ANSWERS", answers);
 
@@ -93,7 +97,6 @@ export default function IncompleteProcess() {
 
   useEffect(() => {
     // PreProcessing of Process
-    let i = 0;
     const splitProcess = questions[currentIndex].diagram.split("→");
     console.log(splitProcess);
     const transformedArray = splitProcess.map((item, index, array) => {
@@ -127,19 +130,41 @@ export default function IncompleteProcess() {
   useEffect(() => {
     if (checked) {
       const correctAns = Object.values(questions[currentIndex].correctAnswers);
-
+      const correctKeys = Object.keys(questions[currentIndex].correctAnswers);
+      let wrongAnswers = [];
+      let correctAnswers = [];
       let flag = true;
       const arr = answers.map((item, index) => {
         if (item.val !== correctAns[index]) {
           flag = false;
+
+          correctAnswers.push({
+            value: correctAns[index],
+            option: correctKeys[index],
+          });
+        } else {
+          wrongAnswers.push(item.val);
         }
       });
+      console.log(wrongAnswers);
+      console.log(correctAnswers);
 
+      setWrongMatches(wrongAnswers);
+      setCorrectMatches(correctAnswers);
+      setWords((prev) => {
+        const updatedWords = prev.map((word) =>
+          correctAnswers.some((item) => item.value === word.val)
+            ? { ...word, opacity: 1 }
+            : { ...word, opacity: 0.5 }
+        );
+        return updatedWords;
+      });
       if (flag) {
         setIsMatchesCorrect(true);
       } else {
         setIsMatchesCorrect(false);
       }
+      setIsColorsSet(true);
     }
   }, [checked]);
 
@@ -229,11 +254,13 @@ export default function IncompleteProcess() {
                                     style={[
                                       styles.Blank,
                                       {
-                                        backgroundColor: !checked
+                                        backgroundColor: !isColorsSet
                                           ? selected === index
                                             ? `${theme.barColor}`
                                             : `${theme.barBgColor}`
-                                          : "",
+                                          : wrongMatches.includes(proc.val)
+                                            ? theme.barColor
+                                            : "#EF5555",
                                       },
                                     ]}
                                   >
@@ -262,9 +289,27 @@ export default function IncompleteProcess() {
                     <View style={styles.wordsCotainer}>
                       {words.map((word, index) => (
                         <IncompleteWordButtons
+                          bgColor={
+                            !isColorsSet
+                              ? "#ffffff"
+                              : correctMatches.some(
+                                    (item) => item.value === word.val
+                                  )
+                                ? theme.barColor
+                                : "#ffffff"
+                          }
                           setAnswers={setAnswers}
                           key={index}
-                          title={word.val}
+                          opacity={word.opacity}
+                          title={
+                            !isColorsSet
+                              ? word.val
+                              : correctMatches.some(
+                                    (item) => item.value === word.val
+                                  )
+                                ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
+                                : word.val
+                          }
                           selected={selected}
                           setProcess={setProcess}
                           setSelected={setSelected}
