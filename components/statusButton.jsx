@@ -41,9 +41,8 @@ export default function StatusButton({
   checked,
   questionType,
 }) {
-  const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
-    (state) => state
-  );
+  const { getCurrentQuestion, increaseCurrentIndex, currentIndex } =
+    useQuesStore((state) => state);
   const router = useRouter();
 
   const handlePress = () => {
@@ -68,7 +67,7 @@ export default function StatusButton({
       console.log("After Pressing Cont", currentIndex);
       if (currentIndex + 1 < 9) {
         increaseCurrentIndex();
-        const nextScreen = getQuestionType(questions[currentIndex + 1]);
+        const nextScreen = getQuestionType(getCurrentQuestion());
         console.log("Navigating to:", nextScreen);
 
         router.replace(nextScreen);

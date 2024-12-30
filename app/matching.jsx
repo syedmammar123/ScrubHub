@@ -73,6 +73,10 @@ export default function Matching() {
       return updatedAns;
     });
   };
+  console.log("0", matchingDropLayout[0]);
+  console.log("1", matchingDropLayout[1]);
+  console.log("2", matchingDropLayout[2]);
+  console.log("3", matchingDropLayout[3]);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -91,27 +95,42 @@ export default function Matching() {
           offsetValue - 20
         ) {
           box.value = 0;
-          yValue.value = -offsetValue + 3 - matchingOptionsLayout[index]?.y;
+          yValue.value = -offsetValue - matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           offsetValue - 47 - 20
         ) {
           box.value = 1;
-          yValue.value = -offsetValue + 55 - matchingOptionsLayout[index]?.y;
+          yValue.value =
+            -offsetValue +
+            (matchingDropLayout[0].height + 10) -
+            matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           offsetValue - 2 * 47 - 20
         ) {
           box.value = 2;
           yValue.value =
-            -offsetValue + 2 * 53.5 - matchingOptionsLayout[index]?.y;
+            -offsetValue +
+            (matchingDropLayout[0].height +
+              matchingDropLayout[1].height +
+              matchingDropLayout[2].y +
+              20) -
+            matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
           offsetValue - 3 * 47 - 20
         ) {
           box.value = 3;
           yValue.value =
-            -offsetValue + 3 * 52.5 - matchingOptionsLayout[index]?.y;
+            -offsetValue +
+            (matchingDropLayout[0].height +
+              matchingDropLayout[1].height +
+              matchingDropLayout[2].height +
+              matchingDropLayout[2].y +
+              matchingDropLayout[3].y +
+              30) -
+            matchingOptionsLayout[index]?.y;
         } else {
           box.value = -1;
         }

@@ -10,6 +10,7 @@ import StatusIcon from "@/components/statusIcon";
 import { ScrollView } from "react-native-gesture-handler";
 import IncompleteWordButtons from "@/components/incompleteWordButtons";
 import useQuesStore from "@/store/quesStore";
+import { scale } from "react-native-size-matters";
 
 // let processWords = [
 //   { val: "Glucose→", notknown: false },
@@ -96,15 +97,12 @@ export default function IncompleteProcess() {
   };
 
   useEffect(() => {
-    // PreProcessing of Process
+    // // PreProcessing of Process
+
     const splitProcess = questions[currentIndex].diagram.split("→");
     console.log(splitProcess);
     const transformedArray = splitProcess.map((item, index, array) => {
-      if (index === 0) {
-        return { val: item.trim() + "→", notknown: false };
-      } else if (index === array.length - 1) {
-        return { val: "→" + item.trim(), notknown: false };
-      } else if (item.includes("{")) {
+      if (item.includes("{")) {
         setAnswers((prevAnswers) => {
           const newObj = {
             val: "",
@@ -114,7 +112,7 @@ export default function IncompleteProcess() {
         });
         return { val: "", notknown: true };
       } else {
-        return { val: "→" + item.trim() + "→", notknown: false };
+        return { val: item.trim(), notknown: false };
       }
     });
     setProcess(transformedArray);
@@ -129,8 +127,16 @@ export default function IncompleteProcess() {
   //Checking After Submission
   useEffect(() => {
     if (checked) {
-      const correctAns = Object.values(questions[currentIndex].correctAnswers);
-      const correctKeys = Object.keys(questions[currentIndex].correctAnswers);
+      const correctAnswersfromDB = questions[currentIndex].correctAnswers;
+
+      const correctKeys = Object.keys(
+        questions[currentIndex].correctAnswers
+      ).sort();
+      const correctAns = correctKeys.map((key) => correctAnswersfromDB[key]);
+
+      console.log(correctKeys);
+      console.log(correctAns);
+
       let wrongAnswers = [];
       let correctAnswers = [];
       let flag = true;
@@ -190,42 +196,54 @@ export default function IncompleteProcess() {
                   alignSelf: "center",
                 }}
               >
-                <View style={{ flex: 1, justifyContent: "space-between" }}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "space-between",
+                    height: scale(650),
+                  }}
+                >
                   {/* UPPER CONTAINER */}
                   <View
                     style={{
                       width: "100%",
                       flex: 1,
-                      justifyContent: "space-between",
+                      rowGap: scale(40),
                     }}
                   >
                     {/* Guideline */}
                     <View>
-                      <Text style={styles.Text}>
-                        Given an incomplete flowchart of a process that occurs
-                        in the human body or in a disease, complete the missing
-                        parts of the flowchart by dragging the answer choices to
-                        their correct position
-                      </Text>
-                    </View>
+                      <View>
+                        <Text style={styles.Text}>
+                          Given an incomplete flowchart of a process that occurs
+                          in the human body or in a disease, complete the
+                          missing parts of the flowchart by dragging the answer
+                          choices to their correct position
+                        </Text>
+                      </View>
 
-                    {/* Hint */}
-                    <View>
-                      <Text style={styles.hint}>
-                        What is the sequence of glycolysis? Complete the missing
-                        step in the diagram using the choices below:
-                      </Text>
+                      {/* Hint */}
+                      <View>
+                        <Text style={styles.hint}>
+                          What is the sequence of glycolysis? Complete the
+                          missing step in the diagram using the choices below:
+                        </Text>
+                      </View>
                     </View>
 
                     {/* Process */}
 
                     <View
-                      style={{ flex: 1, width: "90%", alignSelf: "center" }}
+                      style={{
+                        width: "90%",
+                        alignSelf: "center",
+                      }}
                     >
                       <View
                         style={{
                           flexDirection: "row",
                           width: "100%",
+                          rowGap: 6,
                           flexWrap: "wrap",
                           alignItems: "center",
                           justifyContent: "center",
@@ -238,9 +256,8 @@ export default function IncompleteProcess() {
                               notknown.push(index);
                             }
                           });
-                          let qIndex = 0; // Initialize the counter
                           return process.map((proc, index) => (
-                            <View key={index}>
+                            <View style={{ flexDirection: "row" }} key={index}>
                               {!proc.notknown ? (
                                 <Text style={styles.processText}>
                                   {proc.val}
@@ -248,6 +265,7 @@ export default function IncompleteProcess() {
                               ) : (
                                 <View>
                                   <Pressable
+                                    disabled={isColorsSet}
                                     onPress={() => {
                                       handlePress(index);
                                     }}
@@ -280,6 +298,10 @@ export default function IncompleteProcess() {
                                   </Pressable>
                                 </View>
                               )}
+                              <Text>
+                                {" "}
+                                {index !== process.length - 1 && "→"}{" "}
+                              </Text>
                             </View>
                           ));
                         })()}
@@ -326,7 +348,7 @@ export default function IncompleteProcess() {
                     <View
                       style={[
                         styles.btncontainer,
-                        { rowGap: 10, marginTop: 10 },
+                        { rowGap: 10, marginTop: 60 },
                       ]}
                     >
                       {error ? (
