@@ -45,14 +45,15 @@ export default function App() {
 
   const router = useRouter();
   const handlePress = async () => {
-    if (currentIndex < 8) {
-      await fetchQuestions();
-      const nextScreen = getQuestionType(getCurrentQuestion());
+    // if (currentIndex < 8) {
+    //   await fetchQuestions();
+    //   const nextScreen = getQuestionType(getCurrentQuestion());
 
-      router.navigate(nextScreen);
-    } else {
-      router.navigate("/");
-    }
+    //   router.navigate(nextScreen);
+    // } else {
+    //   router.navigate("/");
+    // }
+    router.navigate("topics");
   };
 
   return (

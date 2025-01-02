@@ -18,9 +18,9 @@ const useCurrentUserStore = create((set, get) => ({
     );
     try {
       //   const docs = await getDocs(userQuery);
-      const docs = await getDocs(collection(db,"Users"));
+      const docs = await getDocs(collection(db, "Usersdata"));
 
-      console.log(docs.docs.length);
+      console.log(docs);
 
       docs.forEach((doc) => {
         console.log(`Document ID: ${doc.id}, Data:`, doc.data());

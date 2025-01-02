@@ -2,7 +2,7 @@
   "expo": {
     "newArchEnabled": true,
     "name": "scrubhub",
-    "slug": "scrubhub",
+    "slug": "scrubhubprod",
     "version": "1.0.0",
     "scheme": "scrubhub",
     "orientation": "portrait",
@@ -54,7 +54,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e5e04b01-7aa7-4d99-a085-cd385b63b2a1"
+        "projectId": "e0886165-7580-4b78-a8f9-b57a588ccde0"
       }
     }
   }
