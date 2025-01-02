@@ -19,12 +19,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
+import useCurrentUserStore from "@/store/currentUserStore";
+import { useEffect } from "react";
 
 export default function App() {
+  const { fetchUser } = useCurrentUserStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+  useEffect(() => {
+    fetchUser();
+  });
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
