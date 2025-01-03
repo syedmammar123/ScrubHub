@@ -5,16 +5,34 @@ export default function questionOption({
   bgColor,
   Option,
   setSelected,
+  selected,
   checked,
+  opacity,
+  index,
 }) {
   const handlePress = () => {
-    setSelected(Option);
+    if (typeof selected === "string") {
+      setSelected(Option);
+    } else {
+      setSelected((prev) => {
+        let updatedArray;
+        if (prev.includes(index)) {
+          updatedArray = prev.filter((s) => s !== index);
+        } else {
+          updatedArray = [...prev, index];
+        }
+        return updatedArray.sort((a, b) => a - b);
+      });
+    }
   };
   return (
     <TouchableOpacity
       onPress={handlePress}
       disabled={checked}
-      style={[styles.optionContainer, { backgroundColor: bgColor }]}
+      style={[
+        styles.optionContainer,
+        { backgroundColor: bgColor, opacity: opacity },
+      ]}
     >
       <Text
         style={{

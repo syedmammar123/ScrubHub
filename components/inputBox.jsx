@@ -8,6 +8,8 @@ export default function InputBox({
   setLetterLayout,
   index,
   AnimatedStyle,
+  bgColor,
+  answerCalculated,
 }) {
   return (
     // <View style={styles.container}>
@@ -16,13 +18,24 @@ export default function InputBox({
         const { x, y, width, height } = e.nativeEvent.layout;
         setLetterLayout((prevLayout) => {
           const updatedlayout = [...prevLayout];
-          updatedlayout[index] = { x, y, width, height };
+          updatedlayout[index] = { x, y, width, height, isInBank: false };
           return updatedlayout;
         });
       }}
-      style={[styles.box, AnimatedStyle(index)]}
+      style={[
+        styles.box,
+        AnimatedStyle(index),
+        { backgroundColor: bgColor, borderWidth: answerCalculated ? 0 : 1 },
+      ]}
     >
-      <Text style={{ fontWeight: "bold" }}>{letter}</Text>
+      <Text
+        style={{
+          fontWeight: "bold",
+          color: bgColor === "#EF5555" ? "white" : "black",
+        }}
+      >
+        {letter}
+      </Text>
     </Animated.View>
 
     //   <View style={[styles.outerBorder]}></View>
@@ -43,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    backgroundColor: "white",
+
     marginTop: 5,
     zIndex: 2,
   },

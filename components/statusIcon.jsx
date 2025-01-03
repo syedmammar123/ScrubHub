@@ -5,12 +5,19 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { theme } from "@/theme";
 
 export default function StatusIcon({ text, icon }) {
+  console.log(icon === "none");
+
   return (
     <View style={styles.container}>
       {icon !== "cancel" ? (
-        <AntDesign name="checkcircle" size={35} color={theme.barColor} />
+        <AntDesign
+          name="checkcircle"
+          style={{ opacity: icon === "none" ? 0 : 1 }}
+          size={35}
+          color={theme.barColor}
+        />
       ) : (
-        <MaterialIcons name="cancel" size={35} color="red" />
+        <MaterialIcons name="cancel" size={35} color="#EF5555" />
       )}
       <Text style={{ fontWeight: "bold", fontSize: 18, marginLeft: 10 }}>
         {text}

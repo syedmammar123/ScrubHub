@@ -19,12 +19,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
+import useCurrentUserStore from "@/store/currentUserStore";
+import { useEffect } from "react";
 
 export default function App() {
+  const { fetchUser } = useCurrentUserStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+  useEffect(() => {
+    fetchUser();
+  });
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -127,36 +133,6 @@ export default function App() {
               ]}
             >
               PLAY WITH YOUR FRIENDS
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => handlePress("casemystery")}
-          >
-            <View
-              style={[
-                styles.lightBlueButton,
-                styles.buttonStyle,
-                styles.buttonFP,
-              ]}
-            >
-              <MaterialCommunityIcons
-                name="clipboard-text-search"
-                size={24}
-                color="white"
-              />
-            </View>
-
-            <Text
-              style={[
-                styles.lightBlueButton,
-                styles.buttonStyle,
-                styles.buttonText,
-                styles.buttonSP,
-              ]}
-            >
-              CASE MYSTERY
             </Text>
           </TouchableOpacity>
         </SafeAreaView>

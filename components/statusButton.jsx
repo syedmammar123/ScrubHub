@@ -5,6 +5,32 @@ import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
 
+const checkAnswerArray = (selected) => {
+  for (let i = 0; i < selected.length; i++) {
+    if (selected[i] === -1) {
+      return false;
+    }
+  }
+  return true;
+};
+const checkAnswerArray2 = (selected) => {
+  for (let i = 0; i < selected.length; i++) {
+    if (selected[i].value === -1) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const checkAnswerArray3 = (selected) => {
+  for (let i = 0; i < selected.length; i++) {
+    if (selected[i].value === "") {
+      return false;
+    }
+  }
+  return true;
+};
+
 export default function StatusButton({
   setSubmitted,
   setError,
@@ -13,15 +39,24 @@ export default function StatusButton({
   width,
   setChecked,
   checked,
+  questionType,
 }) {
-  const { questions, increaseCurrentIndex, currentIndex } = useQuesStore(
-    (state) => state
-  );
+  const { getCurrentQuestion, increaseCurrentIndex, currentIndex } =
+    useQuesStore((state) => state);
   const router = useRouter();
 
   const handlePress = () => {
+    console.log("Type", questionType);
+
     if (!checked) {
-      if (selected === "") {
+      if (
+        (questionType === "fourOpt" && selected === "") ||
+        (questionType === "matching" && checkAnswerArray(selected) === false) ||
+        (questionType === "multipleOpt" && selected.length === 0) ||
+        (questionType === "wordscramble" &&
+          checkAnswerArray2(selected) === false) ||
+        (questionType === "incomplete" && checkAnswerArray3(selected) === false)
+      ) {
         setError(true);
       } else {
         setError(false);
@@ -32,7 +67,7 @@ export default function StatusButton({
       console.log("After Pressing Cont", currentIndex);
       if (currentIndex + 1 < 9) {
         increaseCurrentIndex();
-        const nextScreen = getQuestionType(questions[currentIndex + 1]);
+        const nextScreen = getQuestionType(getCurrentQuestion());
         console.log("Navigating to:", nextScreen);
 
         router.replace(nextScreen);

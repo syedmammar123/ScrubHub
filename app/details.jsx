@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -39,16 +39,23 @@ const buttons = [
 ];
 
 export default function App() {
-  const { questions, currentIndex } = useQuesStore((state) => state);
-  const nextScreen = getQuestionType(questions[currentIndex]);
+  const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
+    (state) => state
+  );
+
   const router = useRouter();
-  const handlePress = () => {
-    if (currentIndex < 8) {
-      router.navigate(nextScreen);
-    } else {
-      router.navigate("/");
-    }
+  const handlePress = async () => {
+    // if (currentIndex < 8) {
+    //   await fetchQuestions();
+    //   const nextScreen = getQuestionType(getCurrentQuestion());
+
+    //   router.navigate(nextScreen);
+    // } else {
+    //   router.navigate("/");
+    // }
+    router.navigate("topics");
   };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -59,6 +66,7 @@ export default function App() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
           <ScrubLogo />
+
           <View style={styles.buttonContainer}>
             {/* Buttons */}
             {buttons.map((button, index) => (
@@ -136,5 +144,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
+    fontFamily: "Poppins-Regular",
   },
 });
