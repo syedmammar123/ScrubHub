@@ -19,6 +19,9 @@ export default function ProfileScreen() {
 
       router.navigate("/onboarding");
     } catch (error) {
+      toggleHasOnboarded();
+
+      router.navigate("/onboarding");
       console.error("Error during sign out:", error);
     }
   };
