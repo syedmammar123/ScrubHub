@@ -9,14 +9,13 @@ export default function ProfileScreen() {
   const router = useRouter();
   const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
 
-
   const handleLogout = async () => {
     try {
       const auth = getAuth();
       await signOut(auth);
       console.log("User signed out successfully.");
 
-      toggleHasOnboarded();  
+      toggleHasOnboarded();
 
       router.navigate("/onboarding");
     } catch (error) {

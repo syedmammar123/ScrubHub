@@ -40,7 +40,7 @@ const buttons = [
 
 export default function App() {
   const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state
+    (state) => state,
   );
 
   const router = useRouter();

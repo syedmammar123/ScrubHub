@@ -15,7 +15,13 @@ import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { router, useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { collection, doc,getDoc, getDocs, getFirestore } from "@react-native-firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "@react-native-firebase/firestore";
 import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 
@@ -40,7 +46,7 @@ const buttons = [
 
 export default function Topics() {
   const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state
+    (state) => state,
   );
 
   const router = useRouter();
@@ -55,24 +61,19 @@ export default function Topics() {
     }
   };
 
-
-
   const getInfo = async () => {
     try {
-      
       const auth = getAuth();
-      const user = auth.currentUser;  
+      const user = auth.currentUser;
 
       if (!user) {
         console.log("No user is logged in.");
         return;
       }
 
-      
       const userId = user.uid;
       console.log("Currently logged in user ID:", userId);
 
-      
       const db = getFirestore();
 
       // Reference to the 'Topics' collection
@@ -87,7 +88,7 @@ export default function Topics() {
       }
 
       // Loop through each document and log its data
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         console.log(`Document ID: ${doc.id}, Data:`, doc.data());
       });
     } catch (error) {
@@ -122,29 +123,31 @@ export default function Topics() {
               </Text>
             </View>
             <View>
-            <Pressable
-              onPress={getInfo} 
-              style={{
-                backgroundColor: theme.barColor,
-                paddingHorizontal: 40,
-                paddingVertical: 10,
-                borderWidth: 1,
-                borderColor: theme.barBgColor,
-                borderRadius: 10,
-                // Shadow for iOS
-                shadowColor: "#000", // Black shadow
-                shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
-                shadowOpacity: 0.1, // Opacity of the shadow
-                shadowRadius: 10, // Blur effect of the shadow
+              <Pressable
+                onPress={getInfo}
+                style={{
+                  backgroundColor: theme.barColor,
+                  paddingHorizontal: 40,
+                  paddingVertical: 10,
+                  borderWidth: 1,
+                  borderColor: theme.barBgColor,
+                  borderRadius: 10,
+                  // Shadow for iOS
+                  shadowColor: "#000", // Black shadow
+                  shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
+                  shadowOpacity: 0.1, // Opacity of the shadow
+                  shadowRadius: 10, // Blur effect of the shadow
 
-                // Elevation for Android
-                elevation: 20, // Adds shadow on Android
-              }}
-            >
-              <Text style={{ fontWeight: "bold", fontSize: 14, color: "white" }}>
-                Random
-              </Text>
-            </Pressable>
+                  // Elevation for Android
+                  elevation: 20, // Adds shadow on Android
+                }}
+              >
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 14, color: "white" }}
+                >
+                  Random
+                </Text>
+              </Pressable>
             </View>
           </View>
           <View style={styles.buttonContainer}>

@@ -31,7 +31,7 @@ export default function MultipleOptSelect() {
         }
         return indices;
       },
-      []
+      [],
     );
     setCorrectOptions(correctAnswers);
   }, []);
@@ -39,7 +39,7 @@ export default function MultipleOptSelect() {
   useEffect(() => {
     if (checked) {
       const areMatchesCorrect = correctOptions.every(
-        (value, index) => value === selected[index]
+        (value, index) => value === selected[index],
       );
 
       if (!areMatchesCorrect) {
