@@ -2,7 +2,7 @@
   "expo": {
     "newArchEnabled": true,
     "name": "scrubhub",
-    "slug": "scrubhubprod",
+    "slug": "scrubhub",
     "version": "1.0.0",
     "scheme": "scrubhub",
     "orientation": "portrait",
@@ -16,14 +16,14 @@
     "ios": {
       "supportsTablet": true,
       "googleServicesFile": "./GoogleService-Info.plist",
-      "bundleIdentifier": "com.anonymous.scrubhub"
+      "bundleIdentifier": "com.anonymous.scrubhubsaim"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.scrubhub",
+      "package": "com.anonymous.scrubhubsaim",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
@@ -45,7 +45,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/Poppins-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/Poppins-Regular.ttf"
+          ]
         }
       ]
     ],
@@ -54,8 +56,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e0886165-7580-4b78-a8f9-b57a588ccde0"
+        "projectId": "c7da26d0-9f16-43ba-b0f1-1cb19d9f8eb5"
       }
-    }
+    },
+    "owner": "saim1234"
   }
 }
