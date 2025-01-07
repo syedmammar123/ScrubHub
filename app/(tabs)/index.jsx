@@ -5,10 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
-  ImageBackground,
   SafeAreaView,
-  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -21,16 +18,25 @@ import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { useEffect } from "react";
+import useQuesStore from "@/store/quesStore";
 
 export default function App() {
   const { fetchUser } = useCurrentUserStore((state) => state);
+  const { fetchQuestions, questions, submitQuestions } = useQuesStore(
+    (state) => state
+  );
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+
+  const handleSave = () => {
+    submitQuestions("cardiovascular", "atrial fibrillation");
+  };
   useEffect(() => {
     fetchUser();
-  });
+    // fetchQuestions();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -43,6 +49,24 @@ export default function App() {
           <ScrubLogo />
           {/* Buttons */}
 
+          <TouchableOpacity style={[styles.button]} onPress={handleSave}>
+            <View
+              style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
+            >
+              <Entypo name="graduation-cap" size={24} color="white" />
+            </View>
+
+            <Text
+              style={[
+                styles.redButton,
+                styles.buttonStyle,
+                styles.buttonText,
+                styles.buttonSP,
+              ]}
+            >
+              Submit Questions
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => handlePress("details")}

@@ -44,7 +44,7 @@ export default function App() {
   );
 
   const router = useRouter();
-  const handlePress = async () => {
+  const handlePress = async (system) => {
     // if (currentIndex < 8) {
     //   await fetchQuestions();
     //   const nextScreen = getQuestionType(getCurrentQuestion());
@@ -53,7 +53,7 @@ export default function App() {
     // } else {
     //   router.navigate("/");
     // }
-    router.navigate("topics");
+    router.push({ pathname: "topics", params: { system: system } });
   };
 
   return (
@@ -71,7 +71,7 @@ export default function App() {
             {/* Buttons */}
             {buttons.map((button, index) => (
               <TouchableOpacity
-                onPress={handlePress}
+                onPress={() => handlePress(button.label)}
                 key={index}
                 style={[styles.button]}
               >
