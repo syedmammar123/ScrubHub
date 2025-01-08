@@ -39,12 +39,12 @@ const buttons = [
 ];
 
 export default function App() {
-  const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state,
-  );
+  const { getCurrentType } = useQuesStore((state) => state);
 
   const router = useRouter();
-  const handlePress = async (system) => {
+  const handlePress = (system) => {
+    console.log("TYPE", getCurrentType());
+
     // if (currentIndex < 8) {
     //   await fetchQuestions();
     //   const nextScreen = getQuestionType(getCurrentQuestion());

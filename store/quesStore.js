@@ -8,7 +8,7 @@ import {
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
-const prevQuesLength = async () => {
+const prevQuesLength = async (system, topic) => {
   let prevQues;
   console.log("USER=>", useCurrentUserStore.getState().getUser());
   const curUser = useCurrentUserStore.getState().getUser();
@@ -18,8 +18,8 @@ const prevQuesLength = async () => {
       "Users", // Collection name
       curUser.userId,
       "solved",
-      "cardiovascular",
-      "atrial fibrillation",
+      system,
+      topic
     );
     prevQues = await getDocs(getPrevQuesRef);
     return prevQues.docs.length;
@@ -40,7 +40,7 @@ const pickQues = async (system, topic, docs) => {
   //   system,
   //   topic
   // )
-  const lengthtoSkip = await prevQuesLength();
+  const lengthtoSkip = await prevQuesLength(system, topic);
   console.log("Length to skip", lengthtoSkip);
 
   let index = lengthtoSkip / 9;
@@ -57,26 +57,51 @@ const pickQues = async (system, topic, docs) => {
 };
 
 const useQuesStore = create((set, get) => ({
+  type: "",
   questions: [],
   isLoading: false,
   currentIndex: 0,
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
-  fetchQuestions: async () => {
+  fetchQuestions: async (system, topic) => {
     set({ isLoading: true });
     try {
       const querySnapshot = await getDocs(
-        collection(db, "Questions/cardiovascular/atrial fibrillation"),
+        collection(db, `Questions/${system}/${topic}`)
       );
       let documents = [];
       querySnapshot.forEach((doc) => {
         documents.push({ id: doc.id, ...doc.data() });
       });
 
-      const pickedQuestions = await pickQues("", "", documents);
+      const pickedQuestions = await pickQues(system, topic, documents);
       console.log("PICKED QUESTIONS:", pickedQuestions.length);
 
       set({ questions: pickedQuestions });
+    } catch (error) {
+      console.error("Error fetching documents: ", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  fetchReviewQuestions: async (system, topic) => {
+    set({ isLoading: true });
+    try {
+      const curUser = useCurrentUserStore.getState().getUser();
+      const getPrevQuesRef = collection(
+        db,
+        "Users",
+        curUser.userId,
+        "solved",
+        system,
+        topic
+      );
+      const docs = await getDocs(getPrevQuesRef);
+
+      console.log(docs.docs.length);
+      return docs.docs.length;
+
+      // set({ questions: pickedQuestions });
     } catch (error) {
       console.error("Error fetching documents: ", error);
     } finally {
@@ -94,7 +119,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id,
+          q.id
         );
         batch.set(docRef, q); // Add to batch
       });
@@ -105,9 +130,14 @@ const useQuesStore = create((set, get) => ({
       console.log(error.message);
     }
   },
+  setType: (type) => set({ type: type }),
   getCurrentQuestion: () => {
     const { questions, currentIndex } = get();
     return questions[currentIndex];
+  },
+  getCurrentType: () => {
+    const { type } = get();
+    return type;
   },
 }));
 
