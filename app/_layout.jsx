@@ -109,6 +109,13 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
+          name="userInfoScreen"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
           name="incompleteProcess"
           options={{
             headerShown: false,
