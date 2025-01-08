@@ -19,7 +19,7 @@ const prevQuesLength = async () => {
       curUser.userId,
       "solved",
       "cardiovascular",
-      "atrial fibrillation"
+      "atrial fibrillation",
     );
     prevQues = await getDocs(getPrevQuesRef);
     return prevQues.docs.length;
@@ -94,7 +94,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id
+          q.id,
         );
         batch.set(docRef, q); // Add to batch
       });

@@ -14,8 +14,7 @@ const useCurrentUserStore = create((set, get) => ({
     console.log("CALLED FOR USER");
     const userQuery = query(
       collection(db, "Users"),
-      where("phonenumber", "==", `${userNumber}`)
-
+      where("phonenumber", "==", `${userNumber}`),
     );
     try {
       //   const docs = await getDocs(userQuery);
