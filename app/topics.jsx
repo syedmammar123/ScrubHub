@@ -15,6 +15,7 @@ import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { router, useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useGlobalSearchParams } from "expo-router";
 import {
   collection,
   doc,
@@ -48,11 +49,13 @@ export default function Topics() {
   const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
     (state) => state,
   );
-
+  const { system } = useGlobalSearchParams();
   const router = useRouter();
   const handlePress = async () => {
+    console.log(system);
+
     if (currentIndex < 8) {
-      await fetchQuestions();
+      await fetchQuestions(system.toLowerCase(), "atrial fibrillation");
       const nextScreen = getQuestionType(getCurrentQuestion());
 
       router.navigate(nextScreen);
@@ -154,7 +157,7 @@ export default function Topics() {
             {/* Buttons */}
             {buttons.map((button, index) => (
               <TouchableOpacity
-                onPress={handlePress}
+                onPress={() => handlePress(button.label)}
                 key={index}
                 style={[styles.button]}
               >

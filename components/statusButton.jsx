@@ -72,6 +72,7 @@ export default function StatusButton({
 
         router.replace(nextScreen);
       } else {
+        // Logic to submit Questions
         router.navigate("/");
       }
     }
