@@ -23,7 +23,7 @@ import useQuesStore from "@/store/quesStore";
 export default function App() {
   const { fetchUser } = useCurrentUserStore((state) => state);
   const { fetchQuestions, questions, submitQuestions } = useQuesStore(
-    (state) => state
+    (state) => state,
   );
   const router = useRouter();
   const handlePress = (screen) => {
