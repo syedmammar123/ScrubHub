@@ -66,7 +66,7 @@ const useQuesStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       const querySnapshot = await getDocs(
-        collection(db, "Questions/cardiovascular/atrial fibrillation")
+        collection(db, "Questions/cardiovascular/atrial fibrillation"),
       );
       let documents = [];
       querySnapshot.forEach((doc) => {

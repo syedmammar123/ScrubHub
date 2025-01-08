@@ -29,7 +29,7 @@ export default function Friends() {
   const [dropDownActive, setDropDownActive] = useState(false);
   const [inviteSent, setInviteSent] = useState(false);
 
-  const [countryCode, setCountryCode] = useState("+1");
+  const [countryCode, setCountryCode] = useState("+92");
 
   return (
     <View style={styles.container}>

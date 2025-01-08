@@ -30,7 +30,7 @@ export default function IncompleteWordButtons({
       setAnswers((prev) => {
         const previous = [...prev];
         const foundIndex = previous.findIndex(
-          (obj) => obj.realIndex === selected
+          (obj) => obj.realIndex === selected,
         );
         console.log("FOUND AT", foundIndex);
 

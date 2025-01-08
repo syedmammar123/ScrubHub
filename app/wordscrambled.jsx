@@ -52,22 +52,22 @@ export default function WordScrambled() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 })
+    Array(answerLength).fill({ value: -1, realIndex: -1 }),
   );
 
   console.log("Selected", selected);
 
   // Drag drop functions/ Values
   const translateValueX = questions[currentIndex]?.letterChoices?.map(() =>
-    useSharedValue(0)
+    useSharedValue(0),
   );
   const translateValueY = questions[currentIndex]?.letterChoices?.map(() =>
-    useSharedValue(0)
+    useSharedValue(0),
   );
   const [letterLayout, setLetterLayout] = useState([]);
 
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null)
+    Array(answerLength).fill(null),
   );
 
   const line = useSharedValue(-1);
@@ -149,7 +149,7 @@ export default function WordScrambled() {
               runOnJS(updatedAnswers)(
                 i,
                 index,
-                questions[currentIndex].letterChoices[index]
+                questions[currentIndex].letterChoices[index],
               );
 
               translateValueY[index].value = withSpring(ytranslated.value);
@@ -160,7 +160,7 @@ export default function WordScrambled() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10
+                val - letterLayout[index]?.x + 10,
               );
 
               break;
@@ -191,7 +191,7 @@ export default function WordScrambled() {
   };
 
   const panGestureHandler = questions[currentIndex]?.letterChoices?.map(
-    (_, index) => CreatePanGesture(index)
+    (_, index) => CreatePanGesture(index),
   );
 
   const AnimatedStyle = (index) =>
@@ -240,7 +240,7 @@ export default function WordScrambled() {
           }
           return array;
         },
-        []
+        [],
       );
 
       console.log("MISSING", missingIndices);
@@ -255,7 +255,7 @@ export default function WordScrambled() {
       console.log("MISSINGARRAY", missingArray);
       console.log([...selectedString, ...missingArray]);
       const sortedArray = [...selectedString, ...missingArray].sort(
-        (a, b) => a.realIndex - b.realIndex
+        (a, b) => a.realIndex - b.realIndex,
       );
       console.log("Sorted Array", sortedArray);
 
@@ -338,7 +338,7 @@ export default function WordScrambled() {
                             AnimatedStyle={AnimatedStyle}
                           />
                         </GestureDetector>
-                      )
+                      ),
                     )}
                   </View>
                 </View>

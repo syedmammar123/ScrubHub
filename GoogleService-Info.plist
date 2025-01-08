@@ -2,24 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CLIENT_ID</key>
-	<string>4434927302-a1fd13jffqmh603qsja991r6rh2c7p5k.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.4434927302-a1fd13jffqmh603qsja991r6rh2c7p5k</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>4434927302-0m5bdj8gae2k71f8di766klbvifmup80.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDaqY7U_LExvzzKlv7w3EYnjDJq7SiOYq0</string>
+	<string>AIzaSyDcpYXBDckHeEqi4i7cG5nUdp8ezr4EfVE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>4434927302</string>
+	<string>22327794740</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.anonymous.scrubhub</string>
+	<string>com.anonymous.scrubhubsaim</string>
 	<key>PROJECT_ID</key>
-	<string>scrubhubb</string>
+	<string>scrubhub-24321</string>
 	<key>STORAGE_BUCKET</key>
-	<string>scrubhubb.firebasestorage.app</string>
+	<string>scrubhub-24321.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:4434927302:ios:709d3d0db1bc36119c41c7</string>
+	<string>1:22327794740:ios:30fb2520495fbae0e93e61</string>
 </dict>
 </plist>

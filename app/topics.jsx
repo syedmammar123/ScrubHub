@@ -16,6 +16,15 @@ import { getQuestionType } from "@/util/utilQuesFunc";
 import { router, useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useGlobalSearchParams } from "expo-router";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from "@react-native-firebase/firestore";
+import { db } from "@/config/firebase";
+import { getAuth } from "@react-native-firebase/auth";
 
 const buttons = [
   { label: "Topic 1" },
@@ -38,7 +47,7 @@ const buttons = [
 
 export default function Topics() {
   const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state
+    (state) => state,
   );
   const { system } = useGlobalSearchParams();
   const router = useRouter();
@@ -52,6 +61,41 @@ export default function Topics() {
       router.navigate(nextScreen);
     } else {
       router.navigate("/");
+    }
+  };
+
+  const getInfo = async () => {
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.log("No user is logged in.");
+        return;
+      }
+
+      const userId = user.uid;
+      console.log("Currently logged in user ID:", userId);
+
+      const db = getFirestore();
+
+      // Reference to the 'Topics' collection
+      const topicsCollectionRef = collection(db, "Topics");
+
+      // Get all documents in the 'Topics' collection
+      const querySnapshot = await getDocs(topicsCollectionRef);
+
+      if (querySnapshot.empty) {
+        console.log("No documents found in Topics.");
+        return null;
+      }
+
+      // Loop through each document and log its data
+      querySnapshot.forEach((doc) => {
+        console.log(`Document ID: ${doc.id}, Data:`, doc.data());
+      });
+    } catch (error) {
+      console.error("Error fetching documents:", error);
     }
   };
 
@@ -83,6 +127,7 @@ export default function Topics() {
             </View>
             <View>
               <Pressable
+                onPress={getInfo}
                 style={{
                   backgroundColor: theme.barColor,
                   paddingHorizontal: 40,

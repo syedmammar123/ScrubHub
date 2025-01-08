@@ -87,7 +87,7 @@ export default function Matching() {
 
         console.log(
           "DRAGY",
-          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y,
         );
 
         if (
@@ -147,7 +147,7 @@ export default function Matching() {
           runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
-            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x,
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -183,7 +183,7 @@ export default function Matching() {
   useEffect(() => {
     if (checked && questions[currentIndex]?.correctMatches) {
       let correctAnswers = Object.values(
-        questions[currentIndex].correctMatches
+        questions[currentIndex].correctMatches,
       );
 
       const updatedAnswers = answers.map((val, index) => {
@@ -250,7 +250,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Matching Container",
-                        e.nativeEvent.layout.y
+                        e.nativeEvent.layout.y,
                       );
                       setMatchingContainerY(e.nativeEvent.layout.y);
                     }}
@@ -275,7 +275,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Buttons Container",
-                        e.nativeEvent.layout.y
+                        e.nativeEvent.layout.y,
                       );
                       setAnswerContainerY(e.nativeEvent.layout.y);
                     }}
