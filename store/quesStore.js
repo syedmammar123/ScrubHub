@@ -59,14 +59,23 @@ const pickQues = async (system, topic, docs) => {
 const useQuesStore = create((set, get) => ({
   type: "",
 
-  // type (review/study), topic(any topic)
-  fetchedQuestionTopic: { topic: null, type: null },
+  // type (study)
+  fetchedQuestionTopic: "",
   questions: [],
-  isLoading: false,
   currentIndex: 0,
+
+  // type (review)
+  fetchedReviewQuestionTopic: "",
+  reviewQuestions: [],
+  isLoading: false,
+  currentIndexReview: 0,
 
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
+
+  increaseCurrentReviewIndex: () =>
+    set((state) => ({ currentIndexReview: state.currentIndexReview + 1 })),
+
   fetchQuestions: async (system, topic) => {
     set({ isLoading: true });
     // Setting Index 0 for Questions
@@ -85,8 +94,7 @@ const useQuesStore = create((set, get) => ({
       console.log("PICKED QUESTIONS:", pickedQuestions.length);
 
       set({ questions: pickedQuestions });
-      let fetched = { topic: topic, type: "study" };
-      set({ fetchedQuestionTopic: fetched });
+      set({ fetchedQuestionTopic: topic });
     } catch (error) {
       console.error("Error fetching documents: ", error);
     } finally {
@@ -97,7 +105,7 @@ const useQuesStore = create((set, get) => ({
     set({ isLoading: true });
 
     // Setting Index 0 for Questions
-    set({ currentIndex: 0 });
+    set({ currentIndexReview: 0 });
     try {
       const curUser = useCurrentUserStore.getState().getUser();
       const getPrevQuesRef = collection(
@@ -114,9 +122,9 @@ const useQuesStore = create((set, get) => ({
         let questionsPicked = docs.docs.map((doc) => {
           return doc.data();
         });
-        set({ questions: questionsPicked });
-        let fetched = { topic: topic, type: "review" };
-        set({ fetchedQuestionTopic: fetched });
+        set({ reviewQuestions: questionsPicked });
+
+        set({ fetchedReviewQuestionTopic: topic });
       }
 
       console.log(docs.docs.length);
@@ -177,24 +185,37 @@ const useQuesStore = create((set, get) => ({
     }
   },
 
-  // Getting any current Question
+  // Getting any current Question(study)
   getCurrentQuestion: () => {
     const { questions, currentIndex } = get();
     return questions[currentIndex];
   },
 
+  // Getting any current Question(study)
+  getReviewQuestion: () => {
+    const { reviewQuestions, currentIndexReview } = get();
+    return reviewQuestions[currentIndexReview];
+  },
+
   // Setting if user is reviwing/Studying
   setType: (type) => set({ type: type }),
+
   // Getting any current Question reviwing/Studying
   getCurrentType: () => {
     const { type } = get();
     return type;
   },
 
-  // Getting Question Fetch Flag to not fetch/fetch require Questions again
+  // Getting Question Fetch Flag to not fetch/fetch require Questions again(study)
   getfetchedQuestionTopic: () => {
     const { fetchedQuestionTopic } = get();
     return fetchedQuestionTopic;
+  },
+
+  // Getting Question Fetch Flag to not fetch/fetch require Questions again(review)
+  getfetchedReviewTopic: () => {
+    const { fetchedReviewQuestionTopic } = get();
+    return fetchedReviewQuestionTopic;
   },
 }));
 

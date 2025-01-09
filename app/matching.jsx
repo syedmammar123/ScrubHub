@@ -44,8 +44,10 @@ console.log(screenheight);
 
 export default function Matching() {
   //Question Fetch
-  const { currentIndex, questions } = useQuesStore((state) => state);
+  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
+    useQuesStore((state) => state);
 
+  const [question, setQuestion] = useState({});
   // Answer States
   const [answers, setAnswers] = useState(Array(4).fill(-1));
 
@@ -87,7 +89,7 @@ export default function Matching() {
 
         console.log(
           "DRAGY",
-          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y,
+          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
         );
 
         if (
@@ -147,7 +149,7 @@ export default function Matching() {
           runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
-            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x,
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -181,10 +183,8 @@ export default function Matching() {
     });
 
   useEffect(() => {
-    if (checked && questions[currentIndex]?.correctMatches) {
-      let correctAnswers = Object.values(
-        questions[currentIndex].correctMatches,
-      );
+    if (checked && question?.correctMatches) {
+      let correctAnswers = Object.values(question.correctMatches);
 
       const updatedAnswers = answers.map((val, index) => {
         if (val + 1 === correctAnswers[index]) {
@@ -200,6 +200,21 @@ export default function Matching() {
     }
   }, [checked]);
 
+  useEffect(() => {
+    let q = {};
+    if (
+      getReviewQuestion()?.questionStyle === "matchTheMicrobe" ||
+      getCurrentQuestion()?.questionStyle === "matchTheMicrobe"
+    ) {
+      if (getCurrentType() === "review") {
+        q = getReviewQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "study") {
+        q = getCurrentQuestion();
+        setQuestion(q);
+      }
+    }
+  }, [question]);
   useEffect(() => {
     if (matchingContainerY !== null && answerContainerY !== null) {
       setOffsetValue(answerContainerY - matchingContainerY);
@@ -240,9 +255,7 @@ export default function Matching() {
 
                   {/* Hint */}
                   <View>
-                    <Text style={styles.heading}>
-                      {questions[currentIndex].question}
-                    </Text>
+                    <Text style={styles.heading}>{question?.question}</Text>
                   </View>
 
                   {/* Input Of Word  */}
@@ -250,13 +263,13 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Matching Container",
-                        e.nativeEvent.layout.y,
+                        e.nativeEvent.layout.y
                       );
                       setMatchingContainerY(e.nativeEvent.layout.y);
                     }}
                     style={styles.matchablesContainer}
                   >
-                    {questions[currentIndex].microbes?.map((val, index) => (
+                    {question.microbes?.map((val, index) => (
                       <View style={styles.row} key={val.id}>
                         <Text style={styles.TextMatching}>
                           {val.id + "." + val.name}
@@ -275,13 +288,13 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Buttons Container",
-                        e.nativeEvent.layout.y,
+                        e.nativeEvent.layout.y
                       );
                       setAnswerContainerY(e.nativeEvent.layout.y);
                     }}
                     style={styles.answerBtnContainer}
                   >
-                    {questions[currentIndex].treatments?.map((val, index) => (
+                    {question.treatments?.map((val, index) => (
                       <GestureDetector
                         key={index}
                         gesture={panGestureHandler[index]}

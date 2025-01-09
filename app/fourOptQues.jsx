@@ -12,13 +12,49 @@ import StatusIcon from "@/components/statusIcon";
 
 let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
 
+const types = {
+  1: "quickDiagnosis",
+  4: "shortFacts",
+  7: "firstLineTreatment",
+  8: "lab",
+  9: "testToOrder",
+};
+
 export default function fourOptQues() {
-  const { currentIndex, questions } = useQuesStore((state) => state);
+  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
+    useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [selected, setSelected] = useState("");
   const [error, setError] = useState(null);
-
+  const [question, setQuestion] = useState({
+    options: [],
+    question: "",
+    answer: "",
+  });
+  useEffect(() => {
+    let q = {};
+    if (
+      getReviewQuestion()?.questionStyle === types[1] ||
+      getCurrentQuestion()?.questionStyle === types[1] ||
+      getReviewQuestion()?.questionStyle === types[4] ||
+      getCurrentQuestion()?.questionStyle === types[4] ||
+      getReviewQuestion()?.questionStyle === types[7] ||
+      getCurrentQuestion()?.questionStyle === types[7] ||
+      getReviewQuestion()?.questionStyle === types[8] ||
+      getCurrentQuestion()?.questionStyle === types[8] ||
+      getReviewQuestion()?.questionStyle === types[9] ||
+      getCurrentQuestion()?.questionStyle === types[9]
+    ) {
+      if (getCurrentType() === "review") {
+        q = getReviewQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "study") {
+        q = getCurrentQuestion();
+        setQuestion(q);
+      }
+    }
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -36,13 +72,11 @@ export default function fourOptQues() {
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
-                  <Text style={styles.question}>
-                    {questions[currentIndex]?.question}
-                  </Text>
+                  <Text style={styles.question}>{question?.question}</Text>
                 </View>
                 {/* OPTIONS */}
                 <View style={styles.optionsContainer}>
-                  {questions[currentIndex].options?.map((opt, index) => (
+                  {question?.options.map((opt, index) => (
                     <QuestionOption
                       checked={checked}
                       key={index}
@@ -51,8 +85,7 @@ export default function fourOptQues() {
                       opacity={
                         !checked
                           ? 1
-                          : opt === selected ||
-                              opt === questions[currentIndex].answer
+                          : opt === selected || opt === question.answer
                             ? 1
                             : 0.4
                       }
@@ -61,13 +94,11 @@ export default function fourOptQues() {
                           ? selected === opt
                             ? "white"
                             : bgColors[index]
-                          : opt !== questions[currentIndex].answer &&
-                              opt !== selected
+                          : opt !== question.answer && opt !== selected
                             ? bgColors[index]
-                            : selected === questions[currentIndex].answer
+                            : selected === question.answer
                               ? theme.barColor
-                              : opt === questions[currentIndex].answer &&
-                                  opt !== selected
+                              : opt === question.answer && opt !== selected
                                 ? theme.barColor
                                 : "#EF5555"
                       }
@@ -76,7 +107,7 @@ export default function fourOptQues() {
                   ))}
                 </View>
               </View>
-              <View style={{ rowGap: 15 }}>
+              <View style={{ paddingBottom: 20, rowGap: 15 }}>
                 {error ? (
                   <StatusIcon icon="cancel" text={"No Option Selected!"} />
                 ) : (
@@ -84,13 +115,9 @@ export default function fourOptQues() {
                 )}
                 {checked && selected !== "" && !error ? (
                   <StatusIcon
-                    icon={
-                      selected === questions[currentIndex].answer
-                        ? "correct"
-                        : "cancel"
-                    }
+                    icon={selected === question.answer ? "correct" : "cancel"}
                     text={
-                      selected === questions[currentIndex].answer
+                      selected === question.answer
                         ? "Correct Answer!"
                         : "Wrong Answer!"
                     }
