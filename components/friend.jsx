@@ -7,7 +7,7 @@ export default function Friend({ position, photoUrl, Name, marks }) {
       <View style={styles.container}>
         <View style={styles.imageName}>
           {position && <Text style={styles.bluefont}>{position}</Text>}
-          <Image style={styles.image} source={{ uri: photoUrl }} />
+          <Image style={styles.image} source={photoUrl} />
           <Text style={styles.friendName}>{Name}</Text>
         </View>
         {marks ? (

@@ -9,12 +9,7 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { router } from "expo-router";
-import {
-  doc,
-  getDoc,
-  getFirestore,
-  setDoc,
-} from "@react-native-firebase/firestore";
+import { doc, getFirestore, setDoc } from "@react-native-firebase/firestore";
 
 const userInfoScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
