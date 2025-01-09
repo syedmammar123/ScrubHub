@@ -52,37 +52,60 @@ export default function Topics() {
     fetchReviewQuestions,
     currentIndex,
     getCurrentType,
+    getfetchedQuestionTopic,
   } = useQuesStore((state) => state);
   const [topics, setTopics] = useState([]);
   const { system } = useGlobalSearchParams();
   const router = useRouter();
+
+  const [error, setError] = useState(false);
   const handlePress = async (topic) => {
     console.log(system);
     if (getCurrentType() === "review") {
       if (currentIndex < 8) {
-        const lengthOfQuestions = await fetchReviewQuestions(
-          system.toLowerCase(),
-          topic
-        );
-        console.log("LENGTH GIVEN AT", lengthOfQuestions);
-
-        if (lengthOfQuestions > 0) {
+        if (
+          getfetchedQuestionTopic().topic === topic &&
+          getfetchedQuestionTopic().type === "review"
+        ) {
           const nextScreen = getQuestionType(getCurrentQuestion());
-
           router.navigate(nextScreen);
         } else {
-          console.log("NO QUESTIONS FETCHED");
+          const lengthOfQuestions = await fetchReviewQuestions(
+            system.toLowerCase(),
+            topic
+          );
+          console.log("LENGTH GIVEN AT", lengthOfQuestions);
+
+          if (lengthOfQuestions > 0) {
+            const nextScreen = getQuestionType(getCurrentQuestion());
+
+            router.navigate(nextScreen);
+          } else {
+            console.log("NO QUESTIONS FETCHED");
+            setError(true);
+          }
         }
       } else {
         router.navigate("/");
       }
     } else {
       if (currentIndex < 8) {
-        await fetchQuestions(system.toLowerCase(), topic);
-        const nextScreen = getQuestionType(getCurrentQuestion());
+        console.log("PREVIOUS FETCH", getfetchedQuestionTopic());
 
-        router.navigate(nextScreen);
+        if (
+          getfetchedQuestionTopic().topic === topic &&
+          getfetchedQuestionTopic().type === "study"
+        ) {
+          const nextScreen = getQuestionType(getCurrentQuestion());
+          router.navigate(nextScreen);
+        } else {
+          await fetchQuestions(system.toLowerCase(), topic);
+          const nextScreen = getQuestionType(getCurrentQuestion());
+
+          router.navigate(nextScreen);
+        }
       } else {
+        // 9 Questions solved already
         router.navigate("/");
       }
     }

@@ -58,13 +58,20 @@ const pickQues = async (system, topic, docs) => {
 
 const useQuesStore = create((set, get) => ({
   type: "",
+
+  // type (review/study), topic(any topic)
+  fetchedQuestionTopic: { topic: null, type: null },
   questions: [],
   isLoading: false,
   currentIndex: 0,
+
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
   fetchQuestions: async (system, topic) => {
     set({ isLoading: true });
+    // Setting Index 0 for Questions
+    set({ currentIndex: 0 });
+
     try {
       const querySnapshot = await getDocs(
         collection(db, `Questions/${system}/${topic}`)
@@ -78,6 +85,8 @@ const useQuesStore = create((set, get) => ({
       console.log("PICKED QUESTIONS:", pickedQuestions.length);
 
       set({ questions: pickedQuestions });
+      let fetched = { topic: topic, type: "study" };
+      set({ fetchedQuestionTopic: fetched });
     } catch (error) {
       console.error("Error fetching documents: ", error);
     } finally {
@@ -86,6 +95,9 @@ const useQuesStore = create((set, get) => ({
   },
   fetchReviewQuestions: async (system, topic) => {
     set({ isLoading: true });
+
+    // Setting Index 0 for Questions
+    set({ currentIndex: 0 });
     try {
       const curUser = useCurrentUserStore.getState().getUser();
       const getPrevQuesRef = collection(
@@ -98,10 +110,17 @@ const useQuesStore = create((set, get) => ({
       );
       const docs = await getDocs(getPrevQuesRef);
 
+      if (docs.docs.length > 0) {
+        let questionsPicked = docs.docs.map((doc) => {
+          return doc.data();
+        });
+        set({ questions: questionsPicked });
+        let fetched = { topic: topic, type: "review" };
+        set({ fetchedQuestionTopic: fetched });
+      }
+
       console.log(docs.docs.length);
       return docs.docs.length;
-
-      // set({ questions: pickedQuestions });
     } catch (error) {
       console.error("Error fetching documents: ", error);
     } finally {
@@ -130,14 +149,52 @@ const useQuesStore = create((set, get) => ({
       console.log(error.message);
     }
   },
-  setType: (type) => set({ type: type }),
+  submitReviews: async (system, topic) => {
+    const batch = writeBatch(db); // Initialize batch
+    try {
+      get().questions.forEach((q) => {
+        const docRef = doc(
+          db, // Firestore database instance
+          "Users", // Collection name
+          useCurrentUserStore.getState().getUser().userId,
+          "solved",
+          "cardiovascular",
+          get().fetchedQuestionTopic.topic,
+          q.id
+        );
+
+        batch.update(docRef, {
+          isReviewed: true,
+          lastReviewed: new Date(), // Current timestamp
+        });
+      });
+
+      // Commit batch update
+      await batch.commit();
+      console.log("Batch update successful!");
+    } catch (error) {
+      console.error("Batch update failed:", error.message);
+    }
+  },
+
+  // Getting any current Question
   getCurrentQuestion: () => {
     const { questions, currentIndex } = get();
     return questions[currentIndex];
   },
+
+  // Setting if user is reviwing/Studying
+  setType: (type) => set({ type: type }),
+  // Getting any current Question reviwing/Studying
   getCurrentType: () => {
     const { type } = get();
     return type;
+  },
+
+  // Getting Question Fetch Flag to not fetch/fetch require Questions again
+  getfetchedQuestionTopic: () => {
+    const { fetchedQuestionTopic } = get();
+    return fetchedQuestionTopic;
   },
 }));
 

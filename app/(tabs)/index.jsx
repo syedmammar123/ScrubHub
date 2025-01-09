@@ -23,14 +23,19 @@ import review from "../review";
 
 export default function App() {
   const { fetchUser } = useCurrentUserStore((state) => state);
-  const { submitQuestions, setType } = useQuesStore((state) => state);
+  const { submitQuestions, setType, getCurrentType, submitReviews } =
+    useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
 
   const handleSave = () => {
-    submitQuestions("cardiovascular", "atrial fibrillation");
+    // submitQuestions("cardiovascular", "atrial fibrillation");
+
+    if (getCurrentType() === "review") {
+      submitReviews();
+    }
   };
 
   useEffect(() => {
@@ -70,7 +75,7 @@ export default function App() {
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
-              setType("Study");
+              setType("study");
               handlePress("details");
             }}
           >

@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
-  ImageBackground,
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -16,8 +15,7 @@ import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
-import { getQuestionType } from "@/util/utilQuesFunc";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 const buttons = [
   { label: "CARDIOVASCULAR", icon: "graduation-cap", bgColor: "#EBA7A7" },
