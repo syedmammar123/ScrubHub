@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -25,7 +25,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
-
+import ScrubLogo from "@/components/scrubLogo";
 const buttons = [
   { label: "Topic 1" },
   { label: "Test Topic 1" },
@@ -46,24 +46,84 @@ const buttons = [
 ];
 
 export default function Topics() {
-  const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state,
-  );
+  const {
+    fetchQuestions,
+    getCurrentQuestion,
+    fetchReviewQuestions,
+    currentIndex,
+    getCurrentType,
+    getfetchedQuestionTopic,
+  } = useQuesStore((state) => state);
+  const [topics, setTopics] = useState([]);
   const { system } = useGlobalSearchParams();
   const router = useRouter();
-  const handlePress = async () => {
+
+  const [error, setError] = useState(false);
+  const handlePress = async (topic) => {
     console.log(system);
+    if (getCurrentType() === "review") {
+      if (currentIndex < 8) {
+        if (
+          getfetchedQuestionTopic().topic === topic &&
+          getfetchedQuestionTopic().type === "review"
+        ) {
+          const nextScreen = getQuestionType(getCurrentQuestion());
+          router.navigate(nextScreen);
+        } else {
+          const lengthOfQuestions = await fetchReviewQuestions(
+            system.toLowerCase(),
+            topic
+          );
+          console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
-    if (currentIndex < 8) {
-      await fetchQuestions(system.toLowerCase(), "atrial fibrillation");
-      const nextScreen = getQuestionType(getCurrentQuestion());
+          if (lengthOfQuestions > 0) {
+            const nextScreen = getQuestionType(getCurrentQuestion());
 
-      router.navigate(nextScreen);
+            router.navigate(nextScreen);
+          } else {
+            console.log("NO QUESTIONS FETCHED");
+            setError(true);
+          }
+        }
+      } else {
+        router.navigate("/");
+      }
     } else {
-      router.navigate("/");
+      if (currentIndex < 8) {
+        console.log("PREVIOUS FETCH", getfetchedQuestionTopic());
+
+        if (
+          getfetchedQuestionTopic().topic === topic &&
+          getfetchedQuestionTopic().type === "study"
+        ) {
+          const nextScreen = getQuestionType(getCurrentQuestion());
+          router.navigate(nextScreen);
+        } else {
+          await fetchQuestions(system.toLowerCase(), topic);
+          const nextScreen = getQuestionType(getCurrentQuestion());
+
+          router.navigate(nextScreen);
+        }
+      } else {
+        // 9 Questions solved already
+        router.navigate("/");
+      }
     }
   };
 
+  const getTopics = async () => {
+    console.log("TOPICS====>");
+    console.log(system);
+
+    const topicsCollectionRef = doc(db, "Topics", system.toLowerCase());
+    try {
+      const topics = await getDoc(topicsCollectionRef);
+
+      setTopics(topics.data().topics);
+    } catch (error) {
+      console.error("Error fetching document:", error);
+    }
+  };
   const getInfo = async () => {
     try {
       const auth = getAuth();
@@ -99,6 +159,10 @@ export default function Topics() {
     }
   };
 
+  useEffect(() => {
+    getTopics();
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -110,6 +174,7 @@ export default function Topics() {
         {/* Content Container */}
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
+          {!topics && <ScrubLogo />}
           <View
             style={{
               display: "flex",
@@ -122,46 +187,48 @@ export default function Topics() {
           >
             <View>
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                Choose From Topics...
+                {topics && "Choose From Topics..."}
               </Text>
             </View>
             <View>
-              <Pressable
-                onPress={getInfo}
-                style={{
-                  backgroundColor: theme.barColor,
-                  paddingHorizontal: 40,
-                  paddingVertical: 10,
-                  borderWidth: 1,
-                  borderColor: theme.barBgColor,
-                  borderRadius: 10,
-                  // Shadow for iOS
-                  shadowColor: "#000", // Black shadow
-                  shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
-                  shadowOpacity: 0.1, // Opacity of the shadow
-                  shadowRadius: 10, // Blur effect of the shadow
+              {topics && (
+                <Pressable
+                  onPress={getInfo}
+                  style={{
+                    backgroundColor: theme.barColor,
+                    paddingHorizontal: 40,
+                    paddingVertical: 10,
+                    borderWidth: 1,
+                    borderColor: theme.barBgColor,
+                    borderRadius: 10,
+                    // Shadow for iOS
+                    shadowColor: "#000", // Black shadow
+                    shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
+                    shadowOpacity: 0.1, // Opacity of the shadow
+                    shadowRadius: 10, // Blur effect of the shadow
 
-                  // Elevation for Android
-                  elevation: 20, // Adds shadow on Android
-                }}
-              >
-                <Text
-                  style={{ fontWeight: "bold", fontSize: 14, color: "white" }}
+                    // Elevation for Android
+                    elevation: 20, // Adds shadow on Android
+                  }}
                 >
-                  Random
-                </Text>
-              </Pressable>
+                  <Text
+                    style={{ fontWeight: "bold", fontSize: 14, color: "white" }}
+                  >
+                    Random
+                  </Text>
+                </Pressable>
+              )}
             </View>
           </View>
           <View style={styles.buttonContainer}>
             {/* Buttons */}
-            {buttons.map((button, index) => (
+            {topics?.map((button, index) => (
               <TouchableOpacity
-                onPress={() => handlePress(button.label)}
+                onPress={() => handlePress(button)}
                 key={index}
                 style={[styles.button]}
               >
-                <Text style={styles.buttonText}>{button.label}</Text>
+                <Text style={styles.buttonText}>{button}</Text>
                 <AntDesign
                   name="rightcircle"
                   size={24}
@@ -177,6 +244,11 @@ export default function Topics() {
                 </View> */}
               </TouchableOpacity>
             ))}
+          </View>
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <Text>Topics Coming Soon...</Text>
           </View>
         </ScrollView>
       </BackgroundImage>
@@ -239,5 +311,7 @@ const styles = StyleSheet.create({
     color: theme.colorBlack,
     fontWeight: "bold",
     fontSize: 16,
+    width: "80%",
+    textTransform: "capitalize",
   },
 });

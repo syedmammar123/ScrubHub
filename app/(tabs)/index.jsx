@@ -19,20 +19,25 @@ import BackgroundImage from "@/components/backgroundImage";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { useEffect } from "react";
 import useQuesStore from "@/store/quesStore";
+import review from "../review";
 
 export default function App() {
   const { fetchUser } = useCurrentUserStore((state) => state);
-  const { fetchQuestions, questions, submitQuestions } = useQuesStore(
-    (state) => state,
-  );
+  const { submitQuestions, setType, getCurrentType, submitReviews } =
+    useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
 
   const handleSave = () => {
-    submitQuestions("cardiovascular", "atrial fibrillation");
+    // submitQuestions("cardiovascular", "atrial fibrillation");
+
+    if (getCurrentType() === "review") {
+      submitReviews();
+    }
   };
+
   useEffect(() => {
     fetchUser();
     // fetchQuestions();
@@ -64,12 +69,15 @@ export default function App() {
                 styles.buttonSP,
               ]}
             >
-              Submit Questions
+              Test Review Submit
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("details")}
+            onPress={() => {
+              setType("study");
+              handlePress("details");
+            }}
           >
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
@@ -92,7 +100,10 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("review")}
+            onPress={() => {
+              setType("review");
+              handlePress("review");
+            }}
           >
             <View
               style={[styles.yellowButton, styles.buttonStyle, styles.buttonFP]}

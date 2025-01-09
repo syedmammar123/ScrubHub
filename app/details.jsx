@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
-  ImageBackground,
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -16,8 +15,7 @@ import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
-import { getQuestionType } from "@/util/utilQuesFunc";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 const buttons = [
   { label: "CARDIOVASCULAR", icon: "graduation-cap", bgColor: "#EBA7A7" },
@@ -39,12 +37,12 @@ const buttons = [
 ];
 
 export default function App() {
-  const { fetchQuestions, getCurrentQuestion, currentIndex } = useQuesStore(
-    (state) => state,
-  );
+  const { getCurrentType } = useQuesStore((state) => state);
 
   const router = useRouter();
-  const handlePress = async (system) => {
+  const handlePress = (system) => {
+    console.log("TYPE", getCurrentType());
+
     // if (currentIndex < 8) {
     //   await fetchQuestions();
     //   const nextScreen = getQuestionType(getCurrentQuestion());
