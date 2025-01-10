@@ -45,7 +45,9 @@ import { scale } from "react-native-size-matters";
 
 export default function IncompleteProcess() {
   //Question Fetch
-  const { currentIndex, questions } = useQuesStore((state) => state);
+  const { getCurrentQuestion, getReviewQuestion, getCurrentType } =
+    useQuesStore((state) => state);
+  const [question, setQuestion] = useState({});
 
   // Process and Submission States
   const [submitted, setSubmitted] = useState(false);
@@ -74,7 +76,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val,
+        (word) => word.val === process[index].val
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -98,40 +100,50 @@ export default function IncompleteProcess() {
 
   useEffect(() => {
     // // PreProcessing of Process
-
-    const splitProcess = questions[currentIndex].diagram.split("→");
-    console.log(splitProcess);
-    const transformedArray = splitProcess.map((item, index, array) => {
-      if (item.includes("{")) {
-        setAnswers((prevAnswers) => {
-          const newObj = {
-            val: "",
-            realIndex: index,
-          };
-          return [...prevAnswers, newObj];
-        });
-        return { val: "", notknown: true };
-      } else {
-        return { val: item.trim(), notknown: false };
+    let question = {};
+    if (
+      getReviewQuestion()?.questionStyle === "flowChart" ||
+      getCurrentQuestion()?.questionStyle === "flowChart"
+    ) {
+      if (getCurrentType() === "review") {
+        question = getReviewQuestion();
+        setQuestion(question);
+      } else if (getCurrentType() === "study") {
+        question = getCurrentQuestion();
+        setQuestion(question);
       }
-    });
-    setProcess(transformedArray);
+      const splitProcess = question.diagram.split("→");
+      console.log(splitProcess);
+      const transformedArray = splitProcess.map((item, index) => {
+        if (item.includes("{")) {
+          setAnswers((prevAnswers) => {
+            const newObj = {
+              val: "",
+              realIndex: index,
+            };
+            return [...prevAnswers, newObj];
+          });
+          return { val: "", notknown: true };
+        } else {
+          return { val: item.trim(), notknown: false };
+        }
+      });
+      setProcess(transformedArray);
 
-    const optionsArray = questions[currentIndex].options.map((item) => {
-      return { val: item, opacity: 1 };
-    });
+      const optionsArray = question.options.map((item) => {
+        return { val: item, opacity: 1 };
+      });
 
-    setWords(optionsArray);
+      setWords(optionsArray);
+    }
   }, []);
 
   //Checking After Submission
   useEffect(() => {
     if (checked) {
-      const correctAnswersfromDB = questions[currentIndex].correctAnswers;
+      const correctAnswersfromDB = question.correctAnswers;
 
-      const correctKeys = Object.keys(
-        questions[currentIndex].correctAnswers,
-      ).sort();
+      const correctKeys = Object.keys(question.correctAnswers).sort();
       const correctAns = correctKeys.map((key) => correctAnswersfromDB[key]);
 
       console.log(correctKeys);
@@ -140,7 +152,7 @@ export default function IncompleteProcess() {
       let wrongAnswers = [];
       let correctAnswers = [];
       let flag = true;
-      const arr = answers.map((item, index) => {
+      answers.map((item, index) => {
         if (item.val !== correctAns[index]) {
           flag = false;
 
@@ -161,7 +173,7 @@ export default function IncompleteProcess() {
         const updatedWords = prev.map((word) =>
           correctAnswers.some((item) => item.value === word.val)
             ? { ...word, opacity: 1 }
-            : { ...word, opacity: 0.5 },
+            : { ...word, opacity: 0.5 }
         );
         return updatedWords;
       });
@@ -291,7 +303,7 @@ export default function IncompleteProcess() {
                                     >
                                       {proc.val === ""
                                         ? String.fromCharCode(
-                                            65 + notknown.indexOf(index),
+                                            65 + notknown.indexOf(index)
                                           )
                                         : proc.val}
                                     </Text>
@@ -315,7 +327,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? "#ffffff"
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? theme.barColor
                                 : "#ffffff"
@@ -327,7 +339,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? word.val
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
                                 : word.val

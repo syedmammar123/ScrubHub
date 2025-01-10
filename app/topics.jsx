@@ -53,6 +53,8 @@ export default function Topics() {
     currentIndex,
     getCurrentType,
     getfetchedQuestionTopic,
+    getfetchedReviewTopic,
+    getReviewQuestion,
   } = useQuesStore((state) => state);
   const [topics, setTopics] = useState([]);
   const { system } = useGlobalSearchParams();
@@ -63,11 +65,8 @@ export default function Topics() {
     console.log(system);
     if (getCurrentType() === "review") {
       if (currentIndex < 8) {
-        if (
-          getfetchedQuestionTopic().topic === topic &&
-          getfetchedQuestionTopic().type === "review"
-        ) {
-          const nextScreen = getQuestionType(getCurrentQuestion());
+        if (getfetchedReviewTopic() === topic) {
+          const nextScreen = getQuestionType(getReviewQuestion());
           router.navigate(nextScreen);
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
@@ -90,12 +89,7 @@ export default function Topics() {
       }
     } else {
       if (currentIndex < 8) {
-        console.log("PREVIOUS FETCH", getfetchedQuestionTopic());
-
-        if (
-          getfetchedQuestionTopic().topic === topic &&
-          getfetchedQuestionTopic().type === "study"
-        ) {
+        if (getfetchedQuestionTopic() === topic) {
           const nextScreen = getQuestionType(getCurrentQuestion());
           router.navigate(nextScreen);
         } else {

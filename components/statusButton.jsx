@@ -41,8 +41,15 @@ export default function StatusButton({
   checked,
   questionType,
 }) {
-  const { getCurrentQuestion, increaseCurrentIndex, currentIndex } =
-    useQuesStore((state) => state);
+  const {
+    getReviewQuestion,
+    getCurrentQuestion,
+    increaseCurrentIndex,
+    currentIndex,
+    currentIndexReview,
+    increaseCurrentReviewIndex,
+    getCurrentType,
+  } = useQuesStore((state) => state);
   const router = useRouter();
 
   const handlePress = () => {
@@ -64,16 +71,30 @@ export default function StatusButton({
       }
     } else {
       setSubmitted(true);
-      console.log("After Pressing Cont", currentIndex);
-      if (currentIndex + 1 < 9) {
-        increaseCurrentIndex();
-        const nextScreen = getQuestionType(getCurrentQuestion());
-        console.log("Navigating to:", nextScreen);
+      if (getCurrentType() === "review") {
+        console.log("After Pressing Cont", currentIndexReview);
+        if (currentIndexReview + 1 < 9) {
+          increaseCurrentReviewIndex();
+          const nextScreen = getQuestionType(getReviewQuestion());
+          console.log("Navigating to:", nextScreen);
 
-        router.replace(nextScreen);
+          router.replace(nextScreen);
+        } else {
+          // Logic to submit Questions
+          router.navigate("/");
+        }
       } else {
-        // Logic to submit Questions
-        router.navigate("/");
+        console.log("After Pressing Cont", currentIndex);
+        if (currentIndex + 1 < 9) {
+          increaseCurrentIndex();
+          const nextScreen = getQuestionType(getCurrentQuestion());
+          console.log("Navigating to:", nextScreen);
+
+          router.replace(nextScreen);
+        } else {
+          // Logic to submit Questions
+          router.navigate("/");
+        }
       }
     }
   };
