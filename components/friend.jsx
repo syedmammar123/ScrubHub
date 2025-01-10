@@ -2,7 +2,9 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import Entypo from '@expo/vector-icons/Entypo';
 
-export default function Friend({ position, photoUrl, Name, marks, acceptBtn=false }) {
+export default function Friend({ position, photoUrl, Name, marks, acceptBtn=false, onAccept, onReject, onRemove, id }) {
+
+
   return (
     <>
       <View style={styles.container}>
@@ -17,15 +19,16 @@ export default function Friend({ position, photoUrl, Name, marks, acceptBtn=fals
           <View style={styles.btns}>
             {acceptBtn ? (
               <>
-               <Pressable style={styles.greenBtn}>
+               <Pressable style={styles.greenBtn} onPress={()=>onAccept(id)}>
             <Text style={styles.btnText}>Accept</Text>
           </Pressable>
-          <Pressable style={styles.btn}>
+          <Pressable style={styles.btn} onPress={()=>onReject(id)}>
           <Entypo name="cross" size={24} color="white" />
           </Pressable>
               </>
             ) : (
-              <Pressable style={styles.btn}><Text style={styles.btnText}>Remove</Text></Pressable>
+              <Pressable style={styles.btn} onPress={()=>onRemove(id)}><Text style={styles.btnText} 
+              >Remove</Text></Pressable>
             ) }
          
           </View>
