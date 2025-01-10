@@ -27,14 +27,11 @@ import DropDownButton from "@/components/dropDownButton";
 import CountryPickerModal from "@/components/countryPickerModal";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
-import avatar1 from "@/assets/avatar1.png";
-import avatar2 from "@/assets/avatar2.png";
-import avatar3 from "@/assets/avatar3.png";
-import avatar4 from "@/assets/avatar4.png";
-import avatar5 from "@/assets/avatar5.png";
-import avatar6 from "@/assets/avatar6.png";
-import avatar7 from "@/assets/avatar7.png";
-import avatar0 from "@/assets/avatar0.png";
+
+import AddFriend from "@/components/addFriend";
+import SlideUpView from "@/components/SlideUpView";
+import useGetInvitations from "@/hooks/useGetInvitations";
+import { getAvatarImage } from "@/util/getAvatarImage";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -57,6 +54,10 @@ export default function Friends() {
   const [inviteSent, setInviteSent] = useState(false);
 
   const [countryCode, setCountryCode] = useState("+92");
+
+  const [showInvitation,setShowInvitation] = useState(false);
+  const {invitations,invitationsLoading} = useGetInvitations()  
+
 
   //For testing Purpose only!
   // const uid1 = "FrTsL0JPgZaBSMvPoGHErIpU1iz2";
@@ -225,6 +226,7 @@ export default function Friends() {
     }
   };
 
+
   useEffect(() => {
     if (active === "friends") {
       fetchFriends(); // Fetch friends when the "My Friends" tab is active
@@ -262,31 +264,20 @@ export default function Friends() {
   //   }
   // }
 
-  const getAvatarImage = (avatarId) => {
-    switch (avatarId) {
-      case 1:
-        return avatar1;
-      case 2:
-        return avatar2;
-      case 3:
-        return avatar3;
-      case 4:
-        return avatar4;
-      case 5:
-        return avatar5;
-      case 6:
-        return avatar6;
-      case 7:
-        return avatar7;
-      default:
-        return avatar0; // Default avatar if no match is found
-    }
-  };
+ 
 
   return (
     <View style={styles.container}>
+      {
+        showInvitation && <SlideUpView visible={showInvitation} onClose={() => setShowInvitation(false)} invitations={invitations} invitationsLoading={invitationsLoading}/>
+      }
       <StatusBar style="auto" />
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
       <BackButton />
+      <AddFriend setShowInvitation={setShowInvitation} count={invitations.length}/>
+        </View>
+      
+      
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />

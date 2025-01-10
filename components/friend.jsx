@@ -1,7 +1,8 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
+import Entypo from '@expo/vector-icons/Entypo';
 
-export default function Friend({ position, photoUrl, Name, marks }) {
+export default function Friend({ position, photoUrl, Name, marks, acceptBtn=false }) {
   return (
     <>
       <View style={styles.container}>
@@ -13,9 +14,21 @@ export default function Friend({ position, photoUrl, Name, marks }) {
         {marks ? (
           <Text style={styles.bluefont}>{marks}</Text>
         ) : (
-          <Pressable style={styles.btn}>
-            <Text style={styles.btnText}>Remove</Text>
+          <View style={styles.btns}>
+            {acceptBtn ? (
+              <>
+               <Pressable style={styles.greenBtn}>
+            <Text style={styles.btnText}>Accept</Text>
           </Pressable>
+          <Pressable style={styles.btn}>
+          <Entypo name="cross" size={24} color="white" />
+          </Pressable>
+              </>
+            ) : (
+              <Pressable style={styles.btn}><Text style={styles.btnText}>Remove</Text></Pressable>
+            ) }
+         
+          </View>
         )}
       </View>
       <View style={styles.divider}></View>
@@ -55,6 +68,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
+  },
+  greenBtn: {
+    backgroundColor: "#00FF00",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  btns: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
   },
   btnText: {
     color: "white",
