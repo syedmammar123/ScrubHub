@@ -27,14 +27,11 @@ import DropDownButton from "@/components/dropDownButton";
 import CountryPickerModal from "@/components/countryPickerModal";
 import firestore from "@react-native-firebase/firestore";
 import auth from "@react-native-firebase/auth";
-import avatar1 from "@/assets/avatar1.png";
-import avatar2 from "@/assets/avatar2.png";
-import avatar3 from "@/assets/avatar3.png";
-import avatar4 from "@/assets/avatar4.png";
-import avatar5 from "@/assets/avatar5.png";
-import avatar6 from "@/assets/avatar6.png";
-import avatar7 from "@/assets/avatar7.png";
-import avatar0 from "@/assets/avatar0.png";
+
+import AddFriend from "@/components/addFriend";
+import SlideUpView from "@/components/SlideUpView";
+import useGetInvitations from "@/hooks/useGetInvitations";
+import { getAvatarImage } from "@/util/getAvatarImage";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -57,6 +54,10 @@ export default function Friends() {
   const [inviteSent, setInviteSent] = useState(false);
 
   const [countryCode, setCountryCode] = useState("+92");
+
+  const [showInvitation,setShowInvitation] = useState(false);
+  const {invitations,invitationsLoading} = useGetInvitations()  
+
 
   //For testing Purpose only!
   // const uid1 = "FrTsL0JPgZaBSMvPoGHErIpU1iz2";
@@ -225,6 +226,7 @@ export default function Friends() {
     }
   };
 
+
   useEffect(() => {
     if (active === "friends") {
       fetchFriends(); // Fetch friends when the "My Friends" tab is active
@@ -262,31 +264,140 @@ export default function Friends() {
   //   }
   // }
 
-  const getAvatarImage = (avatarId) => {
-    switch (avatarId) {
-      case 1:
-        return avatar1;
-      case 2:
-        return avatar2;
-      case 3:
-        return avatar3;
-      case 4:
-        return avatar4;
-      case 5:
-        return avatar5;
-      case 6:
-        return avatar6;
-      case 7:
-        return avatar7;
-      default:
-        return avatar0; // Default avatar if no match is found
+
+  const handleAcceptRequest = async (itemId) => {
+    try {
+      const batch = firestore().batch();
+
+      // Reference to the current user's document
+      const myDoc = firestore().collection("Users").doc(myUid);
+
+      // Reference to the target user's document
+      const theirDoc = firestore().collection("Users").doc(itemId);
+
+      // Update the current user's data
+      batch.update(myDoc, {
+        friendList: firestore.FieldValue.arrayUnion(itemId), // Add to friend list
+        friendRequestsReceived: firestore.FieldValue.arrayRemove(itemId), // Remove from received requests
+      });
+
+      // Update the target user's data
+      batch.update(theirDoc, {
+        friendList: firestore.FieldValue.arrayUnion(myUid), // Add to friend list
+        friendRequestsSent: firestore.FieldValue.arrayRemove(myUid), // Remove from sent requests
+      });
+
+      // Commit the batch operation
+      await batch.commit();
+
+      Alert.alert("Success", "Friend request accepted successfully!");
+    } catch (error) {
+      console.error("Error accepting friend request:", error);
+      Alert.alert("Error", "An error occurred while accepting the friend request.");
     }
+  };
+
+  const handleRejectRequest = async (itemId) => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to reject this friend request?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Reject",
+          onPress: async () => {
+            try {
+              const batch = firestore().batch();
+
+              // Reference to the current user's document
+              const myDoc = firestore().collection("Users").doc(myUid);
+
+              // Reference to the target user's document
+              const theirDoc = firestore().collection("Users").doc(itemId);
+
+              // Update the current user's friendRequestsReceived
+              batch.update(myDoc, {
+                friendRequestsReceived: firestore.FieldValue.arrayRemove(itemId),
+              });
+
+              // Update the target user's friendRequestsSent
+              batch.update(theirDoc, {
+                friendRequestsSent: firestore.FieldValue.arrayRemove(myUid),
+              });
+
+              // Commit the batch operation
+              await batch.commit();
+
+              Alert.alert("Success", "Friend request rejected successfully!");
+            } catch (error) {
+              console.error("Error rejecting friend request:", error);
+              Alert.alert(
+                "Error",
+                "An error occurred while rejecting the friend request."
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
+
+
+  const handleRemoveFriend = async (itemId) => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to remove this friend?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Remove",
+          onPress: async () => {
+            try {
+              const batch = firestore().batch();
+
+              // Reference to the current user's document
+              const myDoc = firestore().collection("Users").doc(myUid);
+
+              // Reference to the target user's document
+              const theirDoc = firestore().collection("Users").doc(itemId);
+
+              // Update the current user's data
+              batch.update(myDoc, {
+                friendList: firestore.FieldValue.arrayRemove(itemId), // Remove the friend from current user's list
+              });
+
+              // Update the target user's data
+              batch.update(theirDoc, {
+                friendList: firestore.FieldValue.arrayRemove(myUid), // Remove the friend from target user's list
+              });
+
+              // Commit the batch operation
+              await batch.commit();
+              fetchFriends()
+
+              Alert.alert("Success", "Friend removed successfully!");
+            } catch (error) {
+              console.error("Error removing friend:", error);
+              Alert.alert("Error", "An error occurred while removing the friend.");
+            }
+          },
+        },
+      ]
+    );
   };
 
   return (
     <View style={styles.container}>
+      {
+        showInvitation && <SlideUpView visible={showInvitation} onClose={() => setShowInvitation(false)} invitations={invitations} invitationsLoading={invitationsLoading} onAccept={handleAcceptRequest} onReject = {handleRejectRequest}/>
+      }
       <StatusBar style="auto" />
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
       <BackButton />
+      <AddFriend setShowInvitation={setShowInvitation} count={invitations.length}/>
+        </View>
+      
+      
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />
@@ -343,6 +454,8 @@ export default function Friends() {
                         ? getAvatarImage(friend.avatarId)
                         : getAvatarImage(0)
                     }
+                    id={friend.uid}
+                    onRemove = {handleRemoveFriend}
                   />
                 ))
               ) : (
