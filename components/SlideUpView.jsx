@@ -7,7 +7,7 @@ import { getAvatarImage } from "@/util/getAvatarImage";
 
 
 
-const SlideUpView = ({ visible, onClose,invitations, invitationsLoading }) => {
+const SlideUpView = ({visible, onClose, invitations, invitationsLoading, onAccept, onReject}) => {
   const screenHeight = Dimensions.get("window").height;
   const translateY = useRef(new Animated.Value(screenHeight)).current;
 
@@ -42,7 +42,7 @@ const SlideUpView = ({ visible, onClose,invitations, invitationsLoading }) => {
         <Feather name="chevron-down" size={24} color="black" />
         </TouchableOpacity>
        
-            <Text style={styles.heading}>Invitaions</Text>
+            <Text style={styles.heading}>Invitations</Text>
             </View>
 
             {
@@ -63,6 +63,9 @@ const SlideUpView = ({ visible, onClose,invitations, invitationsLoading }) => {
                                             ? getAvatarImage(invitation.avatarId)
                                             : getAvatarImage(0)
                                         }
+                                        onAccept= {onAccept}
+                                        onReject= {onReject}
+                                        id = {invitation.uid}
                                       />
                                     ))
                 ) : (
