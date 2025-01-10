@@ -214,7 +214,7 @@ export default function Matching() {
         setQuestion(q);
       }
     }
-  }, [question]);
+  }, []);
   useEffect(() => {
     if (matchingContainerY !== null && answerContainerY !== null) {
       setOffsetValue(answerContainerY - matchingContainerY);

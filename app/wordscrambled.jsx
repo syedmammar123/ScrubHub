@@ -30,20 +30,34 @@ function calcLines(totalBoxes) {
   return lines;
 }
 
+let arr = [
+  "A",
+  "N",
+  "T",
+  "I",
+  "C",
+  "O",
+  "A",
+  "G",
+  "U",
+  "L",
+  "A",
+  "N",
+  "T",
+  "S",
+  "B",
+  "D",
+];
+
 export default function WordScrambled() {
   //Question Fetch
-  const { currentIndex, questions } = useQuesStore((state) => state);
+  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
+    useQuesStore((state) => state);
 
-  // Answer Length & NOofLines States
-  const answerLength = useMemo(() => {
-    return questions[currentIndex]?.answer?.split(" ").join("").length;
-  }, [questions[currentIndex].answer]);
-  const answer = useMemo(() => {
-    return questions[currentIndex]?.answer?.split(" ").join("").toLowerCase();
-  }, [questions[currentIndex].answer]);
-  const noflines = useMemo(() => {
-    return calcLines(answerLength);
-  }, []);
+  const [question, setQuestion] = useState({ letterChoices: [] });
+  const [answerLength, setAnswerLength] = useState();
+  const [answer, setAnswer] = useState("");
+  const [noflines, setNofLines] = useState(-1);
 
   // Submission States
   const [answerCalculated, setAnswerCalculated] = useState(false);
@@ -52,22 +66,26 @@ export default function WordScrambled() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 }),
+    Array(14).fill({ value: -1, realIndex: -1 })
   );
 
   console.log("Selected", selected);
 
+  console.log(blankInputLayout);
+
   // Drag drop functions/ Values
-  const translateValueX = questions[currentIndex]?.letterChoices?.map(() =>
-    useSharedValue(0),
+  // const translateValueX = question?.letterChoices.map(() => useSharedValue(0));
+  // const translateValueY = question.letterChoices.map(() => useSharedValue(0));
+  const translateValueX = getReviewQuestion().letterChoices.map(() =>
+    useSharedValue(0)
   );
-  const translateValueY = questions[currentIndex]?.letterChoices?.map(() =>
-    useSharedValue(0),
+  const translateValueY = getReviewQuestion().letterChoices.map(() =>
+    useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
 
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
 
   const line = useSharedValue(-1);
@@ -146,11 +164,7 @@ export default function WordScrambled() {
                 translateValueX[selected[i].realIndex].value = withSpring(0);
                 translateValueY[selected[i].realIndex].value = withSpring(0);
               }
-              runOnJS(updatedAnswers)(
-                i,
-                index,
-                questions[currentIndex].letterChoices[index],
-              );
+              runOnJS(updatedAnswers)(i, index, question.letterChoices[index]);
 
               translateValueY[index].value = withSpring(ytranslated.value);
 
@@ -160,7 +174,7 @@ export default function WordScrambled() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10,
+                val - letterLayout[index]?.x + 10
               );
 
               break;
@@ -190,8 +204,8 @@ export default function WordScrambled() {
       });
   };
 
-  const panGestureHandler = questions[currentIndex]?.letterChoices?.map(
-    (_, index) => CreatePanGesture(index),
+  const panGestureHandler = question.letterChoices?.map((_, index) =>
+    CreatePanGesture(index)
   );
 
   const AnimatedStyle = (index) =>
@@ -204,6 +218,34 @@ export default function WordScrambled() {
       };
     });
 
+  useEffect(() => {
+    let q = {};
+    if (
+      getReviewQuestion()?.questionStyle === "scrabble" ||
+      getCurrentQuestion()?.questionStyle === "scrabble"
+    ) {
+      if (getCurrentType() === "review") {
+        q = getReviewQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "study") {
+        q = getCurrentQuestion();
+        setQuestion(q);
+      }
+      try {
+        // Answer Length & NOofLines States
+        const answerL = q?.answer?.length;
+        console.log("CONSOLe", q?.answer?.length);
+
+        setAnswerLength(answerL);
+        const ans = q?.answer?.split(" ").join("").toLowerCase();
+        setAnswer(ans);
+        const n = calcLines(answerLength);
+        setNofLines(n);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+  }, []);
   useEffect(() => {
     if (checked) {
       console.log("Checking");
@@ -233,14 +275,14 @@ export default function WordScrambled() {
 
       console.log("Selected", selectedString);
       const selectedIndices = selectedString.map((item) => item.realIndex);
-      const missingIndices = questions[currentIndex]?.letterChoices?.reduce(
+      const missingIndices = question.letterChoices?.reduce(
         (array, _, index) => {
           if (!selectedIndices.includes(index)) {
             array.push(index);
           }
           return array;
         },
-        [],
+        []
       );
 
       console.log("MISSING", missingIndices);
@@ -248,14 +290,14 @@ export default function WordScrambled() {
         return {
           realIndex: item,
           backgroundColor: "white",
-          value: questions[currentIndex]?.letterChoices[item],
+          value: question.letterChoices[item],
         };
       });
 
       console.log("MISSINGARRAY", missingArray);
       console.log([...selectedString, ...missingArray]);
       const sortedArray = [...selectedString, ...missingArray].sort(
-        (a, b) => a.realIndex - b.realIndex,
+        (a, b) => a.realIndex - b.realIndex
       );
       console.log("Sorted Array", sortedArray);
 
@@ -293,21 +335,19 @@ export default function WordScrambled() {
                   <View>
                     <Text style={styles.guideline}>
                       Given a hint with a series of empty spaces and{" "}
-                      {questions[currentIndex]?.letterChoices?.length} letter
-                      options, find out which word/term is being hinted at
+                      {question?.letterChoices?.length} letter options, find out
+                      which word/term is being hinted at
                     </Text>
                   </View>
 
                   {/* Hint */}
                   <View>
-                    <Text style={styles.guideline}>
-                      {questions[currentIndex]?.hint}
-                    </Text>
+                    <Text style={styles.guideline}>{question?.hint}</Text>
                   </View>
 
                   {/* Blanks */}
                   <View style={styles.inputContainer}>
-                    {blankInputLayout.map((_, index) => (
+                    {selected.map((_, index) => (
                       <BlankInput
                         checked={checked}
                         key={index}
@@ -319,27 +359,25 @@ export default function WordScrambled() {
 
                   {/* Letters to Choose */}
                   <View style={styles.lettersContainer}>
-                    {questions[currentIndex]?.letterChoices?.map(
-                      (val, index) => (
-                        <GestureDetector
-                          key={index}
-                          gesture={panGestureHandler[index]}
-                        >
-                          <InputBox
-                            answerCalculated={answerCalculated}
-                            bgColor={
-                              !answerCalculated
-                                ? "white"
-                                : selected[index].backgroundColor
-                            }
-                            letter={val}
-                            setLetterLayout={setLetterLayout}
-                            index={index}
-                            AnimatedStyle={AnimatedStyle}
-                          />
-                        </GestureDetector>
-                      ),
-                    )}
+                    {question?.letterChoices?.map((val, index) => (
+                      <GestureDetector
+                        key={index}
+                        gesture={panGestureHandler[index]}
+                      >
+                        <InputBox
+                          answerCalculated={answerCalculated}
+                          bgColor={
+                            !answerCalculated
+                              ? "white"
+                              : selected[index].backgroundColor
+                          }
+                          letter={val}
+                          setLetterLayout={setLetterLayout}
+                          index={index}
+                          AnimatedStyle={AnimatedStyle}
+                        />
+                      </GestureDetector>
+                    ))}
                   </View>
                 </View>
               </>
@@ -360,11 +398,7 @@ export default function WordScrambled() {
                 {checked && !error ? (
                   <StatusIcon
                     icon={isMatchesCorrect ? "correct" : "cancel"}
-                    text={
-                      isMatchesCorrect
-                        ? "Amazing!"
-                        : `${questions[currentIndex]?.answer}`
-                    }
+                    text={isMatchesCorrect ? "Amazing!" : `${question?.answer}`}
                   />
                 ) : (
                   <StatusIcon icon="none" text={""} />

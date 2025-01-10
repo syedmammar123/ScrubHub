@@ -13,7 +13,11 @@ import StatusIcon from "@/components/statusIcon";
 let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
 
 export default function MultipleOptSelect() {
-  const { currentIndex, questions } = useQuesStore((state) => state);
+  //Question Fetch
+  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
+    useQuesStore((state) => state);
+
+  const [question, setQuestion] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -24,22 +28,32 @@ export default function MultipleOptSelect() {
   console.log("CHECKED", checked);
 
   useEffect(() => {
-    const correctAnswers = questions[currentIndex].options.reduce(
-      (indices, opt, index) => {
-        if (opt.isCorrect) {
-          indices.push(index);
-        }
-        return indices;
-      },
-      [],
-    );
+    let q = {};
+    if (
+      getReviewQuestion()?.questionStyle === "medicationUse" ||
+      getCurrentQuestion()?.questionStyle === "medicationUse"
+    ) {
+      if (getCurrentType() === "review") {
+        q = getReviewQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "study") {
+        q = getCurrentQuestion();
+        setQuestion(q);
+      }
+    }
+    const correctAnswers = q.options.reduce((indices, opt, index) => {
+      if (opt.isCorrect) {
+        indices.push(index);
+      }
+      return indices;
+    }, []);
     setCorrectOptions(correctAnswers);
   }, []);
 
   useEffect(() => {
     if (checked) {
       const areMatchesCorrect = correctOptions.every(
-        (value, index) => value === selected[index],
+        (value, index) => value === selected[index]
       );
 
       if (!areMatchesCorrect) {
@@ -67,16 +81,14 @@ export default function MultipleOptSelect() {
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
-                  <Text style={styles.question}>
-                    {questions[currentIndex]?.description}
-                  </Text>
+                  <Text style={styles.question}>{question?.description}</Text>
                   <Text style={[styles.question, { fontSize: 20 }]}>
-                    "{questions[currentIndex]?.name}"
+                    "{question?.name}"
                   </Text>
                 </View>
                 {/* OPTIONS */}
                 <View style={styles.optionsContainer}>
-                  {questions[currentIndex].options?.map((opt, index) => (
+                  {question?.options?.map((opt, index) => (
                     <QuestionOption
                       checked={checked}
                       index={index}
