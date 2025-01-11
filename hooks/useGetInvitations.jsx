@@ -46,7 +46,7 @@ const useGetInvitations = () => {
       fetchInvitations();
     },[])
   return (
-    {invitations, invitationsLoading}
+    {invitations, invitationsLoading, setInvitations}
   )
 }
 
