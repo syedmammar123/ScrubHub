@@ -346,6 +346,7 @@ export default function Matching() {
                   <StatusButton
                     setError={setError}
                     selected={answers}
+                    scoreIncrease={isMatchesCorrect}
                     setSubmitted={setSubmitted}
                     setChecked={setChecked}
                     checked={checked}

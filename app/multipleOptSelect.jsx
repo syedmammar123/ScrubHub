@@ -143,6 +143,7 @@ export default function MultipleOptSelect() {
                 {checked ? (
                   <StatusButton
                     setError={setError}
+                    scoreIncrease={isMatchesCorrect}
                     selected={selected}
                     setSubmitted={setSubmitted}
                     setChecked={setChecked}

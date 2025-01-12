@@ -383,6 +383,7 @@ export default function IncompleteProcess() {
                       )}
                       {checked ? (
                         <StatusButton
+                          scoreIncrease={isMatchesCorrect}
                           setError={setError}
                           selected={answers}
                           setSubmitted={setSubmitted}
