@@ -17,16 +17,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
 import { router } from "expo-router";
 import { doc, getDoc, getFirestore } from "@react-native-firebase/firestore";
+import { OtpInput } from "react-native-otp-entry";
 
 export default function OtpScreen() {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [confirm, setConfirm] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
-
-  const inputRefs = useRef([]);
 
   useEffect(() => {
     const { phoneNumber } = route.params;
@@ -60,33 +59,10 @@ export default function OtpScreen() {
     }
   };
 
-  const handleOtpChange = (value, index) => {
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
-
-    // Move to the next input field automatically if typing a new value
-    if (value && index < otp.length - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleBackspace = (index) => {
-    const newOtp = [...otp];
-    newOtp[index] = ""; // Clear the current field
-    setOtp(newOtp);
-
-    // Move to the previous input field if it's not the first one
-    if (index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
   const handleConfirm = async () => {
-    const otpCode = otp.join(""); // Join the OTP digits into a single string
     try {
       if (confirm) {
-        const result = await confirm.confirm(otpCode);
+        const result = await confirm.confirm(otp);
         const user = result.user;
         console.log(user);
         const uid = user.uid;
@@ -112,6 +88,10 @@ export default function OtpScreen() {
     }
   };
 
+  const handleTextChange = (text) => {
+    setOtp(text); 
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
@@ -135,25 +115,16 @@ export default function OtpScreen() {
             </View>
 
             {/* OTP Input Fields */}
-            <View style={styles.otpInputContainer}>
-              {otp.map((digit, index) => (
-                <TextInput
-                  key={index}
-                  ref={(ref) => (inputRefs.current[index] = ref)}
-                  style={styles.otpInput}
-                  keyboardType="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChangeText={(value) => handleOtpChange(value, index)}
-                  onKeyPress={({ nativeEvent }) => {
-                    if (nativeEvent.key === "Backspace") {
-                      handleBackspace(index);
-                    }
-                  }}
-                  returnKeyType="next"
-                />
-              ))}
-            </View>
+            <OtpInput
+              numberOfDigits={6}
+              onTextChange={handleTextChange}
+              focusColor="black"
+              hideStick={true}
+              theme={{
+                pinCodeContainerStyle: styles.otpInput,
+                pinCodeTextStyle: styles.pinCodeText,
+              }}
+            />
 
             {/* Confirm Button */}
             <TouchableOpacity
@@ -226,9 +197,12 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0,0,0,0.3)",
     borderRadius: 5,
     textAlign: "center",
-    fontSize: 18,
     backgroundColor: "rgba(0,0,0,0.05)",
     marginHorizontal: 6,
+  },
+  pinCodeText: {
+    color: "black",
+    fontSize: 18,
   },
   confirmButton: {
     width: "100%",
