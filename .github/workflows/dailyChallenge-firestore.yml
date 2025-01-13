@@ -1,9 +1,11 @@
 name: Firestore Daily Update
 
 on:
+  # Schedule to run at 16:51 UTC every day
   schedule:
-    # Run at midnight UTC (adjust as needed)
     - cron: "51 16 * * *"
+  # Manual trigger for running the workflow manually
+  workflow_dispatch:
 
 jobs:
   update-firestore:
@@ -19,10 +21,10 @@ jobs:
         node-version: "16"
 
     - name: Install dependencies
-      run: npm install firebase-admin
+      run: npm install firebase-admin jq
 
     - name: Add Firebase Credentials
-      run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > serviceAccountKey.json
+      run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | jq . > serviceAccountKey.json
 
     - name: Run Firestore Update Script
       run: node scripts/dailyChallenge.js
