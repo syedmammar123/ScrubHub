@@ -3,7 +3,7 @@ const fs = require('fs');
 
 try {
   // Read and parse the service account key JSON
-  const credentials = JSON.parse(fs.readFileSync("serviceAccountKey.json", "utf8"));
+  const credentials = JSON.parse(fs.readFileSync('firebase_credentials.json'));
   
   // Initialize Firebase Admin SDK with the credentials
   admin.initializeApp({
