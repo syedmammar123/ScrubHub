@@ -4,10 +4,13 @@ import { useRouter } from "expo-router";
 import { useUserStore } from "@/store/userStore";
 import { ScrubButton } from "@/components/scrubButton";
 import { getAuth, signOut } from "@react-native-firebase/auth";
+import useGetRandomQues from "@/hooks/useGetRandomQues";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
+
+  const { randomQues, loading } = useGetRandomQues();
 
   const handleLogout = async () => {
     try {
@@ -25,6 +28,8 @@ export default function ProfileScreen() {
       console.error("Error during sign out:", error);
     }
   };
+
+  console.log("randomQues", randomQues);
 
   return (
     <View style={styles.container}>
