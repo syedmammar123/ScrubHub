@@ -3,7 +3,7 @@ name: Firestore Daily Update
 on:
   schedule:
     # Run at midnight UTC (adjust as needed)
-    - cron: "21 19 * * *"
+    - cron: "51 16 * * *"
 
 jobs:
   update-firestore:
