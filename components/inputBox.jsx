@@ -18,7 +18,7 @@ export default function InputBox({
         const { x, y, width, height } = e.nativeEvent.layout;
         setLetterLayout((prevLayout) => {
           const updatedlayout = [...prevLayout];
-          updatedlayout[index] = { x, y, width, height, isInBank: false };
+          updatedlayout[index] = { x, y, width, height };
           return updatedlayout;
         });
       }}

@@ -214,7 +214,7 @@ export default function Matching() {
         setQuestion(q);
       }
     }
-  }, [question]);
+  }, []);
   useEffect(() => {
     if (matchingContainerY !== null && answerContainerY !== null) {
       setOffsetValue(answerContainerY - matchingContainerY);
@@ -346,6 +346,7 @@ export default function Matching() {
                   <StatusButton
                     setError={setError}
                     selected={answers}
+                    scoreIncrease={isMatchesCorrect}
                     setSubmitted={setSubmitted}
                     setChecked={setChecked}
                     checked={checked}

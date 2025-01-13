@@ -127,6 +127,7 @@ export default function fourOptQues() {
                 )}
                 {checked ? (
                   <StatusButton
+                    scoreIncrease={selected === question.answer}
                     setError={setError}
                     selected={selected}
                     setSubmitted={setSubmitted}

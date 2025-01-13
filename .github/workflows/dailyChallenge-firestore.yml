@@ -1,0 +1,28 @@
+name: Firestore Daily Update
+
+on:
+  schedule:
+    # Run at midnight UTC (adjust as needed)
+    - cron: "51 16 * * *"
+
+jobs:
+  update-firestore:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: "16"
+
+    - name: Install dependencies
+      run: npm install firebase-admin
+
+    - name: Add Firebase Credentials
+      run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > serviceAccountKey.json
+
+    - name: Run Firestore Update Script
+      run: node scripts/dailyChallenge.js

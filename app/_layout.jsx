@@ -3,7 +3,6 @@ import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 
-import useCurrentUserStore from "@/store/currentUserStore";
 
 
 export default function Layout() {
@@ -22,14 +21,93 @@ export default function Layout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Stack
-        screenOptions={{
-          tabBarActiveTintColor: theme.colorGreen,
-          headerShown: false,
-        }}
-      >
+       <Stack screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+            animation: "slide_from_bottom",
+          }}
+        />
         <Stack.Screen
           name="onboarding"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="details"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="topics"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="review"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="fourOptQues"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="multipleOptSelect"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="scoreScreen"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="questionmark"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="wordscrambled"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="wordscramblereview"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="matching"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="friends"
           options={{
             headerShown: false,
             animation: "fade",
@@ -49,28 +127,26 @@ export default function Layout() {
             animation: "fade",
           }}
         />
-        
-        <Stack.Screen name="(tabs)" options={{ animation: "fade" }} />
-        <Stack.Screen name="details" options={{ animation: "fade" }} />
-        <Stack.Screen name="topics" options={{ animation: "fade" }} />
-        <Stack.Screen name="review" options={{ animation: "fade" }} />
-        <Stack.Screen name="fourOptQues" options={{ animation: "fade" }} />
         <Stack.Screen
-          name="multipleOptSelect"
-          options={{ animation: "fade" }}
+          name="userInfoScreen"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
         />
-        <Stack.Screen name="questionmark" options={{ animation: "fade" }} />
-        <Stack.Screen name="wordscrambled" options={{ animation: "fade" }} />
-        <Stack.Screen name="matching" options={{ animation: "fade" }} />
-        <Stack.Screen name="friends" options={{ animation: "fade" }} />
-        <Stack.Screen name="userInfoScreen" options={{ animation: "fade" }} />
         <Stack.Screen
           name="incompleteProcess"
-          options={{ animation: "fade" }}
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
         />
         <Stack.Screen
           name="challengeLeaderboard"
-          options={{ animation: "fade" }}
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
         />
       </Stack>
     </GestureHandlerRootView>

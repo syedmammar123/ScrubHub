@@ -37,9 +37,10 @@ export default function App() {
   const handleSave = () => {
     // submitQuestions("cardiovascular", "atrial fibrillation");
 
-    if (getCurrentType() === "review") {
-      submitReviews();
-    }
+    // if (getCurrentType() === "review") {
+    //   submitReviews();
+    // }
+    router.navigate("scoreScreen");
   };
 
   
@@ -71,7 +72,7 @@ export default function App() {
                 styles.buttonSP,
               ]}
             >
-              Test Review Submit
+              Test Screen
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
