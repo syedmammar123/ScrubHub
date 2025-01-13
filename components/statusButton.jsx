@@ -40,6 +40,7 @@ export default function StatusButton({
   setChecked,
   checked,
   questionType,
+  scoreIncrease,
 }) {
   const {
     getReviewQuestion,
@@ -49,6 +50,7 @@ export default function StatusButton({
     currentIndexReview,
     increaseCurrentReviewIndex,
     getCurrentType,
+    increaseScore,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -76,9 +78,12 @@ export default function StatusButton({
         if (currentIndexReview + 1 < 9) {
           increaseCurrentReviewIndex();
           const nextScreen = getQuestionType(getReviewQuestion());
+          if (nextScreen === "wordscrambled") {
+            router.replace("wordscramblereview");
+          } else {
+            router.replace(nextScreen);
+          }
           console.log("Navigating to:", nextScreen);
-
-          router.replace(nextScreen);
         } else {
           // Logic to submit Questions
           router.navigate("/");
@@ -86,6 +91,9 @@ export default function StatusButton({
       } else {
         console.log("After Pressing Cont", currentIndex);
         if (currentIndex + 1 < 9) {
+          if (scoreIncrease) {
+            increaseScore();
+          }
           increaseCurrentIndex();
           const nextScreen = getQuestionType(getCurrentQuestion());
           console.log("Navigating to:", nextScreen);
@@ -93,6 +101,9 @@ export default function StatusButton({
           router.replace(nextScreen);
         } else {
           // Logic to submit Questions
+          if (scoreIncrease) {
+            increaseScore();
+          }
           router.navigate("/");
         }
       }

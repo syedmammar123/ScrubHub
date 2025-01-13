@@ -67,6 +67,13 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
+          name="scoreScreen"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
           name="questionmark"
           options={{
             headerShown: false,
@@ -75,6 +82,13 @@ export default function Layout() {
         />
         <Stack.Screen
           name="wordscrambled"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="wordscramblereview"
           options={{
             headerShown: false,
             animation: "fade",

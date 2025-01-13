@@ -58,7 +58,7 @@ const pickQues = async (system, topic, docs) => {
 
 const useQuesStore = create((set, get) => ({
   type: "",
-
+  score: 0,
   // type (study)
   fetchedQuestionTopic: "",
   questions: [],
@@ -70,6 +70,11 @@ const useQuesStore = create((set, get) => ({
   isLoading: false,
   currentIndexReview: 0,
 
+  increaseScore: () => set((state) => ({ score: state.score + 1 })),
+  getScore: () => {
+    const { score } = get();
+    return score;
+  },
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
 

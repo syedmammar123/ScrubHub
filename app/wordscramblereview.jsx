@@ -49,13 +49,14 @@ let arr = [
   "D",
 ];
 
-export default function WordScrambled() {
+export default function WordScrambleReview() {
   //Question Fetch
-  const { getCurrentQuestion } = useQuesStore((state) => state);
+  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
+    useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({ letterChoices: [] });
   const [answerLength, setAnswerLength] = useState(
-    getCurrentQuestion().answer?.length
+    getReviewQuestion().answer?.length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
@@ -221,8 +222,8 @@ export default function WordScrambled() {
 
   useEffect(() => {
     let q = {};
-    if (getCurrentQuestion()?.questionStyle === "scrabble") {
-      q = getCurrentQuestion();
+    if (getReviewQuestion()?.questionStyle === "scrabble") {
+      q = getReviewQuestion();
       setQuestion(q);
 
       const ans = q?.answer?.split(" ").join("").toLowerCase();
@@ -392,7 +393,6 @@ export default function WordScrambled() {
                 {checked ? (
                   <StatusButton
                     setError={setError}
-                    scoreIncrease={isMatchesCorrect}
                     selected={selected}
                     setSubmitted={setSubmitted}
                     setChecked={setChecked}

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  Modal,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -13,8 +14,9 @@ import BackButton from "@/components/backButton";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useGlobalSearchParams } from "expo-router";
 import {
   collection,
@@ -66,7 +68,11 @@ export default function Topics() {
     if (getCurrentType() === "review") {
       if (currentIndex < 8) {
         if (getfetchedReviewTopic() === topic) {
+          console.log("Already fetched");
+
           const nextScreen = getQuestionType(getReviewQuestion());
+          console.log("NEXT SCREEN", nextScreen);
+
           router.navigate(nextScreen);
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
@@ -76,7 +82,7 @@ export default function Topics() {
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
           if (lengthOfQuestions > 0) {
-            const nextScreen = getQuestionType(getCurrentQuestion());
+            const nextScreen = getQuestionType(getReviewQuestion());
 
             router.navigate(nextScreen);
           } else {
@@ -90,7 +96,13 @@ export default function Topics() {
     } else {
       if (currentIndex < 8) {
         if (getfetchedQuestionTopic() === topic) {
+          console.log("HIT");
+          console.log(getCurrentQuestion().questionStyle);
+          console.log("CALL", getQuestionType(getCurrentQuestion()));
+
           const nextScreen = getQuestionType(getCurrentQuestion());
+          console.log(nextScreen);
+
           router.navigate(nextScreen);
         } else {
           await fetchQuestions(system.toLowerCase(), topic);
@@ -239,11 +251,41 @@ export default function Topics() {
               </TouchableOpacity>
             ))}
           </View>
-          <View
+          {/* Error Modal */}
+          <Modal
+            visible={error}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setError(false)}
+          >
+            <TouchableOpacity
+              style={styles.overlay}
+              onPress={() => setError(false)}
+              activeOpacity={1}
+            >
+              <View style={styles.modalContainer}>
+                {/* Circle with shadow */}
+                <View style={styles.iconCircle}>
+                  <MaterialIcons name="cancel" size={55} color="#EF5555" />
+                </View>
+
+                {/* Title */}
+                <Text style={styles.title}>No Question Fetched!</Text>
+
+                {/* Description */}
+                <Text style={styles.description}>
+                  Error fetching questions. No questions available at the
+                  moment.
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+
+          {/* <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
             <Text>Topics Coming Soon...</Text>
-          </View>
+          </View> */}
         </ScrollView>
       </BackgroundImage>
     </View>
@@ -307,5 +349,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     width: "80%",
     textTransform: "capitalize",
+  },
+
+  // Modal
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Darker background overlay
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 30,
+    alignItems: "center",
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10, // For Android shadow
+  },
+
+  icon: {
+    width: 60,
+    height: 60,
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#333",
+    marginTop: 10,
+  },
+  description: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 10,
   },
 });
