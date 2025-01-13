@@ -21,14 +21,11 @@ jobs:
     - name: Install dependencies
       run: npm install firebase-admin
 
-    - name: Print Firebase credentials (for debugging)
-      run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-
-    - name: Write Firebase credentials to file
-      run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > firebase_credentials.json
+    # - name: Write Firebase credentials to file
+    #   run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" > firebase_credentials.json
 
     - name: Run Firestore Update Script
       run: node scripts/dailyChallenge.js
 
-    - name: Clean up credentials file
-      run: rm -f firebase_credentials.json
+    # - name: Clean up credentials file
+    #   run: rm -f firebase_credentials.json
