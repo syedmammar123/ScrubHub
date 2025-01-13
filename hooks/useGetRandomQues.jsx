@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { types, getRandomArray, getRandomItem } from "../util/getRandomItem";
+import { getRandomArray, getRandomItem } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
 
 const useGetRandomQues = () => {
@@ -67,7 +67,7 @@ const useGetRandomQues = () => {
   };
 
   useEffect(() => {
-    // fetchRandomQues();
+    fetchRandomQues();
   }, []);
 
   return { randomQues, loading };
