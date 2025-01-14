@@ -41,6 +41,7 @@ export default function StatusButton({
   checked,
   questionType,
   scoreIncrease,
+  type, // To Go next after seeing score
 }) {
   const {
     getReviewQuestion,
@@ -51,10 +52,11 @@ export default function StatusButton({
     increaseCurrentReviewIndex,
     getCurrentType,
     increaseScore,
+    submitQuestions,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
-  const handlePress = () => {
+  const handlePress = async () => {
     console.log("Type", questionType);
 
     if (!checked) {
@@ -104,14 +106,24 @@ export default function StatusButton({
           if (scoreIncrease) {
             increaseScore();
           }
-          router.navigate("/");
+          await submitQuestions();
+          router.navigate("scoreScreen");
         }
       }
     }
   };
   return (
     <View style={[styles.container, { width: width }]}>
-      <TouchableOpacity onPress={handlePress} style={styles.btn}>
+      <TouchableOpacity
+        onPress={
+          type === "home"
+            ? () => {
+                router.navigate("/");
+              }
+            : handlePress
+        }
+        style={styles.btn}
+      >
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.lowerbox}></TouchableOpacity>

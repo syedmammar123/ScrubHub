@@ -61,10 +61,12 @@ const useQuesStore = create((set, get) => ({
   score: 0,
   // type (study)
   fetchedQuestionTopic: "",
+  fetchedQuestionSystem: "",
   questions: [],
   currentIndex: 0,
 
   // type (review)
+  fetchedReviewQuestionSystem: "",
   fetchedReviewQuestionTopic: "",
   reviewQuestions: [],
   isLoading: false,
@@ -99,6 +101,7 @@ const useQuesStore = create((set, get) => ({
       console.log("PICKED QUESTIONS:", pickedQuestions.length);
 
       set({ questions: pickedQuestions });
+      set({ fetchedQuestionSystem: system });
       set({ fetchedQuestionTopic: topic });
     } catch (error) {
       console.error("Error fetching documents: ", error);
@@ -129,6 +132,8 @@ const useQuesStore = create((set, get) => ({
         });
         set({ reviewQuestions: questionsPicked });
 
+        set({ fetchedReviewQuestionSystem: system });
+
         set({ fetchedReviewQuestionTopic: topic });
       }
 
@@ -140,8 +145,11 @@ const useQuesStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  submitQuestions: async (system, topic) => {
+  submitQuestions: async () => {
+    set({ currentIndex: 0 });
     const batch = writeBatch(db);
+    let system = get().fetchedQuestionSystem;
+    let topic = get().fetchedQuestionTopic;
     try {
       get().questions.forEach((q) => {
         const docRef = doc(
@@ -156,22 +164,28 @@ const useQuesStore = create((set, get) => ({
         batch.set(docRef, q); // Add to batch
       });
       // Commit the batch operation
+
       await batch.commit();
+      set({ fetchedQuestionSystem: "" });
+      set({ fetchedQuestionTopic: "" });
       console.log("SAVED");
     } catch (error) {
       console.log(error.message);
     }
   },
-  submitReviews: async (system, topic) => {
+  submitReviews: async () => {
     const batch = writeBatch(db); // Initialize batch
+    set({ currentIndexReview: 0 });
+    let system = get().fetchedReviewQuestionSystem;
+    let topic = get().fetchedReviewQuestionTopic;
     try {
-      get().questions.forEach((q) => {
+      get().reviewQuestions.forEach((q) => {
         const docRef = doc(
           db, // Firestore database instance
           "Users", // Collection name
           useCurrentUserStore.getState().getUser().userId,
-          "solved",
-          "cardiovascular",
+          system,
+          topic,
           get().fetchedQuestionTopic.topic,
           q.id
         );
@@ -184,6 +198,9 @@ const useQuesStore = create((set, get) => ({
 
       // Commit batch update
       await batch.commit();
+      set({ fetchedReviewQuestionSystem: "" });
+
+      set({ fetchedReviewQuestionTopic: "" });
       console.log("Batch update successful!");
     } catch (error) {
       console.error("Batch update failed:", error.message);

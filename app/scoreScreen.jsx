@@ -57,7 +57,7 @@ export default function ScoreScreen() {
               You did a great job, Learn more by solving more questions of
               different topics.
             </Text>
-            <StatusButton width={"70%"} text="Continue" />
+            <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>
       </BackgroundImage>

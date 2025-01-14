@@ -30,14 +30,10 @@ export default function App() {
     router.navigate(`${screen}`);
   };
 
-  const handleSave = () => {
-    // submitQuestions("cardiovascular", "atrial fibrillation");
+  // const handleSave = () => {
 
-    // if (getCurrentType() === "review") {
-    //   submitReviews();
-    // }
-    router.navigate("scoreScreen");
-  };
+  //   router.navigate("scoreScreen");
+  // };
 
   useEffect(() => {
     fetchUser();
@@ -55,7 +51,7 @@ export default function App() {
           <ScrubLogo />
           {/* Buttons */}
 
-          <TouchableOpacity style={[styles.button]} onPress={handleSave}>
+          {/* <TouchableOpacity style={[styles.button]} onPress={handleSave}>
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
             >
@@ -72,7 +68,7 @@ export default function App() {
             >
               Test Screen
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
