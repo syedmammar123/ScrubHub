@@ -77,10 +77,10 @@ export default function WordScrambled() {
   // Drag drop functions/ Values
   // const translateValueX = question?.letterChoices.map(() => useSharedValue(0));
   // const translateValueY = question.letterChoices.map(() => useSharedValue(0));
-  const translateValueX = getReviewQuestion().letterChoices.map(() =>
+  const translateValueX = getCurrentQuestion().letterChoices.map(() =>
     useSharedValue(0)
   );
-  const translateValueY = getReviewQuestion().letterChoices.map(() =>
+  const translateValueY = getCurrentQuestion().letterChoices.map(() =>
     useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
