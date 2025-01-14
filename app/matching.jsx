@@ -48,6 +48,7 @@ export default function Matching() {
     useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
+  const [questionOptions, setQuestionOptions] = useState([]);
   // Answer States
   const [answers, setAnswers] = useState(Array(4).fill(-1));
 
@@ -75,22 +76,22 @@ export default function Matching() {
       return updatedAns;
     });
   };
-  console.log("0", matchingDropLayout[0]);
-  console.log("1", matchingDropLayout[1]);
-  console.log("2", matchingDropLayout[2]);
-  console.log("3", matchingDropLayout[3]);
+  // console.log("0", matchingDropLayout[0]);
+  // console.log("1", matchingDropLayout[1]);
+  // console.log("2", matchingDropLayout[2]);
+  // console.log("3", matchingDropLayout[3]);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
-        console.log(offsetValue);
+        // console.log(offsetValue);
 
-        console.log(
-          "DRAGY",
-          0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
-        );
+        // console.log(
+        //   "DRAGY",
+        //   0 - translateValueY[index].value - matchingOptionsLayout[index]?.y
+        // );
 
         if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
@@ -184,7 +185,13 @@ export default function Matching() {
 
   useEffect(() => {
     if (checked && question?.correctMatches) {
-      let correctAnswers = Object.values(question.correctMatches);
+      const correctAnswersfromDB = question.correctMatches;
+      const correctKeys = Object.keys(question.correctMatches).sort();
+
+      let correctAnswers = correctKeys.map((key) => correctAnswersfromDB[key]);
+      // let correctAnswers = Object.values(question.correctMatches);
+      console.log(correctAnswers);
+      console.log(answers);
 
       const updatedAnswers = answers.map((val, index) => {
         if (val + 1 === correctAnswers[index]) {
@@ -212,6 +219,25 @@ export default function Matching() {
       } else if (getCurrentType() === "study") {
         q = getCurrentQuestion();
         setQuestion(q);
+      }
+      if (q.treatments.length < 4) {
+        const matches = Object.values(q.correctMatches);
+        let arr = [];
+        for (let i = 0; i < q.treatments.length; i++) {
+          const count = matches.filter(
+            (id) => id === q.treatments[i].id
+          ).length;
+          console.log("Count of ", q.treatments[i].id, count);
+
+          for (let j = 0; j < count; j++) {
+            arr.push({ id: q.treatments[i].id, name: q.treatments[i].name });
+          }
+        }
+        console.log("New Options", arr);
+
+        setQuestionOptions(arr);
+      } else {
+        setQuestionOptions(q.treatments);
       }
     }
   }, []);
@@ -294,7 +320,7 @@ export default function Matching() {
                     }}
                     style={styles.answerBtnContainer}
                   >
-                    {question.treatments?.map((val, index) => (
+                    {questionOptions?.map((val, index) => (
                       <GestureDetector
                         key={index}
                         gesture={panGestureHandler[index]}
