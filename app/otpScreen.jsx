@@ -29,11 +29,11 @@ export default function OtpScreen() {
   const route = useRoute();
   const setUser = useCurrentUserStore((state) => state.setUser);
 
-  const user = useCurrentUserStore((state) => state.user);
+//   const user = useCurrentUserStore((state) => state.user);
 
- if (user) {
-    return <Redirect href="/" />;
-  }
+//  if (user) {
+//     return <Redirect href="/" />;
+//   }
 
   useEffect(() => {
     const { phoneNumber } = route.params;
@@ -83,7 +83,7 @@ export default function OtpScreen() {
 
         if (userDoc.exists) {
           console.log("User already registered:", userDoc.data());
-          setUser(userDoc.data(),uid);
+          // setUser(userDoc.data(),uid);
           router.navigate("/");
         } else {
           console.log("User not registered. Navigating to user info screen.");
