@@ -168,27 +168,28 @@ async function fetchRandomQues() {
     const randomMainTopics = getRandomArray(documentNames);
 
     // Get random subtopics for each main topic
-    for (const topic of randomMainTopics) {
-      const subTopicDoc = await topicRef.doc(topic).get();
-      const subTopicData = subTopicDoc.data();
+    for (const topicObj of randomMainTopics) {
+      const topic = topicObj.topic;
+      if (!topic) continue; // Skip if topic is invalid
 
-      if (subTopicData && subTopicData.topics) {
+      const subTopicDoc = await topicRef.doc(topic).get();
+      const subTopicData = subTopicDoc.exists ? subTopicDoc.data() : null;
+
+      if (subTopicData && subTopicData.topics && subTopicData.topics.length > 0) {
         const randomTopic = getRandomItem(subTopicData.topics);
-        randomMainTopics[randomMainTopics.indexOf(topic)] = {
-          topic,
-          subTopic: randomTopic,
-        };
+        topicObj.subTopic = randomTopic; // Update the subTopic
       }
     }
 
     // Get random questions for each subtopic
     for (const mainTopic of randomMainTopics) {
-      if (mainTopic.subTopic) {
+      const { topic, subTopic, type } = mainTopic;
+      if (topic && subTopic) {
         const questionsRef = firestore
           .collection("Questions")
-          .doc(mainTopic.topic)
-          .collection(mainTopic.subTopic)
-          .where("questionStyle", "==", mainTopic.type) // Ensure `type` is defined
+          .doc(topic)
+          .collection(subTopic)
+          .where("questionStyle", "==", type) // Ensure `type` is defined
           .limit(1);
 
         const questionSnapshot = await questionsRef.get();
@@ -205,6 +206,7 @@ async function fetchRandomQues() {
     return [];
   }
 }
+
 
 async function updateCollection() {
   try {
