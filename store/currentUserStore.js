@@ -1,36 +1,26 @@
 import { create } from "zustand";
-import { db } from "@/config/firebase";
-import {
-  getDocs,
-  query,
-  where,
-  collection,
-} from "@react-native-firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persist, createJSONStorage } from "zustand/middleware";
 
-let userNumber = "+923404857461";
-const useCurrentUserStore = create((set, get) => ({
-  user: {},
-  fetchUser: async () => {
-    console.log("CALLED FOR USER");
-    const userQuery = query(
-      collection(db, "Users"),
-      where("phonenumber", "==", `${userNumber}`),
-    );
-    try {
-      //   const docs = await getDocs(userQuery);
-      const docs = await getDocs(userQuery);
-
-      const userObj = { ...docs.docs[0].data(), userId: docs.docs[0].id };
-      console.log(userObj);
-      set({ user: userObj });
-    } catch (error) {
-      console.log(error.message);
+const useCurrentUserStore = create(
+  persist(
+    (set, get) => ({
+      user: null, // Initial state
+      setUser: (user, id) => {
+        set({ user: { ...user, id } }); // Properly set the `user` object
+      },
+      getUser: () => {
+        return get().user; // Safely access the `user` state
+      },
+      clearUser: () => {
+        set({ user: null }); // Reset the `user` state
+      },
+    }),
+    {
+      name: "currentUserStore", // Key for localStorage or AsyncStorage
+      storage: createJSONStorage(() => AsyncStorage)
     }
-  },
-  getUser: () => {
-    const { user } = get();
-    return user;
-  },
-}));
+  )
+);
 
 export default useCurrentUserStore;

@@ -13,22 +13,26 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
-import useCurrentUserStore from "@/store/currentUserStore";
-import { useEffect } from "react";
 import useQuesStore from "@/store/quesStore";
 import review from "../review";
+import useCurrentUserStore from "@/store/currentUserStore";
 
 export default function App() {
-  const { fetchUser } = useCurrentUserStore((state) => state);
+
   const { submitQuestions, setType, getCurrentType, submitReviews } =
     useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+  const user = useCurrentUserStore((state) => state.user);
+
+  if (!user) {
+     return <Redirect href="onboarding" />;
+   }
 
   const handleSave = () => {
     // submitQuestions("cardiovascular", "atrial fibrillation");
@@ -39,10 +43,8 @@ export default function App() {
     router.navigate("scoreScreen");
   };
 
-  useEffect(() => {
-    fetchUser();
-    // fetchQuestions();
-  }, []);
+  
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
