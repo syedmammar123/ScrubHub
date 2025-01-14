@@ -97,7 +97,35 @@
 
 
 const admin = require("firebase-admin");
-const { getRandomArray, getRandomItem } = require("../util/getRandomItem");
+
+const types = [
+    'firstLineTreatment',
+    'flowChart',
+    'lab',
+    'matchTheMicrobe',
+    'medicationUse',
+    'quickDiagnosis',
+    'scrabble',
+    'shortFacts',
+    'testToOrder',
+  ];
+
+const getRandomArray = (array) => {
+    let arr = []
+    for (let i = 0; i < types.length; i++) {
+      arr.push({
+        topic: array[Math.floor(Math.random() * array.length)],
+        type: types[i],
+        subTopic: null,
+      });
+    }
+    return arr;
+};
+
+const getRandomItem = (array) => {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
