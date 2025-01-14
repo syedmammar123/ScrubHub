@@ -142,89 +142,162 @@ const firebaseCredentials = {
   universe_domain: "googleapis.com"
 };
 
+// // Initialize Firebase Admin SDK
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(firebaseCredentials)
+// });
+
+
+// const firestore = admin.firestore();
+
+// async function fetchRandomQues() {
+//   try {
+//     const randomQuestions = [];
+
+//     // Get all document IDs from the "Topics" collection
+//     const topicRef = firestore.collection("Topics");
+//     const querySnapshot = await topicRef.get();
+//     const documentNames = querySnapshot.docs.map((doc) => doc.id);
+
+//     if (documentNames.length === 0) {
+//       console.log("No documents found in the Topics collection.");
+//       return [];
+//     }
+
+//     const randomMainTopics = getRandomArray(documentNames);
+
+//     // Get random subtopics for each main topic
+//     for (const topicObj of randomMainTopics) {
+//       const topic = topicObj.topic;
+//       if (!topic) continue; // Skip if topic is invalid
+
+//       const subTopicDoc = await topicRef.doc(topic).get();
+//       const subTopicData = subTopicDoc.exists ? subTopicDoc.data() : null;
+
+//       if (subTopicData && subTopicData.topics && subTopicData.topics.length > 0) {
+//         const randomTopic = getRandomItem(subTopicData.topics);
+//         topicObj.subTopic = randomTopic; // Update the subTopic
+//       }
+//     }
+
+//     // Get random questions for each subtopic
+//     for (const mainTopic of randomMainTopics) {
+//       const { topic, subTopic, type } = mainTopic;
+//       if (topic && subTopic) {
+//         const questionsRef = firestore
+//           .collection("Questions")
+//           .doc(topic)
+//           .collection(subTopic)
+//           .where("questionStyle", "==", type) // Ensure `type` is defined
+//           .limit(1);
+
+//         const questionSnapshot = await questionsRef.get();
+//         questionSnapshot.forEach((doc) => {
+//           randomQuestions.push(doc.data());
+//         });
+//       }
+//     }
+
+//     console.log("Random questions fetched:", randomQuestions);
+//     return randomQuestions;
+//   } catch (error) {
+//     console.error("Error fetching random questions:", error);
+//     return [];
+//   }
+// }
+
+
+// async function updateCollection() {
+//   try {
+//     const randomQues = await fetchRandomQues();
+
+//     const collectionRef = firestore.collection("dailyChallenge");
+//     const snapshot = await collectionRef.get();
+
+//     // Delete existing documents
+//     snapshot.forEach(async (doc) => {
+//       await doc.ref.delete();
+//     });
+
+//     // Add new questions
+//     await collectionRef.add({
+//       createdAt: admin.firestore.FieldValue.serverTimestamp(),
+//       createdVia: "GitHub Actions",
+//       questions: randomQues,
+//     });
+
+//     console.log("dailyChallenge collection updated successfully.");
+//   } catch (error) {
+//     console.error("Error updating dailyChallenge collection:", error);
+//   }
+// }
+
+// // Call the function
+// updateCollection();
+
+
 // Initialize Firebase Admin SDK
-
 admin.initializeApp({
-  credential: admin.credential.cert(firebaseCredentials)
+  credential: admin.credential.cert(firebaseCredentials),
 });
-
 
 const firestore = admin.firestore();
 
-async function fetchRandomQues() {
+async function fetchQuestionsByIndex() {
   try {
-    const randomQuestions = [];
+    const selectedQuestions = [];
+    const topicPath = "Questions/cardiovascular/atrial fibrillation";
 
-    // Get all document IDs from the "Topics" collection
-    const topicRef = firestore.collection("Topics");
+    // Get all document IDs under "Questions->cardiovascular->atrial fibrillation"
+    const topicRef = firestore.collection(topicPath);
     const querySnapshot = await topicRef.get();
-    const documentNames = querySnapshot.docs.map((doc) => doc.id);
+    const documentIds = querySnapshot.docs.map((doc) => doc.id);
 
-    if (documentNames.length === 0) {
-      console.log("No documents found in the Topics collection.");
+    if (documentIds.length === 0) {
+      console.log("No documents found in the specified path.");
       return [];
     }
 
-    const randomMainTopics = getRandomArray(documentNames);
+    // Iterate over document IDs to fetch question content
+    for (const docId of documentIds) {
+      const docRef = topicRef.doc(docId);
+      const docData = await docRef.get();
+      const questionData = docData.exists ? docData.data()?.questions || [] : [];
 
-    // Get random subtopics for each main topic
-    for (const topicObj of randomMainTopics) {
-      const topic = topicObj.topic;
-      if (!topic) continue; // Skip if topic is invalid
-
-      const subTopicDoc = await topicRef.doc(topic).get();
-      const subTopicData = subTopicDoc.exists ? subTopicDoc.data() : null;
-
-      if (subTopicData && subTopicData.topics && subTopicData.topics.length > 0) {
-        const randomTopic = getRandomItem(subTopicData.topics);
-        topicObj.subTopic = randomTopic; // Update the subTopic
+      // Pick questions at indices 0, 10, 20, ..., 80
+      for (let i = 0; i < questionData.length; i += 10) {
+        if (i < questionData.length) {
+          selectedQuestions.push(questionData[i]);
+        }
       }
     }
 
-    // Get random questions for each subtopic
-    for (const mainTopic of randomMainTopics) {
-      const { topic, subTopic, type } = mainTopic;
-      if (topic && subTopic) {
-        const questionsRef = firestore
-          .collection("Questions")
-          .doc(topic)
-          .collection(subTopic)
-          .where("questionStyle", "==", type) // Ensure `type` is defined
-          .limit(1);
-
-        const questionSnapshot = await questionsRef.get();
-        questionSnapshot.forEach((doc) => {
-          randomQuestions.push(doc.data());
-        });
-      }
-    }
-
-    console.log("Random questions fetched:", randomQuestions);
-    return randomQuestions;
+    console.log("Selected questions:", selectedQuestions);
+    return selectedQuestions;
   } catch (error) {
-    console.error("Error fetching random questions:", error);
+    console.error("Error fetching questions:", error);
     return [];
   }
 }
 
-
-async function updateCollection() {
+async function updateDailyChallenge() {
   try {
-    const randomQues = await fetchRandomQues();
+    const selectedQuestions = await fetchQuestionsByIndex();
 
     const collectionRef = firestore.collection("dailyChallenge");
     const snapshot = await collectionRef.get();
 
     // Delete existing documents
-    snapshot.forEach(async (doc) => {
+    for (const doc of snapshot.docs) {
       await doc.ref.delete();
-    });
+    }
 
     // Add new questions
     await collectionRef.add({
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       createdVia: "GitHub Actions",
-      questions: randomQues,
+      questions: selectedQuestions,
     });
 
     console.log("dailyChallenge collection updated successfully.");
@@ -234,4 +307,4 @@ async function updateCollection() {
 }
 
 // Call the function
-updateCollection();
+updateDailyChallenge();
