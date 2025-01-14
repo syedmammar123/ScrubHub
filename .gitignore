@@ -33,3 +33,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+scrubhub-24321-firebase-adminsdk-plrs0-3970bee811.json
