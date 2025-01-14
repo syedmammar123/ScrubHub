@@ -28,11 +28,11 @@ export default function App() {
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
-  const user = useCurrentUserStore((state) => state.user);
+  // const user = useCurrentUserStore((state) => state.user);
 
-  if (!user) {
-     return <Redirect href="onboarding" />;
-   }
+  // if (!user) {
+  //    return <Redirect href="onboarding" />;
+  //  }
 
   // const handleSave = () => {
 

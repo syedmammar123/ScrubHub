@@ -2,11 +2,7 @@ import { theme } from "@/theme";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
-
-
-
 export default function Layout() {
-
   const [fontsLoaded, error] = useFonts({
     CustomFont: require("@/assets/fonts/Poppins-Regular.ttf"), // Add path to your font
   });
@@ -18,10 +14,9 @@ export default function Layout() {
     }
     return null; // You can show a loading screen or spinner here until fonts are loaded
   }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-       <Stack screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
+      <Stack screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
         <Stack.Screen
           name="(tabs)"
           options={{
