@@ -11,11 +11,11 @@ import { View, Text, StyleSheet } from "react-native";
 export default function OnBoarding() {
   const router = useRouter();
   const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
-  // const user = useCurrentUserStore((state) => state.user);
+  const user = useCurrentUserStore((state) => state.user);
 
-  // if (user) {
-  //    return <Redirect href="/" />;
-  //  }
+  if (user) {
+     return <Redirect href="/" />;
+   }
 
   const handlePress = () => {
     toggleHasOnboarded();
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: theme.colorWhite,
+    
   },
 
   buttonContainer: {
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontWeight: "500",
     width: "95%",
+    fontFamily:"Poppins-Regular"
   },
   highlightedText: {
     color: "red",

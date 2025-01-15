@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     textAlign: "center",
+    fontFamily: "Poppins-Regular",
   },
   button: {
     paddingHorizontal: 18,

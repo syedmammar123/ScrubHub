@@ -21,25 +21,22 @@ import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 
 export default function App() {
-
   const { submitQuestions, setType, getCurrentType, submitReviews } =
     useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
-  // const user = useCurrentUserStore((state) => state.user);
-
-  // if (!user) {
-  //    return <Redirect href="onboarding" />;
-  //  }
+  const user = useCurrentUserStore((state) => state.user);
 
   // const handleSave = () => {
 
   //   router.navigate("scoreScreen");
   // };
 
-  
+  if (!user) {
+    return <Redirect href="onboarding" />;
+  }
 
   return (
     <View style={styles.container}>
