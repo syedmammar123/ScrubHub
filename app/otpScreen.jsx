@@ -15,7 +15,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import auth from "@react-native-firebase/auth";
-import { router,Redirect } from "expo-router";
+import { router, Redirect } from "expo-router";
 import { doc, getDoc, getFirestore } from "@react-native-firebase/firestore";
 import { OtpInput } from "react-native-otp-entry";
 import useCurrentUserStore from "@/store/currentUserStore";
@@ -29,11 +29,7 @@ export default function OtpScreen() {
   const route = useRoute();
   const setUser = useCurrentUserStore((state) => state.setUser);
 
-//   const user = useCurrentUserStore((state) => state.user);
-
-//  if (user) {
-//     return <Redirect href="/" />;
-//   }
+  const user = useCurrentUserStore((state) => state.user);
 
   useEffect(() => {
     const { phoneNumber } = route.params;
@@ -83,8 +79,8 @@ export default function OtpScreen() {
 
         if (userDoc.exists) {
           console.log("User already registered:", userDoc.data());
-          // setUser(userDoc.data(),uid);
-          router.navigate("/");
+          await setUser(userDoc.data(), uid);
+          return router.navigate("/");
         } else {
           console.log("User not registered. Navigating to user info screen.");
           navigation.navigate("userInfoScreen", { phoneNumber, uid });
@@ -98,8 +94,13 @@ export default function OtpScreen() {
   };
 
   const handleTextChange = (text) => {
-    setOtp(text); 
+    setOtp(text);
   };
+
+  if (user) {
+    console.log("User already logged in");
+    return <Redirect href="/" />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

@@ -11,11 +11,11 @@ import { View, Text, StyleSheet } from "react-native";
 export default function OnBoarding() {
   const router = useRouter();
   const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
-  // const user = useCurrentUserStore((state) => state.user);
+  const user = useCurrentUserStore((state) => state.user);
 
-  // if (user) {
-  //    return <Redirect href="/" />;
-  //  }
+  if (user) {
+     return <Redirect href="/" />;
+   }
 
   const handlePress = () => {
     toggleHasOnboarded();

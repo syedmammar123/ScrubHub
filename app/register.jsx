@@ -11,18 +11,22 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import DropDownButton from "@/components/dropDownButton";
 import NumberInput from "@/components/numberInput";
 import CountryPickerModal from "@/components/countryPickerModal";
 import { useNavigation } from "@react-navigation/native";
+import useCurrentUserStore from "@/store/currentUserStore";
+
 
 export default function Register() {
   const [dropDownActive, setDropDownActive] = useState(false);
   const [countryCode, setCountryCode] = useState("+92");
   const [phoneNumber, setPhoneNumber] = useState("");
   const navigation = useNavigation();
+  const user = useCurrentUserStore((state) => state.user);
+  
 
   const handlePhoneNumberChange = (value) => {
     console.log(value, "num");
@@ -48,6 +52,10 @@ export default function Register() {
       alert("Please enter a valid phone number.");
     }
   };
+
+ if (user) {
+    return <Redirect href="/" />;
+  }
 
   return (
     <View style={styles.container}>

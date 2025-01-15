@@ -28,18 +28,18 @@ export default function App() {
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
-  // const user = useCurrentUserStore((state) => state.user);
+  const user = useCurrentUserStore((state) => state.user);
 
-  // if (!user) {
-  //    return <Redirect href="onboarding" />;
-  //  }
+  
 
   // const handleSave = () => {
 
   //   router.navigate("scoreScreen");
   // };
 
-  
+  if (!user) {
+    return <Redirect href="onboarding" />;
+  }
 
   return (
     <View style={styles.container}>
