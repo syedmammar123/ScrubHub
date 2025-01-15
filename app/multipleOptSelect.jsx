@@ -14,8 +14,12 @@ let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
 
 export default function MultipleOptSelect() {
   //Question Fetch
-  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
-    useQuesStore((state) => state);
+  const {
+    getReviewQuestion,
+    getCurrentQuestion,
+    getCurrentType,
+    getChallengeQuestion,
+  } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -31,7 +35,8 @@ export default function MultipleOptSelect() {
     let q = {};
     if (
       getReviewQuestion()?.questionStyle === "medicationUse" ||
-      getCurrentQuestion()?.questionStyle === "medicationUse"
+      getCurrentQuestion()?.questionStyle === "medicationUse" ||
+      getChallengeQuestion()?.questionStyle === "medicationUse"
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
@@ -39,6 +44,9 @@ export default function MultipleOptSelect() {
       } else if (getCurrentType() === "study") {
         q = getCurrentQuestion();
         setQuestion(q);
+      } else if (getCurrentType() === "challenge") {
+        question = getChallengeQuestion();
+        setQuestion(question);
       }
     }
     const correctAnswers = q.options.reduce((indices, opt, index) => {

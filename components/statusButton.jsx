@@ -53,6 +53,11 @@ export default function StatusButton({
     getCurrentType,
     increaseScore,
     submitQuestions,
+    increaseCurrentChallengeIndex,
+    getChallengeQuestion,
+    currentChallengeIndex,
+    submitChallengeQuestions,
+    increaseChallengeScore,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -90,7 +95,7 @@ export default function StatusButton({
           // Logic to submit Questions
           router.navigate("/");
         }
-      } else {
+      } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
         if (currentIndex + 1 < 9) {
           if (scoreIncrease) {
@@ -107,6 +112,28 @@ export default function StatusButton({
             increaseScore();
           }
           await submitQuestions();
+          router.navigate("scoreScreen");
+        }
+      } else if (getCurrentType() === "challenge") {
+        console.log("After Pressing Cont", currentChallengeIndex);
+        if (currentChallengeIndex + 1 < 9) {
+          if (scoreIncrease) {
+            increaseChallengeScore();
+          }
+          increaseCurrentChallengeIndex();
+          const nextScreen = getQuestionType(getChallengeQuestion());
+          if (nextScreen === "wordscrambled") {
+            router.replace("wordscrambledchallenge");
+          } else {
+            router.replace(nextScreen);
+          }
+          console.log("Navigating to:", nextScreen);
+        } else {
+          // Logic to submit Questions
+          if (scoreIncrease) {
+            increaseChallengeScore();
+          }
+          await submitChallengeQuestions();
           router.navigate("scoreScreen");
         }
       }

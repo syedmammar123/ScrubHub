@@ -19,14 +19,27 @@ import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
 
 export default function App() {
-
-  const { submitQuestions, setType, getCurrentType, submitReviews } =
-    useQuesStore((state) => state);
+  const { setType, getChallengeQuestions, getChallengeQuestion } = useQuesStore(
+    (state) => state
+  );
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
+  };
+  const handleChallengePress = async () => {
+    const questions = await getChallengeQuestions();
+    console.log(questions);
+    if (questions === 0) {
+      router.navigate("challengeLeaderboard");
+    } else {
+      const nextScreen = getQuestionType(getChallengeQuestion());
+
+      console.log("NEXT SCREEN", nextScreen);
+      // router.navigate(nextScreen);
+    }
   };
   // const user = useCurrentUserStore((state) => state.user);
 
@@ -38,8 +51,6 @@ export default function App() {
 
   //   router.navigate("scoreScreen");
   // };
-
-  
 
   return (
     <View style={styles.container}>
@@ -124,7 +135,10 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("fourOptQues")}
+            onPress={() => {
+              setType("challenge");
+              handleChallengePress();
+            }}
           >
             <View
               style={[styles.purpleButton, styles.buttonStyle, styles.buttonFP]}

@@ -45,8 +45,12 @@ import { scale } from "react-native-size-matters";
 
 export default function IncompleteProcess() {
   //Question Fetch
-  const { getCurrentQuestion, getReviewQuestion, getCurrentType } =
-    useQuesStore((state) => state);
+  const {
+    getCurrentQuestion,
+    getReviewQuestion,
+    getCurrentType,
+    getChallengeQuestion,
+  } = useQuesStore((state) => state);
   const [question, setQuestion] = useState({});
 
   // Process and Submission States
@@ -103,13 +107,17 @@ export default function IncompleteProcess() {
     let question = {};
     if (
       getReviewQuestion()?.questionStyle === "flowChart" ||
-      getCurrentQuestion()?.questionStyle === "flowChart"
+      getCurrentQuestion()?.questionStyle === "flowChart" ||
+      getChallengeQuestion()?.questionStyle === "flowChart"
     ) {
       if (getCurrentType() === "review") {
         question = getReviewQuestion();
         setQuestion(question);
       } else if (getCurrentType() === "study") {
         question = getCurrentQuestion();
+        setQuestion(question);
+      } else if (getCurrentType() === "challenge") {
+        question = getChallengeQuestion();
         setQuestion(question);
       }
       const splitProcess = question.diagram.split("→");
