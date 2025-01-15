@@ -189,11 +189,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     textAlign: "center",
     fontWeight: "bold",
+    fontFamily:"Poppins-Regular"
   },
   subtitleText: {
     marginVertical: 20,
     color: "rgba(0,0,0,0.3)",
     textAlign: "center",
+    fontFamily:"Poppins-Regular"
   },
   otpInputContainer: {
     flexDirection: "row",
@@ -209,6 +211,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     backgroundColor: "rgba(0,0,0,0.05)",
     marginHorizontal: 6,
+    fontFamily:"Poppins-Regular"
   },
   pinCodeText: {
     color: "black",
@@ -226,11 +229,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
+    fontFamily:"Poppins-Regular"
   },
   disabledButton: {
     opacity: 0.5, // Makes the button look visually disabled
   },
   resendText: {
     color: "blue",
+    fontFamily:"Poppins-Regular"
   },
 });

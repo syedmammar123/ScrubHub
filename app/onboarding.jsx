@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: theme.colorWhite,
+    
   },
 
   buttonContainer: {
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontWeight: "500",
     width: "95%",
+    fontFamily:"Poppins-Regular"
   },
   highlightedText: {
     color: "red",

@@ -21,7 +21,6 @@ import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 
 export default function App() {
-
   const { submitQuestions, setType, getCurrentType, submitReviews } =
     useQuesStore((state) => state);
   const router = useRouter();
@@ -29,8 +28,6 @@ export default function App() {
     router.navigate(`${screen}`);
   };
   const user = useCurrentUserStore((state) => state.user);
-
-  
 
   // const handleSave = () => {
 
