@@ -19,7 +19,7 @@ const prevQuesLength = async (system, topic) => {
     const getPrevQuesRef = collection(
       db, // The Firestore database instance
       "Users", // Collection name
-      curUser.userId,
+      curUser.id,
       "solved",
       system,
       topic
@@ -230,42 +230,36 @@ const useQuesStore = create((set, get) => ({
     }
   },
   //
-  getChallengeQuestions: async () => {
+  fetchChallengeQuestions: async () => {
     set({ isLoading: true });
     // Setting Index 0 for Questions
 
     try {
       // Getting dailyChallenge ID First Here
-      // const querySnapshot = await getDocs(
-      //   collection(db, `Questions/${system}/${topic}`)
-      // );
+      const querySnapshot = await getDocs(collection(db, `dailyChallenge`));
+      const challengeID = querySnapshot.docs[0].id;
+      console.log("ID OF Challenge", querySnapshot.docs[0].id);
 
       // Last Daily Challenge ID Now from User here
 
-      // const curUser = useCurrentUserStore.getState().getUser();
-      // console.log(curUser.lastDailyChallngeID);
+      const curUser = useCurrentUserStore.getState().getUser();
 
-      // if(challengeID === curUser.lastDailyChallngeID ){
-      //   return 0; // Length 0 which after checking navigates user to Leaderboard
-      // }
+      const userChallengeId = curUser.lastDailyChallengeID;
+      console.log(curUser);
 
-      // Fetch the DailyChallenge Questions & Return to user
-      // let documents = [];
-      // querySnapshot.forEach((doc) => {
-      //   documents.push({ id: doc.id, ...doc.data() });
-      // });
-      // console.log("PICKED QUESTIONS:", pickedQuestions.length);
-      // set({ currentChallengeId: challengeID });
-      // set({ currentChallengeIndex: 0 });
-      // set({ challengeQuestions: documents });
-      let documents = [];
-      for (let i = 0; i < 9; i++) {
-        documents.push(q.questions[i * 10]);
+      console.log(
+        "Current User Challenge ID Current",
+        curUser.lastDailyChallengeID
+      );
+
+      if (challengeID === userChallengeId) {
+        return 0; // Length 0 which after checking navigates user to Leaderboard
       }
+      let documents = querySnapshot.docs[0].data().questions;
 
       set({ currentChallengeIndex: 0 });
       set({ challengeQuestions: documents });
-
+      set({ currentChallengeId: challengeID });
       return documents.length;
     } catch (error) {
       console.error("Error fetching documents: ", error);
@@ -273,16 +267,24 @@ const useQuesStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  submitChallengeQuestions: async (newScore) => {
+  submitChallengeQuestions: async () => {
     try {
-      const userId = useCurrentUserStore.getState().getUser().userId;
+      const userId = useCurrentUserStore.getState().getUser().id;
 
       const userDocRef = doc(db, "Users", userId);
 
       await updateDoc(userDocRef, {
-        lastDailyChallengeId: get().currentChallengeId,
+        lastDailyChallengeID: get().currentChallengeId,
         lastChallengeScore: get().scoreChallenge,
       });
+
+      // Update User in Store
+      const updatedUser = {
+        ...useCurrentUserStore.getState().getUser(),
+        lastDailyChallengeID: get().currentChallengeId,
+      };
+      useCurrentUserStore.getState().updateUser(updatedUser);
+      console.log("UPDTAED USER", updatedUser);
 
       set({ currentChallengeIndex: 0 });
       set({ challengeQuestions: [] });
@@ -309,6 +311,12 @@ const useQuesStore = create((set, get) => ({
   getChallengeQuestion: () => {
     const { challengeQuestions, currentChallengeIndex } = get();
     return challengeQuestions[currentChallengeIndex];
+  },
+
+  // Getting any current Question(Challenge)
+  getFetchedChallengeID: () => {
+    const { currentChallengeId } = get();
+    return currentChallengeId;
   },
 
   // Setting if user is reviwing/Studying/taking challenge

@@ -22,23 +22,35 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 
 export default function App() {
-  const { setType, getChallengeQuestions, getChallengeQuestion } = useQuesStore(
-    (state) => state
-  );
+  const {
+    setType,
+    fetchChallengeQuestions,
+    getChallengeQuestion,
+    submitChallengeQuestions,
+    getFetchedChallengeID,
+  } = useQuesStore((state) => state);
+  // const { getUser } = useCurrentUserStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
   const handleChallengePress = async () => {
-    const questions = await getChallengeQuestions();
-    console.log(questions);
-    if (questions === 0) {
-      router.navigate("challengeLeaderboard");
+    if (getFetchedChallengeID() === "") {
+      const questions = await fetchChallengeQuestions();
+      console.log(questions);
+      if (questions === 0) {
+        router.navigate("challengeLeaderboard");
+      } else {
+        const nextScreen = getQuestionType(getChallengeQuestion());
+
+        console.log("NEXT SCREEN", nextScreen);
+        router.navigate(nextScreen);
+      }
     } else {
       const nextScreen = getQuestionType(getChallengeQuestion());
 
       console.log("NEXT SCREEN", nextScreen);
-      // router.navigate(nextScreen);
+      router.navigate(nextScreen);
     }
   };
   // const user = useCurrentUserStore((state) => state.user);
@@ -47,9 +59,10 @@ export default function App() {
   //    return <Redirect href="onboarding" />;
   //  }
 
-  // const handleSave = () => {
-
-  //   router.navigate("scoreScreen");
+  // const handleSave = async () => {
+  //   console.log("USER FROM TEST", getUser());
+  //   await submitChallengeQuestions();
+  //   //  router.navigate("scoreScreen");
   // };
 
   return (
@@ -79,7 +92,7 @@ export default function App() {
                 styles.buttonSP,
               ]}
             >
-              Test Screen
+              Testing
             </Text>
           </TouchableOpacity> */}
           <TouchableOpacity

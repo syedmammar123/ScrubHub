@@ -134,7 +134,7 @@ export default function StatusButton({
             increaseChallengeScore();
           }
           await submitChallengeQuestions();
-          router.navigate("scoreScreen");
+          router.navigate("challengeLeaderboard");
         }
       }
     }

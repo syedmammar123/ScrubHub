@@ -45,8 +45,8 @@ export default function MultipleOptSelect() {
         q = getCurrentQuestion();
         setQuestion(q);
       } else if (getCurrentType() === "challenge") {
-        question = getChallengeQuestion();
-        setQuestion(question);
+        q = getChallengeQuestion();
+        setQuestion(q);
       }
     }
     const correctAnswers = q.options.reduce((indices, opt, index) => {
