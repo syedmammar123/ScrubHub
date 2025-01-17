@@ -9,6 +9,9 @@ const useCurrentUserStore = create(
       setUser: (user, id) => {
         set({ user: { ...user, id } }); // Properly set the `user` object
       },
+      updateUser: (user) => {
+        set({ user: user });
+      },
       getUser: () => {
         return get().user; // Safely access the `user` state
       },
@@ -18,7 +21,7 @@ const useCurrentUserStore = create(
     }),
     {
       name: "currentUserStore", // Key for localStorage or AsyncStorage
-      storage: createJSONStorage(() => AsyncStorage)
+      storage: createJSONStorage(() => AsyncStorage),
     }
   )
 );

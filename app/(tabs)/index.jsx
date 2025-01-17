@@ -19,20 +19,55 @@ import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
 
 export default function App() {
+  const {
+    setType,
+    fetchChallengeQuestions,
+    getChallengeQuestion,
+    submitChallengeQuestions,
+    getFetchedChallengeID,
+  } = useQuesStore((state) => state);
+  // const { getUser } = useCurrentUserStore((state) => state);
   const { submitQuestions, setType, getCurrentType, submitReviews } =
     useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+  const handleChallengePress = async () => {
+    if (getFetchedChallengeID() === "") {
+      const questions = await fetchChallengeQuestions();
+      console.log(questions);
+      if (questions === 0) {
+        router.navigate("challengeLeaderboard");
+      } else {
+        const nextScreen = getQuestionType(getChallengeQuestion());
+
+        console.log("NEXT SCREEN", nextScreen);
+        router.navigate(nextScreen);
+      }
+    } else {
+      const nextScreen = getQuestionType(getChallengeQuestion());
+
+      console.log("NEXT SCREEN", nextScreen);
+      router.navigate(nextScreen);
+    }
+  };
+  // const user = useCurrentUserStore((state) => state.user);
+
+  // if (!user) {
+  //    return <Redirect href="onboarding" />;
+  //  }
   const user = useCurrentUserStore((state) => state.user);
 
-  // const handleSave = () => {
-
-  //   router.navigate("scoreScreen");
+  // const handleSave = async () => {
+  //   console.log("USER FROM TEST", getUser());
+  //   await submitChallengeQuestions();
+  //   //  router.navigate("scoreScreen");
   // };
+
 
   if (!user) {
     return <Redirect href="onboarding" />;
@@ -67,7 +102,7 @@ export default function App() {
                 styles.buttonSP,
               ]}
             >
-              Test Screen
+              Testing
             </Text>
           </TouchableOpacity> */}
           <TouchableOpacity
@@ -123,7 +158,10 @@ export default function App() {
 
           <TouchableOpacity
             style={[styles.button]}
-            onPress={() => handlePress("fourOptQues")}
+            onPress={() => {
+              setType("challenge");
+              handleChallengePress();
+            }}
           >
             <View
               style={[styles.purpleButton, styles.buttonStyle, styles.buttonFP]}
