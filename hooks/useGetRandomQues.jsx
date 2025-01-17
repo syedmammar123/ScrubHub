@@ -3,7 +3,6 @@ import { useState } from "react";
 import { getRandomArray, getRandomItem } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
 
-
 const useGetRandomQues = () => {
   const [randomQues, setRandomQues] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,10 @@ const useGetRandomQues = () => {
       //   return [];
       // }
       // const randomMainTopics = getRandomArray(documentNames);
-      const randomMainTopics = getRandomArray(["cardiovascular","gastrointestinal"])
+      const randomMainTopics = getRandomArray([
+        "cardiovascular",
+        "gastrointestinal",
+      ]);
 
       // Get random topics from each main topic
       for (let i = 0; i < randomMainTopics.length; i++) {
@@ -47,7 +49,7 @@ const useGetRandomQues = () => {
           randomQuestions.push(questionDocs[0].data());
         }
       }
-    setRandomQues(randomQuestions);
+      setRandomQues(randomQuestions);
     } catch (error) {
       console.log("Error fetching random questions:", error);
     } finally {

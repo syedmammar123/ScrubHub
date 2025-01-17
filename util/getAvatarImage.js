@@ -8,22 +8,22 @@ import avatar7 from "@/assets/avatar7.png";
 import avatar0 from "@/assets/avatar0.png";
 
 export const getAvatarImage = (avatarId) => {
-    switch (avatarId) {
-      case 1:
-        return avatar1;
-      case 2:
-        return avatar2;
-      case 3:
-        return avatar3;
-      case 4:
-        return avatar4;
-      case 5:
-        return avatar5;
-      case 6:
-        return avatar6;
-      case 7:
-        return avatar7;
-      default:
-        return avatar0; // Default avatar if no match is found
-    }
-  };
+  switch (avatarId) {
+    case 1:
+      return avatar1;
+    case 2:
+      return avatar2;
+    case 3:
+      return avatar3;
+    case 4:
+      return avatar4;
+    case 5:
+      return avatar5;
+    case 6:
+      return avatar6;
+    case 7:
+      return avatar7;
+    default:
+      return avatar0; // Default avatar if no match is found
+  }
+};

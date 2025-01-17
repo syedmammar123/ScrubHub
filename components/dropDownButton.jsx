@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "25%",
   },
-  dropdownText: { color: "white",fontFamily:"Poppins-Regular" },
-  dropdownIcon: { marginLeft: 5,  },
+  dropdownText: { color: "white", fontFamily: "Poppins-Regular" },
+  dropdownIcon: { marginLeft: 5 },
 });
