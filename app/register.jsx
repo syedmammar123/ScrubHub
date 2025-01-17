@@ -81,7 +81,6 @@ export default function Register() {
               <DropDownButton
                 setDropDownActive={setDropDownActive}
                 countryCode={countryCode}
-                
               />
               <View style={{ flex: 1 }}>
                 <NumberInput
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
     color: "rgba(0,0,0,0.3)",
     fontWeight: "black",
     textAlign: "center",
-    fontFamily:"Poppins-Regular"
+    fontFamily: "Poppins-Regular",
   },
   numberinviteFriend: {
     flexDirection: "row",
@@ -157,6 +156,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     fontWeight: "bold",
-    fontFamily:"Poppins-Regular"
+    fontFamily: "Poppins-Regular",
   },
 });

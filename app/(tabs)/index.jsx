@@ -28,7 +28,9 @@ export default function App() {
     getChallengeQuestion,
     submitChallengeQuestions,
     getFetchedChallengeID,
-    submitQuestions, getCurrentType, submitReviews,
+    submitQuestions,
+    getCurrentType,
+    submitReviews,
   } = useQuesStore((state) => state);
   // const { getUser } = useCurrentUserStore((state) => state);
   const router = useRouter();
@@ -67,12 +69,11 @@ export default function App() {
   //   //  router.navigate("scoreScreen");
   // };
 
-
   if (!user) {
     return <Redirect href="onboarding" />;
   }
 
-  console.log(user)
+  console.log(user);
 
   return (
     <View style={styles.container}>

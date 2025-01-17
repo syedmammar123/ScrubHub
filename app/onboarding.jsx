@@ -12,15 +12,15 @@ export default function OnBoarding() {
   const user = useCurrentUserStore((state) => state.user);
 
   if (user) {
-     return <Redirect href="/" />;
-   }
+    return <Redirect href="/" />;
+  }
 
   const handlePress = () => {
     router.navigate("/register");
     // router.navigate("/fbtest");
   };
 
-  console.log(user)
+  console.log(user);
 
   return (
     <LinearGradient
@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: theme.colorWhite,
-    
   },
 
   buttonContainer: {
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontWeight: "500",
     width: "95%",
-    fontFamily:"Poppins-Regular"
+    fontFamily: "Poppins-Regular",
   },
   highlightedText: {
     color: "red",

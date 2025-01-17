@@ -30,6 +30,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 5,
     paddingHorizontal: 20,
-    fontFamily:"Poppins-Regular"
+    fontFamily: "Poppins-Regular",
   },
 });

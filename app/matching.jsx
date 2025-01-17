@@ -154,7 +154,7 @@ export default function Matching() {
           runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
-            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x,
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -233,7 +233,7 @@ export default function Matching() {
         let arr = [];
         for (let i = 0; i < q.treatments.length; i++) {
           const count = matches.filter(
-            (id) => id === q.treatments[i].id
+            (id) => id === q.treatments[i].id,
           ).length;
           console.log("Count of ", q.treatments[i].id, count);
 
@@ -297,7 +297,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Matching Container",
-                        e.nativeEvent.layout.y
+                        e.nativeEvent.layout.y,
                       );
                       setMatchingContainerY(e.nativeEvent.layout.y);
                     }}
@@ -322,7 +322,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Buttons Container",
-                        e.nativeEvent.layout.y
+                        e.nativeEvent.layout.y,
                       );
                       setAnswerContainerY(e.nativeEvent.layout.y);
                     }}

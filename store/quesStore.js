@@ -22,7 +22,7 @@ const prevQuesLength = async (system, topic) => {
       curUser.id,
       "solved",
       system,
-      topic
+      topic,
     );
     prevQues = await getDocs(getPrevQuesRef);
     return prevQues.docs.length;
@@ -113,7 +113,7 @@ const useQuesStore = create((set, get) => ({
 
     try {
       const querySnapshot = await getDocs(
-        collection(db, `Questions/${system}/${topic}`)
+        collection(db, `Questions/${system}/${topic}`),
       );
       let documents = [];
       querySnapshot.forEach((doc) => {
@@ -145,7 +145,7 @@ const useQuesStore = create((set, get) => ({
         curUser.userId,
         "solved",
         system,
-        topic
+        topic,
       );
       const docs = await getDocs(getPrevQuesRef);
 
@@ -182,7 +182,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id
+          q.id,
         );
         batch.set(docRef, q); // Add to batch
       });
@@ -210,7 +210,7 @@ const useQuesStore = create((set, get) => ({
           system,
           topic,
           get().fetchedQuestionTopic.topic,
-          q.id
+          q.id,
         );
 
         batch.update(docRef, {
@@ -249,7 +249,7 @@ const useQuesStore = create((set, get) => ({
 
       console.log(
         "Current User Challenge ID Current",
-        curUser.lastDailyChallengeID
+        curUser.lastDailyChallengeID,
       );
 
       if (challengeID === userChallengeId) {

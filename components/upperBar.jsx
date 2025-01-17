@@ -5,7 +5,7 @@ import useQuesStore from "@/store/quesStore";
 
 export default function UpperBar() {
   const { getCurrentType, currentIndex, currentIndexReview } = useQuesStore(
-    (state) => state
+    (state) => state,
   );
   return (
     <View style={styles.bar}>

@@ -5,7 +5,6 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { theme } from "@/theme";
 
 export default function Layout() {
-
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
       <Tabs.Screen

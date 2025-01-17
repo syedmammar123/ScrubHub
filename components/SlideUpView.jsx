@@ -20,7 +20,7 @@ const SlideUpView = ({
   invitationsLoading,
   onAccept,
   onReject,
-  fetchFriends
+  fetchFriends,
 }) => {
   const screenHeight = Dimensions.get("window").height;
   const translateY = useRef(new Animated.Value(screenHeight)).current;
