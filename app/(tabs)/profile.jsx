@@ -32,7 +32,7 @@ export default function ProfileScreen() {
     }
   };
 
-  console.log("randomQues", randomQues);
+  // console.log("randomQues", randomQues);
 
   return (
     <View style={styles.container}>
