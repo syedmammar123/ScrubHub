@@ -44,8 +44,12 @@ console.log(screenheight);
 
 export default function Matching() {
   //Question Fetch
-  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
-    useQuesStore((state) => state);
+  const {
+    getReviewQuestion,
+    getCurrentQuestion,
+    getCurrentType,
+    getChallengeQuestion,
+  } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
   const [questionOptions, setQuestionOptions] = useState([]);
@@ -211,13 +215,17 @@ export default function Matching() {
     let q = {};
     if (
       getReviewQuestion()?.questionStyle === "matchTheMicrobe" ||
-      getCurrentQuestion()?.questionStyle === "matchTheMicrobe"
+      getCurrentQuestion()?.questionStyle === "matchTheMicrobe" ||
+      getChallengeQuestion()?.questionStyle === "matchTheMicrobe"
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
         setQuestion(q);
       } else if (getCurrentType() === "study") {
         q = getCurrentQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "challenge") {
+        q = getChallengeQuestion();
         setQuestion(q);
       }
       if (q.treatments.length < 4) {

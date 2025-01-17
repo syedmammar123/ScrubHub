@@ -21,8 +21,12 @@ const types = {
 };
 
 export default function fourOptQues() {
-  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
-    useQuesStore((state) => state);
+  const {
+    getReviewQuestion,
+    getCurrentQuestion,
+    getCurrentType,
+    getChallengeQuestion,
+  } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [selected, setSelected] = useState("");
@@ -36,14 +40,19 @@ export default function fourOptQues() {
     let q = {};
     if (
       getReviewQuestion()?.questionStyle === types[1] ||
+      getChallengeQuestion()?.questionStyle === types[1] ||
       getCurrentQuestion()?.questionStyle === types[1] ||
       getReviewQuestion()?.questionStyle === types[4] ||
+      getChallengeQuestion()?.questionStyle === types[4] ||
       getCurrentQuestion()?.questionStyle === types[4] ||
       getReviewQuestion()?.questionStyle === types[7] ||
+      getChallengeQuestion()?.questionStyle === types[7] ||
       getCurrentQuestion()?.questionStyle === types[7] ||
       getReviewQuestion()?.questionStyle === types[8] ||
+      getChallengeQuestion()?.questionStyle === types[8] ||
       getCurrentQuestion()?.questionStyle === types[8] ||
       getReviewQuestion()?.questionStyle === types[9] ||
+      getChallengeQuestion()?.questionStyle === types[9] ||
       getCurrentQuestion()?.questionStyle === types[9]
     ) {
       if (getCurrentType() === "review") {
@@ -51,6 +60,9 @@ export default function fourOptQues() {
         setQuestion(q);
       } else if (getCurrentType() === "study") {
         q = getCurrentQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "challenge") {
+        q = getChallengeQuestion();
         setQuestion(q);
       }
     }

@@ -5,9 +5,12 @@ import {
   getDocs,
   doc,
   writeBatch,
+  updateDoc,
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
+import { q } from "./quesData";
+// Skipping Helper Functions
 const prevQuesLength = async (system, topic) => {
   let prevQues;
   console.log("USER=>", useCurrentUserStore.getState().getUser());
@@ -16,7 +19,7 @@ const prevQuesLength = async (system, topic) => {
     const getPrevQuesRef = collection(
       db, // The Firestore database instance
       "Users", // Collection name
-      curUser.userId,
+      curUser.id,
       "solved",
       system,
       topic
@@ -28,6 +31,7 @@ const prevQuesLength = async (system, topic) => {
   }
 };
 
+// Pick 9 Questions from 90
 const pickQues = async (system, topic, docs) => {
   // const { getUser } = useCurrentUserStore.getState().getUser;
   console.log("CALLED");
@@ -58,11 +62,12 @@ const pickQues = async (system, topic, docs) => {
 
 const useQuesStore = create((set, get) => ({
   type: "",
-  score: 0,
+
   // type (study)
   fetchedQuestionTopic: "",
   fetchedQuestionSystem: "",
   questions: [],
+  score: 0,
   currentIndex: 0,
 
   // type (review)
@@ -72,16 +77,34 @@ const useQuesStore = create((set, get) => ({
   isLoading: false,
   currentIndexReview: 0,
 
+  // type (dailyChallenge)
+  challengeQuestions: [],
+  currentChallengeId: "",
+  currentChallengeIndex: 0,
+  scoreChallenge: 0,
+
   increaseScore: () => set((state) => ({ score: state.score + 1 })),
+  increaseChallengeScore: () =>
+    set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
   getScore: () => {
     const { score } = get();
     return score;
+  },
+
+  getChallengeScore: () => {
+    const { scoreChallenge } = get();
+    return scoreChallenge;
   },
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
 
   increaseCurrentReviewIndex: () =>
     set((state) => ({ currentIndexReview: state.currentIndexReview + 1 })),
+
+  increaseCurrentChallengeIndex: () =>
+    set((state) => ({
+      currentChallengeIndex: state.currentChallengeIndex + 1,
+    })),
 
   fetchQuestions: async (system, topic) => {
     set({ isLoading: true });
@@ -206,6 +229,71 @@ const useQuesStore = create((set, get) => ({
       console.error("Batch update failed:", error.message);
     }
   },
+  //
+  fetchChallengeQuestions: async () => {
+    set({ isLoading: true });
+    // Setting Index 0 for Questions
+
+    try {
+      // Getting dailyChallenge ID First Here
+      const querySnapshot = await getDocs(collection(db, `dailyChallenge`));
+      const challengeID = querySnapshot.docs[0].id;
+      console.log("ID OF Challenge", querySnapshot.docs[0].id);
+
+      // Last Daily Challenge ID Now from User here
+
+      const curUser = useCurrentUserStore.getState().getUser();
+
+      const userChallengeId = curUser.lastDailyChallengeID;
+      console.log(curUser);
+
+      console.log(
+        "Current User Challenge ID Current",
+        curUser.lastDailyChallengeID
+      );
+
+      if (challengeID === userChallengeId) {
+        return 0; // Length 0 which after checking navigates user to Leaderboard
+      }
+      let documents = querySnapshot.docs[0].data().questions;
+
+      set({ currentChallengeIndex: 0 });
+      set({ challengeQuestions: documents });
+      set({ currentChallengeId: challengeID });
+      return documents.length;
+    } catch (error) {
+      console.error("Error fetching documents: ", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+  submitChallengeQuestions: async () => {
+    try {
+      const userId = useCurrentUserStore.getState().getUser().id;
+
+      const userDocRef = doc(db, "Users", userId);
+
+      await updateDoc(userDocRef, {
+        lastDailyChallengeID: get().currentChallengeId,
+        lastChallengeScore: get().scoreChallenge,
+      });
+
+      // Update User in Store
+      const updatedUser = {
+        ...useCurrentUserStore.getState().getUser(),
+        lastDailyChallengeID: get().currentChallengeId,
+      };
+      useCurrentUserStore.getState().updateUser(updatedUser);
+      console.log("UPDTAED USER", updatedUser);
+
+      set({ currentChallengeIndex: 0 });
+      set({ challengeQuestions: [] });
+      set({ currentChallengeId: "" });
+      console.log("Challenge updated successfully!");
+    } catch (error) {
+      console.error("Error updating challenge:", error.message);
+    }
+  },
 
   // Getting any current Question(study)
   getCurrentQuestion: () => {
@@ -219,7 +307,19 @@ const useQuesStore = create((set, get) => ({
     return reviewQuestions[currentIndexReview];
   },
 
-  // Setting if user is reviwing/Studying
+  // Getting any current Question(Challenge)
+  getChallengeQuestion: () => {
+    const { challengeQuestions, currentChallengeIndex } = get();
+    return challengeQuestions[currentChallengeIndex];
+  },
+
+  // Getting any current Question(Challenge)
+  getFetchedChallengeID: () => {
+    const { currentChallengeId } = get();
+    return currentChallengeId;
+  },
+
+  // Setting if user is reviwing/Studying/taking challenge
   setType: (type) => set({ type: type }),
 
   // Getting any current Question reviwing/Studying
