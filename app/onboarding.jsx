@@ -1,7 +1,6 @@
 import { ScrubButton } from "@/components/scrubButton";
 import { ScrubImage } from "@/components/scrubImage";
 import useCurrentUserStore from "@/store/currentUserStore";
-import { useUserStore } from "@/store/userStore";
 import { theme } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Redirect, useRouter } from "expo-router";
@@ -10,18 +9,18 @@ import { View, Text, StyleSheet } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();
-  const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
-  // const user = useCurrentUserStore((state) => state.user);
+  const user = useCurrentUserStore((state) => state.user);
 
-  // if (user) {
-  //    return <Redirect href="/" />;
-  //  }
+  if (user) {
+     return <Redirect href="/" />;
+   }
 
   const handlePress = () => {
-    toggleHasOnboarded();
     router.navigate("/register");
     // router.navigate("/fbtest");
   };
+
+  console.log(user)
 
   return (
     <LinearGradient
@@ -56,6 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     backgroundColor: theme.colorWhite,
+    
   },
 
   buttonContainer: {
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontWeight: "500",
     width: "95%",
+    fontFamily:"Poppins-Regular"
   },
   highlightedText: {
     color: "red",

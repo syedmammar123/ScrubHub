@@ -4,11 +4,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 export default function Layout() {
   const [fontsLoaded, error] = useFonts({
-    CustomFont: require("@/assets/fonts/Poppins-Regular.ttf"), // Add path to your font
+    'Poppins-Regular': require("@/assets/fonts/Poppins-Regular.ttf"),
   });
 
   if (!fontsLoaded) {
-    console.log("NFONT NOT LOADED");
+    console.log("FONT NOT LOADED");
     if (error) {
       console.log("Error loading font:", error);
     }
