@@ -38,6 +38,8 @@ export default function App() {
     return <Redirect href="onboarding" />;
   }
 
+  console.log(user)
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

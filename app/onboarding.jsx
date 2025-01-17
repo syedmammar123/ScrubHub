@@ -1,7 +1,6 @@
 import { ScrubButton } from "@/components/scrubButton";
 import { ScrubImage } from "@/components/scrubImage";
 import useCurrentUserStore from "@/store/currentUserStore";
-import { useUserStore } from "@/store/userStore";
 import { theme } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Redirect, useRouter } from "expo-router";
@@ -10,7 +9,6 @@ import { View, Text, StyleSheet } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();
-  const toggleHasOnboarded = useUserStore((state) => state.toggleHasOnboarded);
   const user = useCurrentUserStore((state) => state.user);
 
   if (user) {
@@ -18,10 +16,11 @@ export default function OnBoarding() {
    }
 
   const handlePress = () => {
-    toggleHasOnboarded();
     router.navigate("/register");
     // router.navigate("/fbtest");
   };
+
+  console.log(user)
 
   return (
     <LinearGradient
