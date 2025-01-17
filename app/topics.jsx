@@ -77,7 +77,7 @@ export default function Topics() {
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic
+            topic,
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 

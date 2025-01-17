@@ -18,7 +18,7 @@ export default function ProfileScreen() {
       await signOut(auth);
       console.log("User signed out successfully.");
 
-      clearUser()
+      clearUser();
 
       router.navigate("/onboarding");
     } catch (error) {
