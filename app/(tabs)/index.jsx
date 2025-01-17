@@ -30,6 +30,8 @@ export default function App() {
     getFetchedChallengeID,
   } = useQuesStore((state) => state);
   // const { getUser } = useCurrentUserStore((state) => state);
+  const { submitQuestions, setType, getCurrentType, submitReviews } =
+    useQuesStore((state) => state);
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
@@ -58,12 +60,20 @@ export default function App() {
   // if (!user) {
   //    return <Redirect href="onboarding" />;
   //  }
+  const user = useCurrentUserStore((state) => state.user);
 
   // const handleSave = async () => {
   //   console.log("USER FROM TEST", getUser());
   //   await submitChallengeQuestions();
   //   //  router.navigate("scoreScreen");
   // };
+
+
+  if (!user) {
+    return <Redirect href="onboarding" />;
+  }
+
+  console.log(user)
 
   return (
     <View style={styles.container}>
