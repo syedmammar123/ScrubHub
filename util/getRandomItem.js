@@ -25,3 +25,16 @@ export const getRandomArray = (array) => {
 export const getRandomItem = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
+
+export const getRandomSolvedQuesArray = (array) => {
+  let arr = [];
+  for (let i = 0; i < types.length; i++) {
+    let index = Math.floor(Math.random() * array.length);
+    arr.push({
+      topic: Object.keys(array[index])[0],
+      type: types[i],
+      subTopic: getRandomItem(array[index][Object.keys(array[index])[0]]),
+    });
+  }
+  return arr;
+}
