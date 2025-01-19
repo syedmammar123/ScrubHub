@@ -5,12 +5,16 @@ import { ScrubButton } from "@/components/scrubButton";
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import useGetRandomQues from "@/hooks/useGetRandomQues";
 import useCurrentUserStore from "@/store/currentUserStore";
+import useGetSolvedQues from "@/hooks/useGetSolvedQues";
+
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser } = useCurrentUserStore((state) => state);
 
-  const { randomQues, loading } = useGetRandomQues();
+
+  // const { randomQues, loading } = useGetRandomQues();
+  // const { loading, solvedQues } = useGetSolvedQues();
 
   const handleLogout = async () => {
     try {
@@ -27,12 +31,15 @@ export default function ProfileScreen() {
     }
   };
 
-  // console.log("randomQues", randomQues);
+  // console.log("solvedQues", solvedQues);
+  // console.log("loading", loading);
+ 
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile</Text>
       <ScrubButton title="logout" onPress={handleLogout} />
+
     </View>
   );
 }
