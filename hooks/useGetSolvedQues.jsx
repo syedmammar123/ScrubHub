@@ -1,0 +1,58 @@
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { getRandomArray, getRandomItem, getRandomSolvedQuesArray } from "../util/getRandomItem";
+import firestore from "@react-native-firebase/firestore";
+
+const useGetSolvedQues = () => {
+  const [solvedQues, setSolvedQues] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchRandomQues = async () => {
+    setLoading(true);
+    try {
+      // Get all document IDs from the Questions collection
+      const topicRef = firestore()
+        .collection("Users")
+        .doc("FrTsL0JPgZaBSMvPoGHErIpU1iz2")
+        const querySnapshot = await topicRef.get();
+        const solvedTopics = querySnapshot.data().solvedTopics;
+        // console.log("querySnapshot",solvedTopics)
+      if (solvedTopics.length === 0 || solvedTopics === undefined) {
+        console.log("No solved topics found in the Users collection.");
+        return [];
+      }
+      const randomMainTopics = getRandomSolvedQuesArray(solvedTopics);
+    //   console.log("randomMainTopics",randomMainTopics)
+
+      // Get random questions from each subtopic
+      const randomQuestions = [];
+
+      for (let i = 0; i < randomMainTopics.length; i++) {
+        if (randomMainTopics[i].subTopic !== null) {
+          const questionsRef =topicRef
+            .collection("solved")
+            .doc(randomMainTopics[i].topic)
+            .collection(randomMainTopics[i].subTopic)
+            .where("questionStyle", "==", randomMainTopics[i].type)
+            .limit(1);
+          const querySnapshot = await questionsRef.get();
+          const questionDocs = querySnapshot.docs;
+          randomQuestions.push(questionDocs[0].data());
+        }
+      }
+      setSolvedQues(randomQuestions);
+    } catch (error) {
+      console.log("Error fetching random questions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRandomQues();
+  }, []);
+
+  return { solvedQues, loading };
+};
+
+export default useGetSolvedQues;

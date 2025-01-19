@@ -32,6 +32,7 @@ import AddFriend from "@/components/addFriend";
 import SlideUpView from "@/components/SlideUpView";
 import useGetInvitations from "@/hooks/useGetInvitations";
 import { getAvatarImage } from "@/util/getAvatarImage";
+import leaderBoardImg from "@/assets/leaderboard.png";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -205,7 +206,7 @@ export default function Friends() {
               .doc(friendId)
               .get();
             return { id: friendId, ...friendDoc.data() };
-          }),
+          })
         );
 
         setFriends(friendsDetails);
@@ -214,7 +215,7 @@ export default function Friends() {
         setFriends([]); // Optional: Reset friends if fetching details fails
         Alert.alert(
           "Error",
-          "Unable to fetch some friends' details. Please try again later.",
+          "Unable to fetch some friends' details. Please try again later."
         );
       } finally {
         setLoadingFriends(false); // Ensure loading state is updated after all async calls
@@ -290,14 +291,14 @@ export default function Friends() {
 
       Alert.alert("Success", "Friend request accepted successfully!");
       setInvitations(
-        invitations.filter((invitation) => invitation.uid !== itemId),
+        invitations.filter((invitation) => invitation.uid !== itemId)
       );
       fetchFriends();
     } catch (error) {
       console.error("Error accepting friend request:", error);
       Alert.alert(
         "Error",
-        "An error occurred while accepting the friend request.",
+        "An error occurred while accepting the friend request."
       );
     }
   };
@@ -336,18 +337,18 @@ export default function Friends() {
 
               Alert.alert("Success", "Friend request rejected successfully!");
               setInvitations(
-                invitations.filter((invitation) => invitation.uid !== itemId),
+                invitations.filter((invitation) => invitation.uid !== itemId)
               );
             } catch (error) {
               console.error("Error rejecting friend request:", error);
               Alert.alert(
                 "Error",
-                "An error occurred while rejecting the friend request.",
+                "An error occurred while rejecting the friend request."
               );
             }
           },
         },
-      ],
+      ]
     );
   };
 
@@ -385,7 +386,7 @@ export default function Friends() {
             console.error("Error removing friend:", error);
             Alert.alert(
               "Error",
-              "An error occurred while removing the friend.",
+              "An error occurred while removing the friend."
             );
           }
         },
@@ -408,10 +409,13 @@ export default function Friends() {
       <StatusBar style="auto" />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <BackButton />
-        <AddFriend
-          setShowInvitation={setShowInvitation}
-          count={invitations.length}
-        />
+        <View style={{ flexDirection: "row", alignItems: "center", rowGap: 10, marginRight: 10,justifyContent: "center" }}>
+          <AddFriend
+            setShowInvitation={setShowInvitation}
+            count={invitations.length}
+          />
+          <Image source={leaderBoardImg} style={styles.buttonCircleStyle}/>
+        </View>
       </View>
 
       <View style={{ flex: 1 }}>
@@ -697,6 +701,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 14,
     color: "#666",
+    marginBottom: 10,
+  },
+  buttonCircleStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+    width: 25,
+    height: 25,
+    marginTop: 60,
+    alignSelf: "flex-start",
+    marginRight: 25,
     marginBottom: 10,
   },
 });

@@ -21,7 +21,9 @@ import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 
+
 export default function App() {
+  
   const {
     setType,
     fetchChallengeQuestions,
@@ -72,8 +74,7 @@ export default function App() {
   if (!user) {
     return <Redirect href="onboarding" />;
   }
-
-  console.log(user);
+  
 
   return (
     <View style={styles.container}>
