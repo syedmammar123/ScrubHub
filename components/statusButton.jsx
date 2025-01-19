@@ -58,6 +58,9 @@ export default function StatusButton({
     currentChallengeIndex,
     submitChallengeQuestions,
     increaseChallengeScore,
+    submitReviews,
+    getfetchedQuestionTopic,
+    getfetchedQuestionSystem,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -92,6 +95,7 @@ export default function StatusButton({
           }
           console.log("Navigating to:", nextScreen);
         } else {
+          await submitReviews();
           // Logic to submit Questions
           router.navigate("/");
         }
@@ -111,7 +115,12 @@ export default function StatusButton({
           if (scoreIncrease) {
             increaseScore();
           }
-          await submitQuestions();
+          const system = `${getfetchedQuestionSystem()}all`;
+          const topic = getfetchedQuestionTopic();
+          if (topic !== system) {
+            await submitQuestions();
+          }
+
           router.navigate("scoreScreen");
         }
       } else if (getCurrentType() === "challenge") {
