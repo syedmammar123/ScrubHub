@@ -69,8 +69,11 @@ export default function App() {
     // console.log("USER FROM TEST", getUser());
     // await submitChallengeQuestions();
     // await submitReviews();
-    await submitQuestions();
+    // await submitQuestions();
     //  router.navigate("scoreScreen");
+
+    // Testing for saving topics
+    await submitQuestions();
   };
 
   if (!user) {

@@ -262,6 +262,7 @@ const useQuesStore = create((set, get) => ({
     let topic = get().fetchedQuestionTopic;
     const user = useCurrentUserStore.getState().getUser();
     const userId = user.id;
+    const userDocRef = doc(db, "Users", userId);
     try {
       get().questions.forEach((q) => {
         const docRef = doc(
@@ -275,11 +276,39 @@ const useQuesStore = create((set, get) => ({
         );
         batch.set(docRef, q); // Add to batch
       });
-      // Commit the batch operation
+      // Update User
+      const userSolvedTopics = user.solvedTopics;
 
-      // Update User Score
-      let score = 0;
-      if (user.totalScore === null) {
+      console.log("User solved Topics", userSolvedTopics);
+
+      // Check if the system already exists
+      const systemIndex = userSolvedTopics.findIndex((entry) => entry[system]);
+      console.log("System is there?", systemIndex);
+
+      if (systemIndex === -1) {
+        // System does not exist, add it with the topics
+        userSolvedTopics.push({ [system]: [topic] });
+        console.log(userSolvedTopics);
+      } else {
+        // System exists, update its topics array
+        const existingTopics = userSolvedTopics[systemIndex][system];
+
+        // Check if the topic already exists
+        if (!existingTopics.includes(topic)) {
+          // Add the new topic to the system's array
+          userSolvedTopics[systemIndex][system].push(topic);
+          console.log(`Added topic: ${topic} to system: ${system}`);
+          console.log(userSolvedTopics);
+        } else {
+          console.log(`Topic: ${topic} already exists in system: ${system}`);
+          console.log(userSolvedTopics);
+        }
+      }
+
+      // Update the Firestore document
+      // console.log("After Submission", newUser);
+      let score = user.totalScore;
+      if (score === null) {
         score = get().score;
       } else {
         score += get().score;
@@ -289,15 +318,22 @@ const useQuesStore = create((set, get) => ({
 
       await updateDoc(userDocRef, {
         totalScore: score,
+        solvedTopics: userSolvedTopics,
       });
-      const newUser = { ...user, totalScore: score };
+      const newUser = {
+        ...user,
+        totalScore: score,
+        solvedTopics: userSolvedTopics,
+      };
       useCurrentUserStore.getState().updateUser(newUser);
+
+      // Commit the batch operation
       await batch.commit();
       set({ currentIndex: 0 });
       set({ fetchedQuestionSystem: "" });
       set({ fetchedQuestionTopic: "" });
       set({ score: 0 });
-      console.log("SAVED");
+      // console.log("SAVED");
     } catch (error) {
       console.log(error.message);
     }
