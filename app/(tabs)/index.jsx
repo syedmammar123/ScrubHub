@@ -20,10 +20,10 @@ import useQuesStore from "@/store/quesStore";
 import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
-
+import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 
 export default function App() {
-  
+  const state = useGetSolvedQues();
   const {
     setType,
     fetchChallengeQuestions,
@@ -68,6 +68,8 @@ export default function App() {
   const user = useCurrentUserStore((state) => state.user);
 
   const handleSave = async () => {
+    console.log(state);
+
     // console.log("USER FROM TEST", getUser());
     // await submitChallengeQuestions();
     // await submitReviews();
@@ -75,13 +77,12 @@ export default function App() {
     //  router.navigate("scoreScreen");
 
     // Testing for saving topics
-    await submitQuestions();
+    // await submitQuestions();
   };
 
   if (!user) {
     return <Redirect href="onboarding" />;
   }
-
 
   // console.log(user);
 
