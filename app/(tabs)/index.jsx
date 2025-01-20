@@ -53,9 +53,11 @@ export default function App() {
       }
     } else {
       const nextScreen = getQuestionType(getChallengeQuestion());
-
-      console.log("NEXT SCREEN", nextScreen);
-      router.navigate(nextScreen);
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledchallenge");
+      } else {
+        router.replace(nextScreen);
+      }
     }
   };
   // const user = useCurrentUserStore((state) => state.user);
@@ -65,16 +67,23 @@ export default function App() {
   //  }
   const user = useCurrentUserStore((state) => state.user);
 
-  // const handleSave = async () => {
-  //   console.log("USER FROM TEST", getUser());
-  //   await submitChallengeQuestions();
-  //   //  router.navigate("scoreScreen");
-  // };
+  const handleSave = async () => {
+    // console.log("USER FROM TEST", getUser());
+    // await submitChallengeQuestions();
+    // await submitReviews();
+    // await submitQuestions();
+    //  router.navigate("scoreScreen");
+
+    // Testing for saving topics
+    await submitQuestions();
+  };
 
   if (!user) {
     return <Redirect href="onboarding" />;
   }
-  
+
+
+  // console.log(user);
 
   return (
     <View style={styles.container}>
@@ -88,7 +97,7 @@ export default function App() {
           <ScrubLogo />
           {/* Buttons */}
 
-          {/* <TouchableOpacity style={[styles.button]} onPress={handleSave}>
+          <TouchableOpacity style={[styles.button]} onPress={handleSave}>
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
             >
@@ -105,7 +114,7 @@ export default function App() {
             >
               Testing
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {

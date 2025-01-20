@@ -57,6 +57,7 @@ export default function Topics() {
     getfetchedQuestionTopic,
     getfetchedReviewTopic,
     getReviewQuestion,
+    currentIndexReview,
   } = useQuesStore((state) => state);
   const [topics, setTopics] = useState([]);
   const { system } = useGlobalSearchParams();
@@ -66,7 +67,7 @@ export default function Topics() {
   const handlePress = async (topic) => {
     console.log(system);
     if (getCurrentType() === "review") {
-      if (currentIndex < 8) {
+      if (currentIndexReview < 8) {
         if (getfetchedReviewTopic() === topic) {
           console.log("Already fetched");
 
@@ -77,7 +78,7 @@ export default function Topics() {
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic,
+            topic
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
@@ -165,6 +166,30 @@ export default function Topics() {
     }
   };
 
+  const getRandom = async () => {
+    if (currentIndex < 8) {
+      await fetchQuestions(system.toLowerCase(), topics);
+      // if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
+      //   console.log("HIT");
+      //   console.log(getCurrentQuestion().questionStyle);
+      //   console.log("CALL", getQuestionType(getCurrentQuestion()));
+
+      //   const nextScreen = getQuestionType(getCurrentQuestion());
+      //   console.log(nextScreen);
+
+      //   router.navigate(nextScreen);
+      // } else {
+      //   await fetchQuestions(system.toLowerCase(), topics);
+      //   const nextScreen = getQuestionType(getCurrentQuestion());
+
+      //   router.navigate(nextScreen);
+      // }
+    } else {
+      // 9 Questions solved already
+      router.navigate("/");
+    }
+  };
+
   useEffect(() => {
     getTopics();
   }, []);
@@ -199,7 +224,7 @@ export default function Topics() {
             <View>
               {topics && (
                 <Pressable
-                  onPress={getInfo}
+                  onPress={getRandom}
                   style={{
                     backgroundColor: theme.barColor,
                     paddingHorizontal: 40,
