@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { getRandomArray, getRandomItem, getRandomSolvedQuesArray } from "../util/getRandomItem";
+import { getRandomSolvedQuesArray } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
 
 const useGetSolvedQues = () => {
