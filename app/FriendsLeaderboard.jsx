@@ -1,10 +1,21 @@
 import BackgroundImage from "@/components/backgroundImage";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
 import { theme } from "@/theme";
+import useGetScores from "@/hooks/useGetScores";
 
 export default function FriendsLeaderboard() {
+  const { scores, loading } = useGetScores({ scoreField: "totalScore" });
+  console.log("scores", scores);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <BackgroundImage>

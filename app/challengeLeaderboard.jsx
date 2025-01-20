@@ -14,7 +14,7 @@ import { theme } from "@/theme";
 import useGetScores from "@/hooks/useGetScores";
 
 export default function ChallengeLeaderboard() {
-  const { scores, loading } = useGetScores({ scoreField: "totalScore" });
+  const { scores, loading } = useGetScores({ scoreField: "lastChallengeScore" });
   console.log("scores", scores);
 
   if (loading) {
