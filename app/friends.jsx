@@ -425,7 +425,7 @@ export default function Friends() {
             setShowInvitation={setShowInvitation}
             count={invitations.length}
           />
-          <TouchableOpacity onPress={() => router.navigate("challengeLeaderboard")}>
+          <TouchableOpacity onPress={() => router.navigate("FriendsLeaderboard")}>
             <Image source={leaderBoardImg} style={styles.buttonCircleStyle} />
           </TouchableOpacity>
         </View>
