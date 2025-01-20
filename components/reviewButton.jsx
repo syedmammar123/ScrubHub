@@ -1,16 +1,60 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import React, { useState } from "react";
 import { theme } from "@/theme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
+import useQuesStore from "@/store/quesStore";
+import useGetSolvedQues from "@/hooks/useGetSolvedQues";
+import { getQuestionType } from "@/util/utilQuesFunc";
 
 export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
+  const {
+    fetchReviewQuestions,
+    getCurrentType,
+    setReviewAllQuestions,
+    getfetchedReviewTopic,
+    getReviewQuestion,
+    currentIndexReview,
+  } = useQuesStore((state) => state);
+  const state = useGetSolvedQues();
+  const [error, setError] = useState(false);
+  const handlePress = async () => {
+    if (getCurrentType() === "review") {
+      if (getfetchedReviewTopic() === "reviewall") {
+        const nextScreen = getQuestionType(getReviewQuestion());
+        if (nextScreen === "wordscrambled") {
+          router.navigate("wordscramblereview");
+        } else {
+          router.navigate(nextScreen);
+        }
+        console.log("NEXT SCREEN", nextScreen);
+        // Questions Already Fetched
+      } else {
+        const questions = await state.fetchRandomQues();
+        if (questions.length === 0) {
+          setError(true);
+          return;
+        }
+        setReviewAllQuestions(questions);
+        const nextScreen = getQuestionType(questions[0]);
+
+        router.navigate(nextScreen);
+        console.log("NEXT SCREEN", nextScreen);
+      }
+    }
+  };
   const router = useRouter("");
   return (
     <View>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => router.navigate(nextRoute)}
+        onPress={() => {
+          if (nextRoute === "reviewall") {
+            handlePress();
+          } else {
+            router.navigate(nextRoute);
+          }
+        }}
       >
         <View style={[styles.buttonCircleStyle, { backgroundColor: bgColor }]}>
           <MaterialIcons name="reviews" size={40} color="black" />
@@ -19,6 +63,34 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
           <Text style={styles.buttonText}>{btnTitle}</Text>
         </View>
       </TouchableOpacity>
+      {/* Error Modal */}
+      <Modal
+        visible={error}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setError(false)}
+      >
+        <TouchableOpacity
+          style={styles.overlay}
+          onPress={() => setError(false)}
+          activeOpacity={1}
+        >
+          <View style={styles.modalContainer}>
+            {/* Circle with shadow */}
+            <View style={styles.iconCircle}>
+              <MaterialIcons name="cancel" size={55} color="#EF5555" />
+            </View>
+
+            {/* Title */}
+            <Text style={styles.title}>No Question Fetched!</Text>
+
+            {/* Description */}
+            <Text style={styles.description}>
+              Error fetching questions. No questions available at the moment.
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
@@ -52,5 +124,43 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
+  },
+  // Modal
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Darker background overlay
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 30,
+    alignItems: "center",
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10, // For Android shadow
+  },
+
+  icon: {
+    width: 60,
+    height: 60,
+  },
+  title: {
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#333",
+    marginTop: 10,
+  },
+  description: {
+    textAlign: "center",
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 10,
   },
 });
