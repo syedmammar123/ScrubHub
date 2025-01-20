@@ -6,13 +6,24 @@ import {
   ScrollView,
   Text,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import BackButton from "@/components/backButton";
 import Friend from "@/components/friend";
 import { theme } from "@/theme";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import useGetScores from "@/hooks/useGetScores";
 
 export default function ChallengeLeaderboard() {
+  const { scores, loading } = useGetScores({ scoreField: "lastChallengeScore" });
+  console.log("scores", scores);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#0038FF" barStyle="light-content" />
@@ -81,14 +92,6 @@ export default function ChallengeLeaderboard() {
           Name={"Michael Wels"}
           photoUrl={
             "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-          }
-        />
-        <Friend
-          position={"05"}
-          marks={"09/15"}
-          Name={"Oliver"}
-          photoUrl={
-            "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=2430"
           }
         />
       </ScrollView>
