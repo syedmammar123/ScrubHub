@@ -168,22 +168,21 @@ export default function Topics() {
 
   const getRandom = async () => {
     if (currentIndex < 8) {
-      await fetchQuestions(system.toLowerCase(), topics);
-      // if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
-      //   console.log("HIT");
-      //   console.log(getCurrentQuestion().questionStyle);
-      //   console.log("CALL", getQuestionType(getCurrentQuestion()));
+      if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
+        console.log("HIT");
+        console.log(getCurrentQuestion().questionStyle);
+        console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-      //   const nextScreen = getQuestionType(getCurrentQuestion());
-      //   console.log(nextScreen);
+        const nextScreen = getQuestionType(getCurrentQuestion());
+        console.log(nextScreen);
 
-      //   router.navigate(nextScreen);
-      // } else {
-      //   await fetchQuestions(system.toLowerCase(), topics);
-      //   const nextScreen = getQuestionType(getCurrentQuestion());
+        router.navigate(nextScreen);
+      } else {
+        await fetchQuestions(system.toLowerCase(), topics);
+        const nextScreen = getQuestionType(getCurrentQuestion());
 
-      //   router.navigate(nextScreen);
-      // }
+        router.navigate(nextScreen);
+      }
     } else {
       // 9 Questions solved already
       router.navigate("/");

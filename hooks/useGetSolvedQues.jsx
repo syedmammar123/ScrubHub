@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { getRandomArray, getRandomItem, getRandomSolvedQuesArray } from "../util/getRandomItem";
+import {
+  getRandomArray,
+  getRandomItem,
+  getRandomSolvedQuesArray,
+} from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
 
 const useGetSolvedQues = () => {
@@ -13,23 +17,23 @@ const useGetSolvedQues = () => {
       // Get all document IDs from the Questions collection
       const topicRef = firestore()
         .collection("Users")
-        .doc("FrTsL0JPgZaBSMvPoGHErIpU1iz2")
-        const querySnapshot = await topicRef.get();
-        const solvedTopics = querySnapshot.data().solvedTopics;
-        // console.log("querySnapshot",solvedTopics)
+        .doc("FrTsL0JPgZaBSMvPoGHErIpU1iz2");
+      const querySnapshot = await topicRef.get();
+      const solvedTopics = querySnapshot.data().solvedTopics;
+      // console.log("querySnapshot",solvedTopics)
       if (solvedTopics.length === 0 || solvedTopics === undefined) {
         console.log("No solved topics found in the Users collection.");
         return [];
       }
       const randomMainTopics = getRandomSolvedQuesArray(solvedTopics);
-    //   console.log("randomMainTopics",randomMainTopics)
+      //   console.log("randomMainTopics",randomMainTopics)
 
       // Get random questions from each subtopic
       const randomQuestions = [];
 
       for (let i = 0; i < randomMainTopics.length; i++) {
         if (randomMainTopics[i].subTopic !== null) {
-          const questionsRef =topicRef
+          const questionsRef = topicRef
             .collection("solved")
             .doc(randomMainTopics[i].topic)
             .collection(randomMainTopics[i].subTopic)
@@ -40,6 +44,8 @@ const useGetSolvedQues = () => {
           randomQuestions.push(questionDocs[0].data());
         }
       }
+
+      return randomQuestions;
       setSolvedQues(randomQuestions);
     } catch (error) {
       console.log("Error fetching random questions:", error);
@@ -48,11 +54,7 @@ const useGetSolvedQues = () => {
     }
   };
 
-  useEffect(() => {
-    fetchRandomQues();
-  }, []);
-
-  return { solvedQues, loading };
+  return { loading, fetchRandomQues };
 };
 
 export default useGetSolvedQues;
