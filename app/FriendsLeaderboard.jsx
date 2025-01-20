@@ -1,7 +1,8 @@
 import BackgroundImage from "@/components/backgroundImage";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
+import { theme } from "@/theme";
 
 export default function FriendsLeaderboard() {
   return (

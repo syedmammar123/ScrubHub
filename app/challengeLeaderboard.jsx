@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import BackButton from "@/components/backButton";
 import Friend from "@/components/friend";
@@ -13,8 +14,16 @@ import { theme } from "@/theme";
 import useGetScores from "@/hooks/useGetScores";
 
 export default function ChallengeLeaderboard() {
-  const {scores,loading} = useGetScores({ scoreField: "totalScore" });
-  console.log("scores",scores)
+  const { scores, loading } = useGetScores({ scoreField: "totalScore" });
+  console.log("scores", scores);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#0038FF" barStyle="light-content" />
@@ -85,7 +94,6 @@ export default function ChallengeLeaderboard() {
             "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
           }
         />
-        
       </ScrollView>
     </View>
   );
