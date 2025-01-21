@@ -11,6 +11,17 @@ import { useRoute } from "@react-navigation/native";
 import { router } from "expo-router";
 import { doc, getFirestore, setDoc } from "@react-native-firebase/firestore";
 
+
+export const avatars = {
+  1: require("@/assets/avatar1.png"),
+  2: require("@/assets/avatar2.png"),
+  3: require("@/assets/avatar3.png"),
+  4: require("@/assets/avatar4.png"),
+  5: require("@/assets/avatar5.png"),
+  6: require("@/assets/avatar6.png"),
+  7: require("@/assets/avatar7.png"),
+};
+
 const userInfoScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [uid, setUid] = useState("");
@@ -19,15 +30,6 @@ const userInfoScreen = () => {
   const route = useRoute();
 
   // Map avatar IDs to their respective image imports
-  const avatars = {
-    1: require("@/assets/avatar1.png"),
-    2: require("@/assets/avatar2.png"),
-    3: require("@/assets/avatar3.png"),
-    4: require("@/assets/avatar4.png"),
-    5: require("@/assets/avatar5.png"),
-    6: require("@/assets/avatar6.png"),
-    7: require("@/assets/avatar7.png"),
-  };
 
   useEffect(() => {
     const { phoneNumber, uid } = route.params;

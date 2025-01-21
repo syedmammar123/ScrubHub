@@ -397,6 +397,7 @@ export default function Friends() {
     ]);
   };
 
+
   return (
     <View style={styles.container}>
       {showInvitation && (
@@ -484,8 +485,7 @@ export default function Friends() {
                     Name={friend.username || "Unknown"}
                     photoUrl={
                       friend.avatarId
-                        ? getAvatarImage(friend.avatarId)
-                        : getAvatarImage(0)
+                      
                     }
                     id={friend.uid}
                     onRemove={handleRemoveFriend}
