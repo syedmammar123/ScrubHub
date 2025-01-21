@@ -33,6 +33,7 @@ import SlideUpView from "@/components/SlideUpView";
 import useGetInvitations from "@/hooks/useGetInvitations";
 import { getAvatarImage } from "@/util/getAvatarImage";
 import leaderBoardImg from "@/assets/leaderboard.png";
+import { useRouter } from "expo-router";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -59,6 +60,8 @@ export default function Friends() {
   const [showInvitation, setShowInvitation] = useState(false);
   const { invitations, invitationsLoading, setInvitations } =
     useGetInvitations();
+
+     const router = useRouter();
 
   //For testing Purpose only!
   // const uid1 = "FrTsL0JPgZaBSMvPoGHErIpU1iz2";
@@ -394,6 +397,7 @@ export default function Friends() {
     ]);
   };
 
+
   return (
     <View style={styles.container}>
       {showInvitation && (
@@ -409,12 +413,22 @@ export default function Friends() {
       <StatusBar style="auto" />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <BackButton />
-        <View style={{ flexDirection: "row", alignItems: "center", rowGap: 10, marginRight: 10,justifyContent: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            rowGap: 10,
+            marginRight: 10,
+            justifyContent: "center",
+          }}
+        >
           <AddFriend
             setShowInvitation={setShowInvitation}
             count={invitations.length}
           />
-          <Image source={leaderBoardImg} style={styles.buttonCircleStyle}/>
+          <TouchableOpacity onPress={() => router.navigate("FriendsLeaderboard")}>
+            <Image source={leaderBoardImg} style={styles.buttonCircleStyle} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -471,8 +485,7 @@ export default function Friends() {
                     Name={friend.username || "Unknown"}
                     photoUrl={
                       friend.avatarId
-                        ? getAvatarImage(friend.avatarId)
-                        : getAvatarImage(0)
+                      
                     }
                     id={friend.uid}
                     onRemove={handleRemoveFriend}
