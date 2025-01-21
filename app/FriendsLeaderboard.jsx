@@ -1,34 +1,53 @@
 import BackgroundImage from "@/components/backgroundImage";
-import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Text,
+} from "react-native";
 import ScrubLogo from "@/components/scrubLogo";
 import Friend from "@/components/friend";
 import { theme } from "@/theme";
 import useGetScores from "@/hooks/useGetScores";
+import BackButton from "@/components/backButton";
+import auth from "@react-native-firebase/auth";
 
 export default function FriendsLeaderboard() {
   const { scores, loading } = useGetScores({ scoreField: "totalScore" });
-  console.log("scores", scores);
+  const currentUserId = auth().currentUser?.uid;
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
   return (
     <View style={styles.container}>
+      <BackButton />
       <BackgroundImage>
         <ScrubLogo />
         <ScrollView style={styles.lowerContainer}>
-          <Friend
-            position={"04"}
-            marks={"10/15"}
-            Name={"Michael Wels"}
-            photoUrl={
-              "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-            }
-          />
+          {loading && (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
+          {!loading &&
+            scores.length > 0 &&
+            scores.map((friend, index) => (
+              <Friend
+                key={friend.id}
+                position={index + 1}
+                marks={`${friend.totalScore}`}
+                Name={friend.id === currentUserId ? `${friend.name} (You)` : friend.name}
+                photoUrl={friend.avatar}
+              />
+            ))}
+          {!loading && scores?.length === 0 && (
+            <Text style={{ textAlign: "center" }}>No records found</Text>
+          )}
         </ScrollView>
       </BackgroundImage>
     </View>
