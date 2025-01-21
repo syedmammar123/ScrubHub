@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
+import { avatars } from "@/app/userInfoScreen";
 
 export default function Friend({
   position,
@@ -18,7 +19,10 @@ export default function Friend({
       <View style={styles.container}>
         <View style={styles.imageName}>
           {position && <Text style={styles.bluefont}>{position}</Text>}
-          <Image style={styles.image} source={photoUrl} />
+          <Image
+            style={styles.image}
+            source={avatars[photoUrl]}
+          />
           <Text style={styles.friendName}>{Name}</Text>
         </View>
         {marks ? (
