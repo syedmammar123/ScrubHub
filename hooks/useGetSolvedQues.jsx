@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { getRandomSolvedQuesArray } from "../util/getRandomItem";
 import {
-  getRandomArray,
-  getRandomItem,
   getRandomSolvedQuesArray,
 } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
+import auth from "@react-native-firebase/auth";
 
 const useGetSolvedQues = () => {
   const [solvedQues, setSolvedQues] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const currentUserId = auth().currentUser?.uid;
 
   const fetchRandomQues = async () => {
     setLoading(true);
@@ -18,10 +18,10 @@ const useGetSolvedQues = () => {
       // Get all document IDs from the Questions collection
       const topicRef = firestore()
         .collection("Users")
-        .doc("FrTsL0JPgZaBSMvPoGHErIpU1iz2");
-      const querySnapshot = await topicRef.get();
-      const solvedTopics = querySnapshot.data().solvedTopics;
-      // console.log("querySnapshot",solvedTopics)
+        .doc(currentUserId)
+        const querySnapshot = await topicRef.get();
+        const solvedTopics = querySnapshot.data().solvedTopics;
+        // console.log("querySnapshot",solvedTopics)
       if (solvedTopics.length === 0 || solvedTopics === undefined) {
         console.log("No solved topics found in the Users collection.");
         return [];
