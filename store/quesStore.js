@@ -345,33 +345,38 @@ const useQuesStore = create((set, get) => ({
     let topic = get().fetchedReviewQuestionTopic;
     console.log(system);
     console.log(topic);
-
-    try {
-      get().reviewQuestions.forEach((q) => {
-        const docRef = doc(
-          db, // Firestore database instance
-          "Users", // Collection name
-          useCurrentUserStore.getState().getUser().id,
-          "solved",
-          system,
-          topic,
-          q.id
-        );
-
-        batch.update(docRef, {
-          isReviewed: true,
-          lastReviewed: new Date(), // Current timestamp
-        });
-      });
-
-      // Commit batch update
-      await batch.commit();
+    if (topic === "reviewall") {
       set({ fetchedReviewQuestionSystem: "" });
-
+      set({ currentIndexReview: 0 });
       set({ fetchedReviewQuestionTopic: "" });
-      console.log("Batch update successful!");
-    } catch (error) {
-      console.error("Batch update failed:", error.message);
+    } else {
+      try {
+        get().reviewQuestions.forEach((q) => {
+          const docRef = doc(
+            db, // Firestore database instance
+            "Users", // Collection name
+            useCurrentUserStore.getState().getUser().id,
+            "solved",
+            system,
+            topic,
+            q.id
+          );
+
+          batch.update(docRef, {
+            isReviewed: true,
+            lastReviewed: new Date(), // Current timestamp
+          });
+        });
+
+        // Commit batch update
+        await batch.commit();
+        set({ fetchedReviewQuestionSystem: "" });
+        set({ currentIndexReview: 0 });
+        set({ fetchedReviewQuestionTopic: "" });
+        console.log("Batch update successful!");
+      } catch (error) {
+        console.error("Batch update failed:", error.message);
+      }
     }
   },
   //
@@ -489,6 +494,17 @@ const useQuesStore = create((set, get) => ({
   getfetchedReviewTopic: () => {
     const { fetchedReviewQuestionTopic } = get();
     return fetchedReviewQuestionTopic;
+  },
+
+  // For Review All
+  setReviewAllQuestions: (questions) => {
+    set({ isLoading: true });
+
+    // Setting Index 0 for Questions
+    set({ currentIndexReview: 0 });
+    set({ reviewQuestions: questions });
+    set({ fetchedReviewQuestionSystem: "reviewall" });
+    set({ fetchedReviewQuestionTopic: "reviewall" });
   },
 }));
 

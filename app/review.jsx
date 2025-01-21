@@ -18,7 +18,7 @@ export default function review() {
             <ReviewButton
               btnTitle="REVIEW ALL"
               bgColor={"#EBA7A7"}
-              nextRoute={"questionmark"}
+              nextRoute={"reviewall"}
             />
             <ReviewButton
               btnTitle="REVIEW BY SYSTEM"
