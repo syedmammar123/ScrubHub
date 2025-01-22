@@ -6,13 +6,60 @@ import {
   ScrollView,
   Text,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import BackButton from "@/components/backButton";
 import Friend from "@/components/friend";
 import { theme } from "@/theme";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import useGetScores from "@/hooks/useGetScores";
+import { avatars } from "./userInfoScreen";
+
+const scores1 = [
+  {
+    avatar: 2,
+    id: "FrTsL0JPgZaBSMvPoGHErIpU1iz2",
+    lastChallengeScore: 7,
+    name: "Ammar",
+  },
+  {
+    avatar: 2,
+    id: "FrTsL0JPgZaBSMvPoGHErIpU1iz2",
+    lastChallengeScore: 7,
+    name: "Ammar",
+  },
+  {
+    avatar: 2,
+    id: "FrTsL0JPgZaBSMvPoGHErIpU1iz2",
+    lastChallengeScore: 7,
+    name: "Ammar",
+  },
+  {
+    avatar: 2,
+    id: "FrTsL0JPgZaBSMvPoGHErIpU1iz2",
+    lastChallengeScore: 7,
+    name: "Ammar",
+  },
+  {
+    avatar: 2,
+    id: "FrTsL0JPgZaBSMvPoGHErIpU1iz2",
+    lastChallengeScore: 7,
+    name: "Ammar",
+  },
+];
 
 export default function ChallengeLeaderboard() {
+  const { scores, loading } = useGetScores({
+    scoreField: "lastChallengeScore",
+  });
+  console.log("scores", scores);
+
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#0038FF" barStyle="light-content" />
@@ -35,36 +82,44 @@ export default function ChallengeLeaderboard() {
 
         {/* Circles with numbers */}
         <View style={styles.images}>
-          <View style={styles.circleContainer}>
+          {/* 2nd Position */}
+          <View
+            style={[
+              styles.circleContainer,
+              scores.length < 2 ? { opacity: 0 } : {},
+            ]}
+          >
             <Image
               style={styles.circles}
-              source={{
-                uri: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-              }}
+              source={avatars[scores[1]?.avatar]}
             />
             <View style={styles.smallCircle}>
               <Text style={styles.numberText}>02</Text>
             </View>
           </View>
 
+          {/* 1st Position */}
+
           <View style={styles.circleContainer}>
             <Image
               style={styles.circles2}
-              source={{
-                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd_LiQaLtCPsF-2qx_iUDTftXaimTQcIWMFafE_oWYLoyhxfWJ8W4GLn1H5criVfFAKIE&usqp=CAU",
-              }}
+              source={avatars[scores[0]?.avatar]}
             />
             <View style={styles.smallCircle2}>
               <Text style={styles.numberText}>01</Text>
             </View>
           </View>
 
-          <View style={styles.circleContainer}>
+          {/* 3rd Position */}
+          <View
+            style={[
+              styles.circleContainer,
+              scores.length < 3 ? { opacity: 0 } : {},
+            ]}
+          >
             <Image
               style={styles.circles}
-              source={{
-                uri: "https://t3.ftcdn.net/jpg/02/42/00/04/360_F_242000451_i5W8qBEWBw5hthTWgPTogYYl8qxIX4f5.jpg",
-              }}
+              source={avatars[scores[2]?.avatar]}
             />
             <View style={styles.smallCircle}>
               <Text style={styles.numberText}>03</Text>
@@ -75,22 +130,18 @@ export default function ChallengeLeaderboard() {
 
       {/* 4 to n Positions */}
       <ScrollView style={styles.lowerContainer}>
-        <Friend
-          position={"04"}
-          marks={"10/15"}
-          Name={"Michael Wels"}
-          photoUrl={
-            "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-          }
-        />
-        <Friend
-          position={"05"}
-          marks={"09/15"}
-          Name={"Oliver"}
-          photoUrl={
-            "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=2430"
-          }
-        />
+        {scores.length > 3 &&
+          scores
+            .slice(3)
+            .map((friend, index) => (
+              <Friend
+                key={friend.id}
+                position={index + 4}
+                marks={`${friend.lastChallengeScore}/9`}
+                Name={friend.name}
+                photoUrl={friend.avatar}
+              />
+            ))}
       </ScrollView>
     </View>
   );
@@ -132,7 +183,7 @@ const styles = StyleSheet.create({
   images: {
     width: "90%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     position: "absolute",
     bottom: -80,
   },
