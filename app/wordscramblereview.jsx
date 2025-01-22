@@ -307,114 +307,118 @@ export default function WordScrambleReview() {
       <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <View style={{ flex: 1, justifyContent: "space-between" }}>
-            {/* UPPER CONTAINER */}
-            {submitted ? (
-              <View>
-                <Text>Loading..</Text>
-              </View>
-            ) : (
-              <>
-                {/* UPPER CONTAINER */}
+          <ScrollView style={{ paddingBottom: 20 }}>
+            <View style={{ flex: 1, justifyContent: "space-between" }}>
+              {/* UPPER CONTAINER */}
+              {submitted ? (
                 <View>
-                  {/* Guideline */}
-                  <View>
-                    <Text style={styles.guideline}>
-                      Given a hint with a series of empty spaces and{" "}
-                      {question?.letterChoices?.length} letter options, find out
-                      which word/term is being hinted at
-                    </Text>
-                  </View>
-
-                  {/* Hint */}
-                  <View>
-                    <Text style={styles.guideline}>{question?.hint}</Text>
-                  </View>
-
-                  {/* Blanks */}
-                  <View style={styles.inputContainer}>
-                    {selected.map((_, index) => (
-                      <BlankInput
-                        checked={checked}
-                        key={index}
-                        setBlankInputLayout={setBlankInputLayout}
-                        index={index}
-                      />
-                    ))}
-                  </View>
-
-                  {/* Letters to Choose */}
-                  <View style={styles.lettersContainer}>
-                    {question?.letterChoices?.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <InputBox
-                          answerCalculated={answerCalculated}
-                          bgColor={
-                            !answerCalculated
-                              ? "white"
-                              : selected[index].backgroundColor
-                          }
-                          letter={val}
-                          setLetterLayout={setLetterLayout}
-                          index={index}
-                          AnimatedStyle={AnimatedStyle}
-                        />
-                      </GestureDetector>
-                    ))}
-                  </View>
+                  <Text>Loading..</Text>
                 </View>
-              </>
-            )}
+              ) : (
+                <>
+                  {/* UPPER CONTAINER */}
+                  <View>
+                    {/* Guideline */}
+                    <View>
+                      <Text style={styles.guideline}>
+                        Given a hint with a series of empty spaces and{" "}
+                        {question?.letterChoices?.length} letter options, find
+                        out which word/term is being hinted at
+                      </Text>
+                    </View>
 
-            {/* LOWER CONTAINER */}
-            <View>
-              {/* Button */}
-              <View style={[styles.btncontainer, { rowGap: 15 }]}>
-                {error ? (
-                  <StatusIcon
-                    icon="cancel"
-                    text={"All Boxes should be filled!"}
-                  />
-                ) : (
-                  <StatusIcon icon="none" text={""} />
-                )}
-                {checked && !error ? (
-                  <StatusIcon
-                    icon={isMatchesCorrect ? "correct" : "cancel"}
-                    text={isMatchesCorrect ? "Amazing!" : `${question?.answer}`}
-                  />
-                ) : (
-                  <StatusIcon icon="none" text={""} />
-                )}
+                    {/* Hint */}
+                    <View>
+                      <Text style={styles.guideline}>{question?.hint}</Text>
+                    </View>
 
-                {checked ? (
-                  <StatusButton
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    setChecked={setChecked}
-                    checked={checked}
-                    text={"Continue"}
-                    width={"60%"}
-                  />
-                ) : (
-                  <StatusButton
-                    setChecked={setChecked}
-                    checked={checked}
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    text={"Submit"}
-                    questionType={"wordscramble"}
-                    width={"60%"}
-                  />
-                )}
+                    {/* Blanks */}
+                    <View style={styles.inputContainer}>
+                      {selected.map((_, index) => (
+                        <BlankInput
+                          checked={checked}
+                          key={index}
+                          setBlankInputLayout={setBlankInputLayout}
+                          index={index}
+                        />
+                      ))}
+                    </View>
+
+                    {/* Letters to Choose */}
+                    <View style={styles.lettersContainer}>
+                      {question?.letterChoices?.map((val, index) => (
+                        <GestureDetector
+                          key={index}
+                          gesture={panGestureHandler[index]}
+                        >
+                          <InputBox
+                            answerCalculated={answerCalculated}
+                            bgColor={
+                              !answerCalculated
+                                ? "white"
+                                : selected[index].backgroundColor
+                            }
+                            letter={val}
+                            setLetterLayout={setLetterLayout}
+                            index={index}
+                            AnimatedStyle={AnimatedStyle}
+                          />
+                        </GestureDetector>
+                      ))}
+                    </View>
+                  </View>
+                </>
+              )}
+
+              {/* LOWER CONTAINER */}
+              <View>
+                {/* Button */}
+                <View style={[styles.btncontainer, { rowGap: 15 }]}>
+                  {error ? (
+                    <StatusIcon
+                      icon="cancel"
+                      text={"All Boxes should be filled!"}
+                    />
+                  ) : (
+                    <StatusIcon icon="none" text={""} />
+                  )}
+                  {checked && !error ? (
+                    <StatusIcon
+                      icon={isMatchesCorrect ? "correct" : "cancel"}
+                      text={
+                        isMatchesCorrect ? "Amazing!" : `${question?.answer}`
+                      }
+                    />
+                  ) : (
+                    <StatusIcon icon="none" text={""} />
+                  )}
+
+                  {checked ? (
+                    <StatusButton
+                      setError={setError}
+                      selected={selected}
+                      setSubmitted={setSubmitted}
+                      setChecked={setChecked}
+                      checked={checked}
+                      text={"Continue"}
+                      width={"60%"}
+                    />
+                  ) : (
+                    <StatusButton
+                      setChecked={setChecked}
+                      checked={checked}
+                      setError={setError}
+                      selected={selected}
+                      setSubmitted={setSubmitted}
+                      text={"Submit"}
+                      questionType={"wordscramble"}
+                      width={"60%"}
+                    />
+                  )}
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </BackgroundImage>
       </View>
     </View>
