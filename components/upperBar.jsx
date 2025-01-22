@@ -4,16 +4,19 @@ import { theme } from "@/theme";
 import useQuesStore from "@/store/quesStore";
 
 export default function UpperBar() {
-  const { getCurrentType, currentIndex, currentIndexReview } = useQuesStore(
-    (state) => state,
-  );
+  const {
+    getCurrentType,
+    currentIndex,
+    currentIndexReview,
+    currentChallengeIndex,
+  } = useQuesStore((state) => state);
   return (
     <View style={styles.bar}>
       <View
         style={[
           styles.innerBar,
           {
-            width: `${((getCurrentType() === "review" ? currentIndexReview : currentIndex) + 1) * 11.11}%`,
+            width: `${((getCurrentType() === "review" ? currentIndexReview : getCurrentType() === "study" ? currentIndex : currentChallengeIndex) + 1) * 11.11}%`,
           },
         ]}
       ></View>
