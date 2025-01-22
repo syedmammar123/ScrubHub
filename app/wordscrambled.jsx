@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
@@ -8,11 +15,7 @@ import InputBox from "@/components/inputBox";
 import BlankInput from "@/components/blankInput";
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
-import {
-  Gesture,
-  GestureDetector,
-  ScrollView,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
   runOnJS,
   useAnimatedStyle,
