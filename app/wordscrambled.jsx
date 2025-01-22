@@ -8,7 +8,11 @@ import InputBox from "@/components/inputBox";
 import BlankInput from "@/components/blankInput";
 import StatusButton from "@/components/statusButton";
 import StatusIcon from "@/components/statusIcon";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  ScrollView,
+} from "react-native-gesture-handler";
 import {
   runOnJS,
   useAnimatedStyle,
@@ -55,7 +59,7 @@ export default function WordScrambled() {
 
   const [question, setQuestion] = useState({ letterChoices: [] });
   const [answerLength, setAnswerLength] = useState(
-    getCurrentQuestion().answer?.length,
+    getCurrentQuestion().answer?.length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
@@ -67,7 +71,7 @@ export default function WordScrambled() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 }),
+    Array(answerLength).fill({ value: -1, realIndex: -1 })
   );
 
   console.log("Selected", selected);
@@ -78,15 +82,15 @@ export default function WordScrambled() {
   // const translateValueX = question?.letterChoices.map(() => useSharedValue(0));
   // const translateValueY = question.letterChoices.map(() => useSharedValue(0));
   const translateValueX = getCurrentQuestion().letterChoices.map(() =>
-    useSharedValue(0),
+    useSharedValue(0)
   );
   const translateValueY = getCurrentQuestion().letterChoices.map(() =>
-    useSharedValue(0),
+    useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
 
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
 
   const line = useSharedValue(-1);
@@ -175,7 +179,7 @@ export default function WordScrambled() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10,
+                val - letterLayout[index]?.x + 10
               );
 
               break;
@@ -206,7 +210,7 @@ export default function WordScrambled() {
   };
 
   const panGestureHandler = question.letterChoices?.map((_, index) =>
-    CreatePanGesture(index),
+    CreatePanGesture(index)
   );
 
   const AnimatedStyle = (index) =>
@@ -267,7 +271,7 @@ export default function WordScrambled() {
           }
           return array;
         },
-        [],
+        []
       );
 
       console.log("MISSING", missingIndices);
@@ -282,7 +286,7 @@ export default function WordScrambled() {
       console.log("MISSINGARRAY", missingArray);
       console.log([...selectedString, ...missingArray]);
       const sortedArray = [...selectedString, ...missingArray].sort(
-        (a, b) => a.realIndex - b.realIndex,
+        (a, b) => a.realIndex - b.realIndex
       );
       console.log("Sorted Array", sortedArray);
 
@@ -306,115 +310,119 @@ export default function WordScrambled() {
       <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <View style={{ flex: 1, justifyContent: "space-between" }}>
-            {/* UPPER CONTAINER */}
-            {submitted ? (
-              <View>
-                <Text>Loading..</Text>
-              </View>
-            ) : (
-              <>
-                {/* UPPER CONTAINER */}
+          <ScrollView style={{ paddingBottom: 20 }}>
+            <View style={{ flex: 1, justifyContent: "space-between" }}>
+              {/* UPPER CONTAINER */}
+              {submitted ? (
                 <View>
-                  {/* Guideline */}
-                  <View>
-                    <Text style={styles.guideline}>
-                      Given a hint with a series of empty spaces and{" "}
-                      {question?.letterChoices?.length} letter options, find out
-                      which word/term is being hinted at
-                    </Text>
-                  </View>
-
-                  {/* Hint */}
-                  <View>
-                    <Text style={styles.guideline}>{question?.hint}</Text>
-                  </View>
-
-                  {/* Blanks */}
-                  <View style={styles.inputContainer}>
-                    {selected.map((_, index) => (
-                      <BlankInput
-                        checked={checked}
-                        key={index}
-                        setBlankInputLayout={setBlankInputLayout}
-                        index={index}
-                      />
-                    ))}
-                  </View>
-
-                  {/* Letters to Choose */}
-                  <View style={styles.lettersContainer}>
-                    {question?.letterChoices?.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <InputBox
-                          answerCalculated={answerCalculated}
-                          bgColor={
-                            !answerCalculated
-                              ? "white"
-                              : selected[index].backgroundColor
-                          }
-                          letter={val}
-                          setLetterLayout={setLetterLayout}
-                          index={index}
-                          AnimatedStyle={AnimatedStyle}
-                        />
-                      </GestureDetector>
-                    ))}
-                  </View>
+                  <Text>Loading..</Text>
                 </View>
-              </>
-            )}
+              ) : (
+                <>
+                  {/* UPPER CONTAINER */}
+                  <View>
+                    {/* Guideline */}
+                    <View>
+                      <Text style={styles.guideline}>
+                        Given a hint with a series of empty spaces and{" "}
+                        {question?.letterChoices?.length} letter options, find
+                        out which word/term is being hinted at
+                      </Text>
+                    </View>
 
-            {/* LOWER CONTAINER */}
-            <View>
-              {/* Button */}
-              <View style={[styles.btncontainer, { rowGap: 15 }]}>
-                {error ? (
-                  <StatusIcon
-                    icon="cancel"
-                    text={"All Boxes should be filled!"}
-                  />
-                ) : (
-                  <StatusIcon icon="none" text={""} />
-                )}
-                {checked && !error ? (
-                  <StatusIcon
-                    icon={isMatchesCorrect ? "correct" : "cancel"}
-                    text={isMatchesCorrect ? "Amazing!" : `${question?.answer}`}
-                  />
-                ) : (
-                  <StatusIcon icon="none" text={""} />
-                )}
+                    {/* Hint */}
+                    <View>
+                      <Text style={styles.guideline}>{question?.hint}</Text>
+                    </View>
 
-                {checked ? (
-                  <StatusButton
-                    setError={setError}
-                    scoreIncrease={isMatchesCorrect}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    setChecked={setChecked}
-                    checked={checked}
-                    text={"Continue"}
-                    width={"60%"}
-                  />
-                ) : (
-                  <StatusButton
-                    setChecked={setChecked}
-                    checked={checked}
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    text={"Submit"}
-                    questionType={"wordscramble"}
-                    width={"60%"}
-                  />
-                )}
+                    {/* Blanks */}
+                    <View style={styles.inputContainer}>
+                      {selected.map((_, index) => (
+                        <BlankInput
+                          checked={checked}
+                          key={index}
+                          setBlankInputLayout={setBlankInputLayout}
+                          index={index}
+                        />
+                      ))}
+                    </View>
+
+                    {/* Letters to Choose */}
+                    <View style={styles.lettersContainer}>
+                      {question?.letterChoices?.map((val, index) => (
+                        <GestureDetector
+                          key={index}
+                          gesture={panGestureHandler[index]}
+                        >
+                          <InputBox
+                            answerCalculated={answerCalculated}
+                            bgColor={
+                              !answerCalculated
+                                ? "white"
+                                : selected[index].backgroundColor
+                            }
+                            letter={val}
+                            setLetterLayout={setLetterLayout}
+                            index={index}
+                            AnimatedStyle={AnimatedStyle}
+                          />
+                        </GestureDetector>
+                      ))}
+                    </View>
+                  </View>
+                </>
+              )}
+
+              {/* LOWER CONTAINER */}
+              <View>
+                {/* Button */}
+                <View style={[styles.btncontainer, { rowGap: 15 }]}>
+                  {error ? (
+                    <StatusIcon
+                      icon="cancel"
+                      text={"All Boxes should be filled!"}
+                    />
+                  ) : (
+                    <StatusIcon icon="none" text={""} />
+                  )}
+                  {checked && !error ? (
+                    <StatusIcon
+                      icon={isMatchesCorrect ? "correct" : "cancel"}
+                      text={
+                        isMatchesCorrect ? "Amazing!" : `${question?.answer}`
+                      }
+                    />
+                  ) : (
+                    <StatusIcon icon="none" text={""} />
+                  )}
+
+                  {checked ? (
+                    <StatusButton
+                      setError={setError}
+                      scoreIncrease={isMatchesCorrect}
+                      selected={selected}
+                      setSubmitted={setSubmitted}
+                      setChecked={setChecked}
+                      checked={checked}
+                      text={"Continue"}
+                      width={"60%"}
+                    />
+                  ) : (
+                    <StatusButton
+                      setChecked={setChecked}
+                      checked={checked}
+                      setError={setError}
+                      selected={selected}
+                      setSubmitted={setSubmitted}
+                      text={"Submit"}
+                      questionType={"wordscramble"}
+                      width={"60%"}
+                    />
+                  )}
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </BackgroundImage>
       </View>
     </View>
