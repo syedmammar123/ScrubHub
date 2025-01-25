@@ -140,6 +140,31 @@ export default function WordScrambled() {
             line.value = 3;
             ytranslated.value = -55 - letterLayout[index]?.y;
           }
+        } else if (noflines === 4) {
+          console.log(
+            0 - translateValueY[index].value - letterLayout[index]?.y
+          );
+
+          line.value = -1;
+          if (0 - translateValueY[index].value - letterLayout[index]?.y > 251) {
+            line.value = 1;
+            ytranslated.value = -281 - letterLayout[index]?.y;
+          } else if (
+            0 - translateValueY[index].value - letterLayout[index]?.y >
+            183
+          ) {
+            line.value = 2;
+            ytranslated.value = -205 - letterLayout[index]?.y;
+          } else if (
+            0 - translateValueY[index].value - letterLayout[index]?.y >
+            115
+          ) {
+            line.value = 3;
+            ytranslated.value = -129 - letterLayout[index]?.y;
+          } else {
+            line.value = 4;
+            ytranslated.value = -55 - letterLayout[index]?.y;
+          }
         }
       })
       .onEnd((event) => {

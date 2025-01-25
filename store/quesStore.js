@@ -332,7 +332,7 @@ const useQuesStore = create((set, get) => ({
       set({ currentIndex: 0 });
       set({ fetchedQuestionSystem: "" });
       set({ fetchedQuestionTopic: "" });
-      set({ score: 0 });
+      // set({ score: 0 });
       // console.log("SAVED");
     } catch (error) {
       console.log(error.message);
