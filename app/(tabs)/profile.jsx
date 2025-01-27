@@ -6,11 +6,13 @@ import { getAuth, signOut } from "@react-native-firebase/auth";
 import useGetRandomQues from "@/hooks/useGetRandomQues";
 import useCurrentUserStore from "@/store/currentUserStore";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
+import ProfilePic from "@/components/ProfilePic";
 
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser } = useCurrentUserStore((state) => state);
+  
 
 
   // const { randomQues, loading } = useGetRandomQues();
@@ -33,13 +35,15 @@ export default function ProfileScreen() {
 
   // console.log("solvedQues", solvedQues);
   // console.log("loading", loading);
+
+  
  
 
   return (
     <View style={styles.container}>
+      <ProfilePic/>
       <Text style={styles.text}>Profile</Text>
       <ScrubButton title="logout" onPress={handleLogout} />
-
     </View>
   );
 }
@@ -48,8 +52,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: theme.colorWhite,
+    alignItems: "center",
   },
   text: {
     fontSize: 24,

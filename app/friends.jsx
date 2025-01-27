@@ -582,6 +582,7 @@ export default function Friends() {
                       </View>
                     </TouchableOpacity>
                   </Modal>
+                  
                 </View>
               </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
