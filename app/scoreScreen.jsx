@@ -34,7 +34,13 @@ export default function ScoreScreen() {
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ color: "#787878", fontSize: 25, marginBottom: 30 }}>
+            <Text
+              style={{
+                color: score < 5 ? "#787878" : theme.barColor,
+                fontSize: 25,
+                marginBottom: 30,
+              }}
+            >
               Your Score
             </Text>
             <View>

@@ -80,7 +80,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val,
+        (word) => word.val === process[index].val
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -181,7 +181,7 @@ export default function IncompleteProcess() {
         const updatedWords = prev.map((word) =>
           correctAnswers.some((item) => item.value === word.val)
             ? { ...word, opacity: 1 }
-            : { ...word, opacity: 0.5 },
+            : { ...word, opacity: 0.5 }
         );
         return updatedWords;
       });
@@ -233,21 +233,19 @@ export default function IncompleteProcess() {
                   >
                     {/* Guideline */}
                     <View>
-                      <View>
+                      {/* Instruction Removed */}
+                      {/* <View>
                         <Text style={styles.Text}>
                           Given an incomplete flowchart of a process that occurs
                           in the human body or in a disease, complete the
                           missing parts of the flowchart by dragging the answer
                           choices to their correct position
                         </Text>
-                      </View>
+                      </View> */}
 
                       {/* Hint */}
                       <View>
-                        <Text style={styles.hint}>
-                          What is the sequence of glycolysis? Complete the
-                          missing step in the diagram using the choices below:
-                        </Text>
+                        <Text style={styles.hint}>{question?.question}</Text>
                       </View>
                     </View>
 
@@ -311,7 +309,7 @@ export default function IncompleteProcess() {
                                     >
                                       {proc.val === ""
                                         ? String.fromCharCode(
-                                            65 + notknown.indexOf(index),
+                                            65 + notknown.indexOf(index)
                                           )
                                         : proc.val}
                                     </Text>
@@ -335,7 +333,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? "#ffffff"
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? theme.barColor
                                 : "#ffffff"
@@ -347,7 +345,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? word.val
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
                                 : word.val
@@ -442,7 +440,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontSize: 16,
     width: "95%",
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 20,
   },
   processText: {

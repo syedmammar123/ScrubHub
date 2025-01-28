@@ -24,7 +24,7 @@ const checkAnswerArray2 = (selected) => {
 
 const checkAnswerArray3 = (selected) => {
   for (let i = 0; i < selected.length; i++) {
-    if (selected[i].value === "") {
+    if (selected[i].val === "") {
       return false;
     }
   }
@@ -162,7 +162,7 @@ export default function StatusButton({
       >
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.lowerbox}></TouchableOpacity>
+      <TouchableOpacity disabled style={styles.lowerbox}></TouchableOpacity>
     </View>
   );
 }

@@ -84,7 +84,14 @@ export default function App() {
                 <View
                   style={[styles.lowerBox, { backgroundColor: button.bgColor }]}
                 >
-                  <Text style={styles.buttonText}>{button.label}</Text>
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.5}
+                    style={styles.buttonText}
+                  >
+                    {button.label}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))}

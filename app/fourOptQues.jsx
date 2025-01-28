@@ -10,7 +10,7 @@ import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
 
-let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
+let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
 const types = {
   1: "quickDiagnosis",

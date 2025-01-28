@@ -85,10 +85,10 @@ export default function Matching() {
       return updatedAns;
     });
   };
-  // console.log("0", matchingDropLayout[0]);
-  // console.log("1", matchingDropLayout[1]);
-  // console.log("2", matchingDropLayout[2]);
-  // console.log("3", matchingDropLayout[3]);
+  console.log("0", matchingDropLayout[0]);
+  console.log("1", matchingDropLayout[1]);
+  console.log("2", matchingDropLayout[2]);
+  console.log("3", matchingDropLayout[3]);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -115,7 +115,7 @@ export default function Matching() {
           box.value = 1;
           yValue.value =
             -offsetValue +
-            (matchingDropLayout[0].height + 10) -
+            (matchingDropLayout[0].height + matchingDropLayout[1].y + 10) -
             matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
@@ -126,6 +126,7 @@ export default function Matching() {
             -offsetValue +
             (matchingDropLayout[0].height +
               matchingDropLayout[1].height +
+              matchingDropLayout[1].y +
               matchingDropLayout[2].y +
               20) -
             matchingOptionsLayout[index]?.y;
@@ -138,6 +139,7 @@ export default function Matching() {
             -offsetValue +
             (matchingDropLayout[0].height +
               matchingDropLayout[1].height +
+              matchingDropLayout[1].y +
               matchingDropLayout[2].height +
               matchingDropLayout[2].y +
               matchingDropLayout[3].y +
@@ -287,12 +289,13 @@ export default function Matching() {
                 {/* UPPER CONTAINER */}
                 <View style={{ flex: 1, justifyContent: "space-between" }}>
                   {/* Guideline */}
-                  <View>
+                  {/* <View>
+                    Instruction Remove 
                     <Text style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
                       match the microbe to the first line treatment:
                     </Text>
-                  </View>
+                  </View> */}
 
                   {/* Hint */}
                   <View>
@@ -433,7 +436,7 @@ const styles = ScaledSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     fontSize: "18@s",
-    marginTop: 10,
+    marginTop: 60,
     marginBottom: 0,
   },
   matchablesContainer: {
