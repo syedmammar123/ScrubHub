@@ -42,7 +42,8 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-web": "~0.19.10",
     "world-countries": "^5.0.0",
-    "zustand": "^5.0.0"
+    "zustand": "^5.0.0",
+    "expo-contacts": "~14.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.22.20",

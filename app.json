@@ -49,6 +49,12 @@
             "./assets/fonts/Poppins-Regular.ttf"
           ]
         }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow ScrubHub to access your contacts."
+        }
       ]
     ],
     "extra": {

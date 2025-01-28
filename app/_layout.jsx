@@ -157,6 +157,13 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="Contacts"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );
