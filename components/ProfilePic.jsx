@@ -22,18 +22,22 @@ const ProfilePic = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const { loading, updateAvatar } = useUpdateAvatar(setModalVisible);
 
-
   const handleEditPress = () => {
     setModalVisible(true);
   };
 
-  const closeModal = () => {
+  const handleModalBtn = () => {
     if (selectedAvatar) {
       updateAvatar(parseInt(selectedAvatar));
     } else {
       setModalVisible(false);
     }
   };
+
+  const closeModal = () => {
+    setModalVisible(false)
+    setSelectedAvatar(null)
+  }
 
   const handleSetAvatar = (id) => {
     if (id == selectedAvatar) {
@@ -46,7 +50,6 @@ const ProfilePic = () => {
   const newAvatars = Object.keys(avatars).filter(
     (id) => Number(id) !== user.avatarId
   );
-
 
   return (
     <View style={styles.container}>
@@ -91,7 +94,7 @@ const ProfilePic = () => {
             </View>
 
             <TouchableOpacity
-              onPress={closeModal}
+              onPress={handleModalBtn}
               style={styles.closeButton}
               disabled={loading}
             >
@@ -135,8 +138,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modal:{
-    margin:0
+  modal: {
+    margin: 0,
   },
   modalOverlay: {
     flex: 1,
