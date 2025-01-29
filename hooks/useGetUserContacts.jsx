@@ -9,69 +9,79 @@ const useGetUserContacts = ({ userContacts }) => {
   const { user } = useCurrentUserStore((state) => state);
 
   const getUserContacts = async () => {
-    if (!userContacts) {
-      return;
-    }
-
     try {
       const currentUserId = user.uid;
       if (!currentUserId) {
         throw new Error("User not authenticated");
       }
-      const friendList = user.friendList;
-      const friendRequestsReceived = user.friendRequestsReceived;
-      const friendRequestsSent = user.friendRequestsSent;
 
-      if (friendList.length !== 0) {
-        const friendListUsers = await firestore()
-          .collection("Users")
-          .where("uid", "in", friendList)
-          .get();
+      const { friendList, friendRequestsReceived, friendRequestsSent } = user;
+      let userContactsCopy = [...userContacts];
 
-        const friendListPhoneNumbers = friendListUsers.docs
-          .map((doc) => doc.data().phoneNumber)
-          .filter((phoneNumber) => phoneNumber);
+      // Query Users only when necessary
+      const phoneNumbersPromises = [];
 
-        //This will filter out the contacts that are already in the friend list
-        userContacts = userContacts.filter(
-          (contact) => !friendListPhoneNumbers.includes(contact.phoneNumber)
+      if (friendList.length > 0) {
+        phoneNumbersPromises.push(
+          firestore()
+            .collection("Users")
+            .where("uid", "in", friendList)
+            .get()
+            .then((friendListUsers) =>
+              friendListUsers.docs.map((doc) => doc.data().phoneNumber)
+            )
         );
       }
 
-      let friendRequestsReceivedUsers = [];
-      if (friendRequestsReceived.length !== 0) {
-        friendRequestsReceivedUsers = await firestore()
-          .collection("Users")
-          .where("uid", "in", friendRequestsReceived)
-          .get();
+      if (friendRequestsReceived.length > 0) {
+        phoneNumbersPromises.push(
+          firestore()
+            .collection("Users")
+            .where("uid", "in", friendRequestsReceived)
+            .get()
+            .then((receivedUsers) =>
+              receivedUsers.docs.map((doc) => doc.data().phoneNumber)
+            )
+        );
       }
 
-      let friendRequestsSentUsers = [];
-      if (friendRequestsSent.length !== 0) {
-        friendRequestsSentUsers = await firestore()
-          .collection("Users")
-          .where("uid", "in", friendRequestsSent)
-          .get();
+      if (friendRequestsSent.length > 0) {
+        phoneNumbersPromises.push(
+          firestore()
+            .collection("Users")
+            .where("uid", "in", friendRequestsSent)
+            .get()
+            .then((sentUsers) =>
+              sentUsers.docs.map((doc) => doc.data().phoneNumber)
+            )
+        );
       }
 
-      const receivedSet = new Set(
-        friendRequestsReceivedUsers.map((doc) => doc.data().phoneNumber)
-      );
-      const sentSet = new Set(
-        friendRequestsSentUsers.map((doc) => doc.data().phoneNumber)
-      );
+      // Execute all Firestore queries simultaneously
+      const [friendListPhoneNumbers, receivedPhoneNumbers, sentPhoneNumbers] =
+        await Promise.all(phoneNumbersPromises);
 
-      userContacts.forEach((contact) => {
-        if (receivedSet.has(contact.phoneNumber)) {
-          contact.status = "received";
-        } else if (sentSet.has(contact.phoneNumber)) {
-          contact.status = "sent";
-        } else {
-          contact.status = "add";
-        }
-      });
+      // Create sets for fast lookups
+      const receivedSet = new Set(receivedPhoneNumbers);
+      const sentSet = new Set(sentPhoneNumbers);
 
-      setContacts(userContacts);
+      // Filter out contacts already in the friend list and assign status
+      userContactsCopy = userContactsCopy
+        .filter(
+          (contact) => !friendListPhoneNumbers.includes(contact.phoneNumber)
+        )
+        .map((contact) => {
+          if (receivedSet.has(contact.phoneNumber)) {
+            contact.status = "received";
+          } else if (sentSet.has(contact.phoneNumber)) {
+            contact.status = "sent";
+          } else {
+            contact.status = "add";
+          }
+          return contact;
+        });
+
+      setContacts(userContactsCopy);
     } catch (error) {
       console.log("Error fetching Contacts: ", error);
     } finally {
