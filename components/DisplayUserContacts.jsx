@@ -6,13 +6,38 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import CustomAlert from "./CustomAlert";
 
 const ContactItem = ({ contact }) => {
-    const {showAlert} = CustomAlert({
-        title: "Delete Item",
-        message: "Are you sure you want to delete this?",
+    const {showAlert:sendRequestAlert} = CustomAlert({
+        title: "Add Friend",
+        message: "Are you sure you want to add this user?",
         cancelText: "No",
         acceptText: "Yes",
-        onAccept: () => console.log("Item deleted"),
+        onAccept: () => console.log("friend Added"),
       });
+
+    const {showAlert:acceptRequestAlert} = CustomAlert({
+        title: "Accept Friend Request",
+        message: "Are you sure you want to accept this friend request?",
+        cancelText: "No",
+        acceptText: "Yes",
+        onAccept: () => console.log("friend request accepted"),
+      });
+
+    const {showAlert:cancelRequestAlert} = CustomAlert({
+        title: "Delete Friend Request",
+        message: "Are you sure you want to delete this friend request?",
+        cancelText: "No",
+        acceptText: "Yes",
+        onAccept: () => console.log("friend request deleted"),
+      });
+
+    const {showAlert:sendInvitationAlert} = CustomAlert({
+        title: "Send Invitation",
+        message: "Are you sure you want to send an invite?",
+        cancelText: "No",
+        acceptText: "Yes",
+        onAccept: () => console.log("invite sent"),
+      });
+
   const statusColors = {
     invite: "bg-blue-500",
     received: "bg-green-500",
@@ -26,8 +51,19 @@ const ContactItem = ({ contact }) => {
     add:"add-user"
   };
 
-  const handleSentInvite = () => {
-    showAlert();
+  const handleAction = (contact) => {
+    if(contact.status === "invite") {
+        sendInvitationAlert();
+    }
+    else if(contact.status === "received") {
+        acceptRequestAlert();
+    }
+    else if(contact.status === "sent") {
+        cancelRequestAlert();
+    }
+    else {
+        sendRequestAlert();
+    }
   }
 
   return (
@@ -40,7 +76,7 @@ const ContactItem = ({ contact }) => {
       </View>
       <TouchableOpacity
         className={`py-2 px-4 w-32 rounded-full ${statusColors[contact.status]}`}
-        onPress={handleSentInvite}
+        onPress={() => handleAction(contact)}
       >{
         contact.status === "invite" ?
         <FontAwesome name="send" size={24} color="white" /> :

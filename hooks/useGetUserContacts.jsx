@@ -42,7 +42,10 @@ const useGetUserContacts = ({ userContacts }) => {
             .where("uid", "in", friendRequestsReceived)
             .get()
             .then((receivedUsers) =>
-              receivedUsers.docs.map((doc) => doc.data().phoneNumber)
+              receivedUsers.docs.map((doc) => ({
+                phoneNumber: doc.data().phoneNumber,
+                uid: doc.id,
+              }))
             )
         );
       }
@@ -53,8 +56,11 @@ const useGetUserContacts = ({ userContacts }) => {
             .collection("Users")
             .where("uid", "in", friendRequestsSent)
             .get()
-            .then((sentUsers) =>
-              sentUsers.docs.map((doc) => doc.data().phoneNumber)
+            .then((receivedUsers) =>
+              receivedUsers.docs.map((doc) => ({
+                phoneNumber: doc.data().phoneNumber,
+                uid: doc.id,
+              }))
             )
         );
       }
@@ -63,9 +69,12 @@ const useGetUserContacts = ({ userContacts }) => {
         firestore()
           .collection("Users")
           .get()
-          .then((user) => {
-            return user.docs[0].data().phoneNumber;
-          })
+          .then((receivedUsers) =>
+            receivedUsers.docs.map((doc) => ({
+              phoneNumber: doc.data().phoneNumber,
+              uid: doc.id,
+            }))
+          )
       );
 
       // Execute all Firestore queries simultaneously
@@ -77,9 +86,13 @@ const useGetUserContacts = ({ userContacts }) => {
       ] = await Promise.all(phoneNumbersPromises);
 
       // Create sets for fast lookups
-      const receivedSet = new Set(receivedPhoneNumbers);
-      const sentSet = new Set(sentPhoneNumbers);
-      const allUserSet = new Set(allUserPhoneNumbers);
+      const receivedSet = new Set(
+        receivedPhoneNumbers.map((user) => user.phoneNumber)
+      );
+      const sentSet = new Set(sentPhoneNumbers.map((user) => user.phoneNumber));
+      const allUserSet = new Set(
+        allUserPhoneNumbers.map((user) => user.phoneNumber)
+      );
 
       // Filter out contacts already in the friend list and assign status
       userContactsCopy = userContactsCopy
@@ -87,22 +100,33 @@ const useGetUserContacts = ({ userContacts }) => {
           (contact) => !friendListPhoneNumbers.includes(contact.phoneNumber)
         )
         .map((contact) => {
+          let status = "invite";
           if (receivedSet.has(contact.phoneNumber)) {
-            contact.status = "received";
+            status = "received";
           } else if (sentSet.has(contact.phoneNumber)) {
-            contact.status = "sent";
+            status = "sent";
           } else if (allUserSet.has(contact.phoneNumber)) {
-            contact.status = "add";
-          } else {
-            contact.status = "invite";
+            status = "add";
           }
-          return contact;
+
+          // Find the UUID for the phone number
+          const userUuid = allUserPhoneNumbers.find(
+            (user) => user.phoneNumber === contact.phoneNumber
+          )?.uid;
+
+          return {
+            phoneNumber: contact.phoneNumber,
+            uuid: userUuid, // add uuid
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            status: status,
+          };
         });
 
       setContacts(userContactsCopy);
     } catch (error) {
       console.log("Error fetching Contacts: ", error);
-        setError(true);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -110,10 +134,10 @@ const useGetUserContacts = ({ userContacts }) => {
 
   useEffect(() => {
     if (userContacts.length === 0) return; // No need to fetch contacts if there are none
-    // getUserContacts();
+    getUserContacts();
   }, [userContacts]);
 
-  return { contacts, loading,error };
+  return { contacts, loading, error };
 };
 
 export default useGetUserContacts;
