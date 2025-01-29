@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as Contacts from "expo-contacts";
 import useCurrentUserStore from "@/store/currentUserStore";
@@ -7,15 +7,24 @@ import BackgroundImage from "@/components/backgroundImage";
 import ScrubLogo from "@/components/scrubLogo";
 import { Redirect } from "expo-router";
 import useGetUserContacts from "@/hooks/useGetUserContacts";
+import { formatPhoneNumber } from "@/util/getRandomItem";
+import DisplayUserContacts from "@/components/DisplayUserContacts";
 
 const UserContacts = () => {
   const [userContacts, setUserContacts] = useState([]);
-  const { loading, contacts: finalContacts } = useGetUserContacts({userContacts});
+  const {
+    loading,
+    contacts: finalContacts,
+    error,
+  } = useGetUserContacts({
+    userContacts,
+  });
   const [permissionDenied, setPermissionDenied] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const requestContactsPermission = async () => {
       const { status } = await Contacts.requestPermissionsAsync();
+
       if (status === "granted") {
         const { data } = await Contacts.getContactsAsync({
           fields: [Contacts.Fields.FirstName, Contacts.Fields.PhoneNumbers],
@@ -29,7 +38,7 @@ const UserContacts = () => {
             .map((contact) => ({
               firstName: contact.firstName,
               lastName: contact.lastName,
-              phoneNumber: contact.phoneNumbers[0]?.number,
+              phoneNumber: formatPhoneNumber(contact.phoneNumbers[0]?.number),
             }));
           setUserContacts(filteredContacts.slice(0, 10));
         }
@@ -37,24 +46,36 @@ const UserContacts = () => {
         console.log("Permission denied");
         setPermissionDenied(true);
       }
-    })();
+    };
+
+    requestContactsPermission();
   }, []);
 
   console.log(loading);
-  console.log(finalContacts);
-
-  if (permissionDenied) {
-    return <Redirect href="friends"/>;
-  }
+  console.log("contacts: ", finalContacts);
 
   return (
     <View className="flex-1">
       <BackButton />
       <BackgroundImage>
         <ScrubLogo />
-        <Text className="font-extrabold text-red-800 text-4xl">
-          UserContacts
-        </Text>
+        <View className="flex-1 items-center justify-center">
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
+          {error && (
+            <Text className="font-semibold text-center">
+              Error fetching contacts
+            </Text>
+          )}
+          {permissionDenied && (
+            <Text className="font-semibold text-center">
+              Permission Denied. Goto Settings and allow ScrubHub to access your
+              contacts.
+            </Text>
+          )}
+        </View>
+        {finalContacts.length > 0 && (
+          <DisplayUserContacts contacts={finalContacts} />
+        )}
       </BackgroundImage>
     </View>
   );
