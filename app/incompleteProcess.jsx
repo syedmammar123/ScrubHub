@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
@@ -204,8 +211,18 @@ export default function IncompleteProcess() {
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           {submitted ? (
-            <View>
-              <Text>Loading..</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
             </View>
           ) : (
             <>

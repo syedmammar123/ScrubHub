@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
@@ -81,8 +88,18 @@ export default function MultipleOptSelect() {
         <BackgroundImage>
           <ScrubLogo />
           {submitted ? (
-            <View>
-              <Text>Loading..</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
             </View>
           ) : (
             <ScrollView style={{ paddingBottom: 40 }}>

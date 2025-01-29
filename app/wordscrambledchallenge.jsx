@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
@@ -317,8 +318,18 @@ export default function WordScrambledChallenge() {
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* UPPER CONTAINER */}
               {submitted ? (
-                <View>
-                  <Text>Loading..</Text>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ActivityIndicator
+                    style={styles.loadingIndicator}
+                    size={"large"}
+                    color={theme.barColor}
+                  />
                 </View>
               ) : (
                 <>

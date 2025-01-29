@@ -4,7 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   Dimensions,
-  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
@@ -281,8 +281,18 @@ export default function Matching() {
             }}
           >
             {submitted ? (
-              <View>
-                <Text>Loading..</Text>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ActivityIndicator
+                  style={styles.loadingIndicator}
+                  size={"large"}
+                  color={theme.barColor}
+                />
               </View>
             ) : (
               <>
