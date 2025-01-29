@@ -509,7 +509,7 @@ export default function Friends() {
                         Share the Scrub Hub Experience - Invite Today!
                       </Text>
                       <TouchableOpacity
-                        onPress={() => router.navigate("Contacts")}
+                        onPress={() => router.navigate("UserContacts")}
                       >
                         <Text style={styles.contactBtn}>Search Contacts</Text>
                       </TouchableOpacity>

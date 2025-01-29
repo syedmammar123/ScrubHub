@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { theme } from "../../theme";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { ScrubButton } from "@/components/scrubButton";
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import useGetRandomQues from "@/hooks/useGetRandomQues";
@@ -61,6 +61,10 @@ export default function ProfileScreen() {
       ]
     );
   };
+
+  if (!user) {
+    return <Redirect href="onboarding" />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
