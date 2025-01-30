@@ -123,13 +123,18 @@ export default function Topics() {
     console.log("TOPICS====>");
     console.log(system);
     setLoading(true);
-    const topicsCollectionRef = doc(db, "Topics", system.toLowerCase());
+    const topicsCollectionRef = doc(
+      db,
+      "Topics",
+      system.toLowerCase().replace(/\s+/g, "")
+    );
     try {
       const topics = await getDoc(topicsCollectionRef);
 
       setTopics(topics.data().topics);
     } catch (error) {
-      console.error("Error fetching document:", error);
+      setError(error.message);
+      // console.error("Error fetching document:", error);
     } finally {
       setLoading(false);
     }
@@ -240,7 +245,7 @@ export default function Topics() {
                 }}
               >
                 <View>
-                  <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  <Text style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}>
                     {topics && "Choose From Topics..."}
                   </Text>
                 </View>
@@ -267,9 +272,10 @@ export default function Topics() {
                     >
                       <Text
                         style={{
-                          fontWeight: "bold",
+                          // fontWeight: "bold",
                           fontSize: 14,
                           color: "white",
+                          fontFamily: "Poppins-Semi",
                         }}
                       >
                         Random
@@ -391,9 +397,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colorBlack,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 16,
     width: "80%",
+    fontFamily: "Poppins-Semi",
     textTransform: "capitalize",
   },
 
@@ -422,7 +429,8 @@ const styles = StyleSheet.create({
     height: 60,
   },
   title: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
     textAlign: "center",
     fontSize: 18,
     marginBottom: 20,

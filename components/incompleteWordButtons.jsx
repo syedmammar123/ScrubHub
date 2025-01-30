@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 9,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
+    // fontWeight: "bold",
   },
 });

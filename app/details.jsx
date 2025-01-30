@@ -146,9 +146,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colorBlack,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
-    fontFamily: "Poppins-Regular",
+    // fontFamily: "Poppins-Regular",
+    fontFamily: "Poppins-Semi",
   },
 });

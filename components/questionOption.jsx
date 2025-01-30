@@ -37,9 +37,10 @@ export default function questionOption({
       <Text
         style={{
           textTransform: "uppercase",
-          fontWeight: "bold",
+          // fontWeight: "bold",
           fontSize: 12,
           textAlign: "center",
+          fontFamily: "Poppins-Semi",
         }}
       >
         {Option}

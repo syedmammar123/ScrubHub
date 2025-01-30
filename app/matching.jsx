@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
@@ -124,11 +125,7 @@ export default function Matching() {
           box.value = 2;
           yValue.value =
             -offsetValue +
-            (matchingDropLayout[0].height +
-              matchingDropLayout[1].height +
-              matchingDropLayout[1].y +
-              matchingDropLayout[2].y +
-              20) -
+            (matchingDropLayout[0].height + matchingDropLayout[1].height + 20) -
             matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
@@ -139,9 +136,7 @@ export default function Matching() {
             -offsetValue +
             (matchingDropLayout[0].height +
               matchingDropLayout[1].height +
-              matchingDropLayout[1].y +
               matchingDropLayout[2].height +
-              matchingDropLayout[2].y +
               matchingDropLayout[3].y +
               30) -
             matchingOptionsLayout[index]?.y;
@@ -435,17 +430,18 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
   },
   Text: {
-    fontWeight: "bold",
-
+    // fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
     textAlign: "left",
     fontSize: 17,
     marginTop: 20,
     alignSelf: "center",
   },
   heading: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
+    // fontWeight: "bold",
     textAlign: "center",
-    fontSize: "18@s",
+    fontSize: "15@s",
     marginTop: 60,
     marginBottom: 0,
   },
@@ -458,12 +454,14 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    height: 37,
   },
   TextMatching: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "left",
-    fontSize: "14@s",
+    fontSize: "12@s",
     width: "50%",
+    fontFamily: "Poppins-Semi",
   },
 
   answerBtnContainer: {

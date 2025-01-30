@@ -126,6 +126,7 @@ const useQuesStore = create((set, get) => ({
   reviewQuestions: [],
   isLoading: false,
   currentIndexReview: 0,
+  reviewScore: 0,
 
   // type (dailyChallenge)
   challengeQuestions: [],
@@ -136,14 +137,19 @@ const useQuesStore = create((set, get) => ({
   increaseScore: () => set((state) => ({ score: state.score + 1 })),
   increaseChallengeScore: () =>
     set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
+  increaseReviewScore: () =>
+    set((state) => ({ reviewScore: state.reviewScore + 1 })),
   getScore: () => {
     const { score } = get();
     return score;
   },
-
   getChallengeScore: () => {
     const { scoreChallenge } = get();
     return scoreChallenge;
+  },
+  getReviewScore: () => {
+    const { reviewScore } = get();
+    return reviewScore;
   },
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
@@ -223,6 +229,7 @@ const useQuesStore = create((set, get) => ({
 
     // Setting Index 0 for Questions
     set({ currentIndexReview: 0 });
+    set({ reviewScore: 0 });
     try {
       const curUser = useCurrentUserStore.getState().getUser();
       const getPrevQuesRef = collection(

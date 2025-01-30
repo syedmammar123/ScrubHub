@@ -40,7 +40,7 @@ const styles = ScaledSheet.create({
 
     height: 37,
     width: "45%",
-    paddingHorizontal: 3,
+    paddingHorizontal: 4,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -53,8 +53,9 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
   },
   btnTitle: {
-    fontSize: "10@s",
-    fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
+    fontSize: "9@s",
+    // fontWeight: "bold",
     textAlign: "center",
   },
 });

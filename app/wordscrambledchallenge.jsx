@@ -450,12 +450,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   guideline: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     width: "95%",
     textAlign: "left",
-    fontSize: 17,
+    fontSize: 15,
     marginTop: 20,
     alignSelf: "center",
+    fontFamily: "Poppins-Semi",
   },
   inputContainer: {
     width: "95%",

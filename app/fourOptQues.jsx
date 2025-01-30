@@ -204,8 +204,9 @@ const styles = StyleSheet.create({
   },
   question: {
     textAlign: "center",
+    fontFamily: "Poppins-Semi",
     // fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 14,
     // fontFamily: "Poppins-Regular",
   },
   optionsContainer: {
