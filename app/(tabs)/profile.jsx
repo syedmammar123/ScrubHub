@@ -65,7 +65,7 @@ export default function ProfileScreen() {
   if (!user) {
     return <Redirect href="onboarding" />;
   }
-
+console.log(user)
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>

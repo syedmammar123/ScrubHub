@@ -11,6 +11,7 @@ const useGetUserContacts = ({ userContacts }) => {
 
   const getUserContacts = async () => {
     setError(false);
+    setLoading(true);
     try {
       const currentUserId = user.uid;
       if (!currentUserId) {
@@ -135,7 +136,7 @@ const useGetUserContacts = ({ userContacts }) => {
   useEffect(() => {
     if (userContacts.length === 0) return; // No need to fetch contacts if there are none
     getUserContacts();
-  }, [userContacts]);
+  }, [userContacts,user]);
 
   return { contacts, loading, error };
 };

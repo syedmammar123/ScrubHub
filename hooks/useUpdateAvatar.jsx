@@ -16,6 +16,7 @@ const useUpdateAvatar = (setModalVisible) => {
       await firestore().collection("Users").doc(currentUserId).update({
         avatarId,
       });
+      
       updateUser({ ...user, avatarId });
       setModalVisible(false);
     } catch (error) {

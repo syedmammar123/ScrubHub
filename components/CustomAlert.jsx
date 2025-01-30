@@ -1,13 +1,15 @@
 import { Alert } from "react-native";
 
 const CustomAlert = ({ title, message, cancelText, acceptText, onAccept }) => {
-  const showAlert = () => {
+
+
+  const showAlert = (uuid) => {
     Alert.alert(
       title || "Alert",
       message || "Are you sure?",
       [
         { text: cancelText || "Cancel", style: "cancel" },
-        { text: acceptText || "OK", onPress: onAccept },
+        { text: acceptText || "OK", onPress: () => onAccept(uuid) },
       ]
     );
   };
