@@ -1,10 +1,4 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { theme } from "../../theme";
 import { Redirect, useRouter } from "expo-router";
 import { ScrubButton } from "@/components/scrubButton";
@@ -14,10 +8,20 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import ProfilePic from "@/components/ProfilePic";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CustomAlert from "@/components/CustomAlert";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
+
+  const { showAlert: deleteAccountAlert } = CustomAlert({
+    title: "Delete Account",
+    message:
+      "This is an irreversible action. Are you sure you want to delete your account?",
+    cancelText: "Cancel",
+    acceptText: "Confirm",
+    onAccept: (uuid) => console.log("Account deleted successfully.", uuid),
+  });
 
   // const { randomQues, loading } = useGetRandomQues();
   // const { loading, solvedQues } = useGetSolvedQues();
@@ -40,32 +44,11 @@ export default function ProfileScreen() {
   // console.log("solvedQues", solvedQues);
   // console.log("loading", loading);
 
-  const handleDeleteAccount = () => {
-    Alert.alert(
-      "Delete Account",
-      "This is an irreversible action. Are you sure you want to delete your account?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Confirm",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              // Replace with your delete function
-              console.log("Account deleted successfully.");
-            } catch (error) {
-              console.error("Error deleting account:", error);
-            }
-          },
-        },
-      ]
-    );
-  };
-
   if (!user) {
     return <Redirect href="onboarding" />;
   }
-console.log(user)
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
@@ -80,7 +63,7 @@ console.log(user)
         <ScrubButton title="logout" onPress={handleLogout} />
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={handleDeleteAccount}
+          onPress={() => deleteAccountAlert(user.uid)}
         >
           <Text style={styles.deleteButtonText}>Delete Account</Text>
         </TouchableOpacity>
