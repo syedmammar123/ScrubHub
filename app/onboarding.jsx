@@ -5,7 +5,7 @@ import { theme } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Redirect, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Touchable, TouchableOpacity } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();

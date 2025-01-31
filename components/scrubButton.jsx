@@ -1,6 +1,6 @@
 import { theme } from "@/theme";
 import { StyleSheet, Text, Pressable, Platform } from "react-native";
-import * as Haptics from "expo-haptics";
+import * as Haptics from "expo-haptics";;
 
 export function ScrubButton({ title, onPress, color, width }) {
   const handlePress = () => {
@@ -10,16 +10,23 @@ export function ScrubButton({ title, onPress, color, width }) {
     onPress();
   };
 
+  console.log(theme.colorGreen);
+
   return (
     <Pressable
       onPress={handlePress}
-      style={(state) => [
-        styles.button,
-        { backgroundColor: color || theme.colorGreen, width: width || "80%" },
-        state.pressed && styles.buttonPressed,
-      ]}
+      className={`px-4 py-3 rounded w-${
+        width ? width : "4/5"
+      }`}
+      style={{ backgroundColor: color || theme.colorGreen }}
     >
-      <Text style={styles.text}>{title}</Text>
+      {({ pressed }) => (
+        <Text
+          className={`text-white text-sm font-normal text-center `}
+        >
+          {title}
+        </Text>
+      )}
     </Pressable>
   );
 }

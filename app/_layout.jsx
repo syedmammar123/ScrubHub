@@ -2,6 +2,7 @@ import { theme } from "@/theme";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
+import "./global.css";
 export default function Layout() {
   const [fontsLoaded, error] = useFonts({
     "Poppins-Regular": require("@/assets/fonts/Poppins-Regular.ttf"),
@@ -157,6 +158,14 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="UserContacts"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+       
       </Stack>
     </GestureHandlerRootView>
   );

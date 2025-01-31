@@ -13,7 +13,8 @@ export default function Friend({
   onReject,
   onRemove,
   id,
-}) {
+})
+{
   return (
     <>
       <View style={styles.container}>
