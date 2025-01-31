@@ -57,7 +57,7 @@ const useGetScores = ({ scoreField = "totalScore" }) => {
                 [scoreField]: score,
               };
             }
-          })
+          }),
         )
       ).filter((detail) => detail !== undefined);
 
@@ -69,7 +69,7 @@ const useGetScores = ({ scoreField = "totalScore" }) => {
       }
 
       const sortedScores = [...initialScores, ...scoresDetails].sort(
-        (a, b) => b[scoreField] - a[scoreField]
+        (a, b) => b[scoreField] - a[scoreField],
       );
 
       setScores(sortedScores);
