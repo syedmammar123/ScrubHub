@@ -30,7 +30,8 @@ export default function InputBox({
     >
       <Text
         style={{
-          fontWeight: "bold",
+          // fontWeight: "bold",
+          fontFamily: "Poppins-Semi",
           color: bgColor === "#EF5555" ? "white" : "black",
         }}
       >

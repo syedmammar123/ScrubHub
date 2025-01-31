@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
@@ -10,7 +17,7 @@ import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
 
-let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
+let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
 export default function MultipleOptSelect() {
   //Question Fetch
@@ -61,7 +68,7 @@ export default function MultipleOptSelect() {
   useEffect(() => {
     if (checked) {
       const areMatchesCorrect = correctOptions.every(
-        (value, index) => value === selected[index],
+        (value, index) => value === selected[index]
       );
 
       if (!areMatchesCorrect) {
@@ -81,8 +88,18 @@ export default function MultipleOptSelect() {
         <BackgroundImage>
           <ScrubLogo />
           {submitted ? (
-            <View>
-              <Text>Loading..</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
             </View>
           ) : (
             <ScrollView style={{ paddingBottom: 40 }}>
@@ -199,8 +216,9 @@ const styles = StyleSheet.create({
   },
   question: {
     textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 15,
+    // fontWeight: "bold",
+    fontSize: 14,
+    fontFamily: "Poppins-Semi",
   },
   optionsContainer: {
     alignItems: "center",

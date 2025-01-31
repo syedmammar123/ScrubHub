@@ -4,6 +4,7 @@ import {
   StatusBar,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
@@ -85,10 +86,10 @@ export default function Matching() {
       return updatedAns;
     });
   };
-  // console.log("0", matchingDropLayout[0]);
-  // console.log("1", matchingDropLayout[1]);
-  // console.log("2", matchingDropLayout[2]);
-  // console.log("3", matchingDropLayout[3]);
+  console.log("0", matchingDropLayout[0]);
+  console.log("1", matchingDropLayout[1]);
+  console.log("2", matchingDropLayout[2]);
+  console.log("3", matchingDropLayout[3]);
 
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
@@ -115,7 +116,7 @@ export default function Matching() {
           box.value = 1;
           yValue.value =
             -offsetValue +
-            (matchingDropLayout[0].height + 10) -
+            (matchingDropLayout[0].height + matchingDropLayout[1].y + 10) -
             matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
@@ -124,10 +125,7 @@ export default function Matching() {
           box.value = 2;
           yValue.value =
             -offsetValue +
-            (matchingDropLayout[0].height +
-              matchingDropLayout[1].height +
-              matchingDropLayout[2].y +
-              20) -
+            (matchingDropLayout[0].height + matchingDropLayout[1].height + 20) -
             matchingOptionsLayout[index]?.y;
         } else if (
           0 - translateValueY[index].value - matchingOptionsLayout[index]?.y >
@@ -139,7 +137,6 @@ export default function Matching() {
             (matchingDropLayout[0].height +
               matchingDropLayout[1].height +
               matchingDropLayout[2].height +
-              matchingDropLayout[2].y +
               matchingDropLayout[3].y +
               30) -
             matchingOptionsLayout[index]?.y;
@@ -279,20 +276,31 @@ export default function Matching() {
             }}
           >
             {submitted ? (
-              <View>
-                <Text>Loading..</Text>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ActivityIndicator
+                  style={styles.loadingIndicator}
+                  size={"large"}
+                  color={theme.barColor}
+                />
               </View>
             ) : (
               <>
                 {/* UPPER CONTAINER */}
                 <View style={{ flex: 1, justifyContent: "space-between" }}>
                   {/* Guideline */}
-                  <View>
+                  {/* <View>
+                    Instruction Remove 
                     <Text style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
                       match the microbe to the first line treatment:
                     </Text>
-                  </View>
+                  </View> */}
 
                   {/* Hint */}
                   <View>
@@ -422,18 +430,19 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
   },
   Text: {
-    fontWeight: "bold",
-
+    // fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
     textAlign: "left",
     fontSize: 17,
     marginTop: 20,
     alignSelf: "center",
   },
   heading: {
-    fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
+    // fontWeight: "bold",
     textAlign: "center",
-    fontSize: "18@s",
-    marginTop: 10,
+    fontSize: "15@s",
+    marginTop: 60,
     marginBottom: 0,
   },
   matchablesContainer: {
@@ -445,12 +454,14 @@ const styles = ScaledSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    height: 37,
   },
   TextMatching: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "left",
-    fontSize: "14@s",
+    fontSize: "12@s",
     width: "50%",
+    fontFamily: "Poppins-Semi",
   },
 
   answerBtnContainer: {

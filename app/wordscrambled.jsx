@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
@@ -138,6 +139,31 @@ export default function WordScrambled() {
             ytranslated.value = -129 - letterLayout[index]?.y;
           } else {
             line.value = 3;
+            ytranslated.value = -55 - letterLayout[index]?.y;
+          }
+        } else if (noflines === 4) {
+          console.log(
+            0 - translateValueY[index].value - letterLayout[index]?.y
+          );
+
+          line.value = -1;
+          if (0 - translateValueY[index].value - letterLayout[index]?.y > 251) {
+            line.value = 1;
+            ytranslated.value = -281 - letterLayout[index]?.y;
+          } else if (
+            0 - translateValueY[index].value - letterLayout[index]?.y >
+            183
+          ) {
+            line.value = 2;
+            ytranslated.value = -205 - letterLayout[index]?.y;
+          } else if (
+            0 - translateValueY[index].value - letterLayout[index]?.y >
+            115
+          ) {
+            line.value = 3;
+            ytranslated.value = -129 - letterLayout[index]?.y;
+          } else {
+            line.value = 4;
             ytranslated.value = -55 - letterLayout[index]?.y;
           }
         }
@@ -317,8 +343,18 @@ export default function WordScrambled() {
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* UPPER CONTAINER */}
               {submitted ? (
-                <View>
-                  <Text>Loading..</Text>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ActivityIndicator
+                    style={styles.loadingIndicator}
+                    size={"large"}
+                    color={theme.barColor}
+                  />
                 </View>
               ) : (
                 <>
@@ -439,12 +475,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   guideline: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     width: "95%",
     textAlign: "left",
-    fontSize: 17,
+    fontSize: 15,
     marginTop: 20,
     alignSelf: "center",
+    fontFamily: "Poppins-Semi",
   },
   inputContainer: {
     width: "95%",

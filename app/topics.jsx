@@ -7,6 +7,7 @@ import {
   ScrollView,
   Pressable,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -62,7 +63,7 @@ export default function Topics() {
   const [topics, setTopics] = useState([]);
   const { system } = useGlobalSearchParams();
   const router = useRouter();
-
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const handlePress = async (topic) => {
     console.log(system);
@@ -121,14 +122,21 @@ export default function Topics() {
   const getTopics = async () => {
     console.log("TOPICS====>");
     console.log(system);
-
-    const topicsCollectionRef = doc(db, "Topics", system.toLowerCase());
+    setLoading(true);
+    const topicsCollectionRef = doc(
+      db,
+      "Topics",
+      system.toLowerCase().replace(/\s+/g, "")
+    );
     try {
       const topics = await getDoc(topicsCollectionRef);
 
       setTopics(topics.data().topics);
     } catch (error) {
-      console.error("Error fetching document:", error);
+      setError(error.message);
+      // console.error("Error fetching document:", error);
+    } finally {
+      setLoading(false);
     }
   };
   const getInfo = async () => {
@@ -204,77 +212,97 @@ export default function Topics() {
         {/* Content Container */}
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
-          {!topics && <ScrubLogo />}
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "90%",
-              marginBottom: 20,
-            }}
-          >
-            <View>
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-                {topics && "Choose From Topics..."}
-              </Text>
-            </View>
-            <View>
-              {topics && (
-                <Pressable
-                  onPress={getRandom}
-                  style={{
-                    backgroundColor: theme.barColor,
-                    paddingHorizontal: 40,
-                    paddingVertical: 10,
-                    borderWidth: 1,
-                    borderColor: theme.barBgColor,
-                    borderRadius: 10,
-                    // Shadow for iOS
-                    shadowColor: "#000", // Black shadow
-                    shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
-                    shadowOpacity: 0.1, // Opacity of the shadow
-                    shadowRadius: 10, // Blur effect of the shadow
 
-                    // Elevation for Android
-                    elevation: 20, // Adds shadow on Android
+          {loading ? (
+            <>
+              <ScrubLogo />
+              <View style={{ flex: 1 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 14, color: "white" }}
-                  >
-                    Random
-                  </Text>
-                </Pressable>
-              )}
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            {/* Buttons */}
-            {topics?.map((button, index) => (
-              <TouchableOpacity
-                onPress={() => handlePress(button)}
-                key={index}
-                style={[styles.button]}
+                  <ActivityIndicator
+                    style={styles.loadingIndicator}
+                    size={"large"}
+                    color={theme.barColor}
+                  />
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "90%",
+                  marginBottom: 20,
+                }}
               >
-                <Text style={styles.buttonText}>{button}</Text>
-                <AntDesign
-                  name="rightcircle"
-                  size={24}
-                  color={theme.barColor}
-                />
-                {/* <View style={[styles.lowerBox, { backgroundColor: "#F0f0f0" }]}>
-                  <View>
-                    
-                  </View>
-                  <View>
-                    
-                  </View>
-                </View> */}
-              </TouchableOpacity>
-            ))}
-          </View>
+                <View>
+                  <Text style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}>
+                    {topics && "Choose From Topics..."}
+                  </Text>
+                </View>
+                <View>
+                  {topics && (
+                    <Pressable
+                      onPress={getRandom}
+                      style={{
+                        backgroundColor: theme.barColor,
+                        paddingHorizontal: 40,
+                        paddingVertical: 10,
+                        borderWidth: 1,
+                        borderColor: theme.barBgColor,
+                        borderRadius: 10,
+                        // Shadow for iOS
+                        shadowColor: "#000", // Black shadow
+                        shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
+                        shadowOpacity: 0.1, // Opacity of the shadow
+                        shadowRadius: 10, // Blur effect of the shadow
+
+                        // Elevation for Android
+                        elevation: 20, // Adds shadow on Android
+                      }}
+                    >
+                      <Text
+                        style={{
+                          // fontWeight: "bold",
+                          fontSize: 14,
+                          color: "white",
+                          fontFamily: "Poppins-Semi",
+                        }}
+                      >
+                        Random
+                      </Text>
+                    </Pressable>
+                  )}
+                </View>
+              </View>
+              <View style={styles.buttonContainer}>
+                {/* Buttons */}
+                {topics?.map((button, index) => (
+                  <TouchableOpacity
+                    onPress={() => handlePress(button)}
+                    key={index}
+                    style={[styles.button]}
+                  >
+                    <Text style={styles.buttonText}>{button}</Text>
+                    <AntDesign
+                      name="rightcircle"
+                      size={24}
+                      color={theme.barColor}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
           {/* Error Modal */}
           <Modal
             visible={error}
@@ -369,9 +397,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colorBlack,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 16,
     width: "80%",
+    fontFamily: "Poppins-Semi",
     textTransform: "capitalize",
   },
 
@@ -400,7 +429,8 @@ const styles = StyleSheet.create({
     height: 60,
   },
   title: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
     textAlign: "center",
     fontSize: 18,
     marginBottom: 20,

@@ -24,7 +24,7 @@ const checkAnswerArray2 = (selected) => {
 
 const checkAnswerArray3 = (selected) => {
   for (let i = 0; i < selected.length; i++) {
-    if (selected[i].value === "") {
+    if (selected[i].val === "") {
       return false;
     }
   }
@@ -61,6 +61,8 @@ export default function StatusButton({
     submitReviews,
     getfetchedQuestionTopic,
     getfetchedQuestionSystem,
+    getfetchedReviewTopic,
+    increaseReviewScore,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -86,6 +88,9 @@ export default function StatusButton({
       if (getCurrentType() === "review") {
         console.log("After Pressing Cont", currentIndexReview);
         if (currentIndexReview + 1 < 9) {
+          if (scoreIncrease) {
+            increaseReviewScore();
+          }
           increaseCurrentReviewIndex();
           const nextScreen = getQuestionType(getReviewQuestion());
           if (nextScreen === "wordscrambled") {
@@ -95,9 +100,15 @@ export default function StatusButton({
           }
           console.log("Navigating to:", nextScreen);
         } else {
-          await submitReviews();
+          if (scoreIncrease) {
+            increaseReviewScore();
+          }
+
+          if (getfetchedReviewTopic() !== "reviewall") {
+            await submitReviews();
+          }
           // Logic to submit Questions
-          router.navigate("/");
+          router.navigate("reviewScoreScreen");
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
@@ -162,7 +173,7 @@ export default function StatusButton({
       >
         <Text style={styles.text}>{text}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.lowerbox}></TouchableOpacity>
+      <TouchableOpacity disabled style={styles.lowerbox}></TouchableOpacity>
     </View>
   );
 }
@@ -182,8 +193,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   text: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 16,
+    fontFamily: "Poppins-Semi",
   },
   lowerbox: {
     position: "absolute",

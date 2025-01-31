@@ -18,9 +18,9 @@ import useQuesStore from "@/store/quesStore";
 import { useRouter } from "expo-router";
 import StatusButton from "@/components/statusButton";
 
-export default function ScoreScreen() {
-  const { getScore } = useQuesStore((state) => state);
-  const [score, setScore] = useState(getScore());
+export default function ReviewScoreScreen() {
+  const { getReviewScore } = useQuesStore((state) => state);
+  const [score, setScore] = useState(getReviewScore());
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -51,9 +51,9 @@ export default function ScoreScreen() {
                 {score}
                 <Text
                   style={{
+                    fontFamily: "Poppins-Regular",
                     color: "#3d3d3d",
                     fontSize: 60,
-                    fontFamily: "Poppins-Regular",
                   }}
                 >
                   {" "}
@@ -66,7 +66,7 @@ export default function ScoreScreen() {
                 width: "80%",
                 textAlign: "center",
                 color: "#787878",
-                fontSize: 13,
+                fontSize: 14,
                 marginBottom: 20,
                 fontFamily: "Poppins-Regular",
               }}

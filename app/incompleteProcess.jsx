@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";
@@ -80,7 +87,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val,
+        (word) => word.val === process[index].val
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -181,7 +188,7 @@ export default function IncompleteProcess() {
         const updatedWords = prev.map((word) =>
           correctAnswers.some((item) => item.value === word.val)
             ? { ...word, opacity: 1 }
-            : { ...word, opacity: 0.5 },
+            : { ...word, opacity: 0.5 }
         );
         return updatedWords;
       });
@@ -204,8 +211,18 @@ export default function IncompleteProcess() {
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           {submitted ? (
-            <View>
-              <Text>Loading..</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
             </View>
           ) : (
             <>
@@ -233,21 +250,19 @@ export default function IncompleteProcess() {
                   >
                     {/* Guideline */}
                     <View>
-                      <View>
+                      {/* Instruction Removed */}
+                      {/* <View>
                         <Text style={styles.Text}>
                           Given an incomplete flowchart of a process that occurs
                           in the human body or in a disease, complete the
                           missing parts of the flowchart by dragging the answer
                           choices to their correct position
                         </Text>
-                      </View>
+                      </View> */}
 
                       {/* Hint */}
                       <View>
-                        <Text style={styles.hint}>
-                          What is the sequence of glycolysis? Complete the
-                          missing step in the diagram using the choices below:
-                        </Text>
+                        <Text style={styles.hint}>{question?.question}</Text>
                       </View>
                     </View>
 
@@ -311,7 +326,7 @@ export default function IncompleteProcess() {
                                     >
                                       {proc.val === ""
                                         ? String.fromCharCode(
-                                            65 + notknown.indexOf(index),
+                                            65 + notknown.indexOf(index)
                                           )
                                         : proc.val}
                                     </Text>
@@ -335,7 +350,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? "#ffffff"
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? theme.barColor
                                 : "#ffffff"
@@ -347,7 +362,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? word.val
                               : correctMatches.some(
-                                    (item) => item.value === word.val,
+                                    (item) => item.value === word.val
                                   )
                                 ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
                                 : word.val
@@ -431,25 +446,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   Text: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "left",
-    fontSize: 17,
+    fontSize: 16,
     marginTop: 20,
+    fontFamily: "Poppins-Semi",
   },
   hint: {
-    fontWeight: "bold",
+    // fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
     textAlign: "center",
     alignSelf: "center",
-    fontSize: 16,
+    fontSize: 15,
     width: "95%",
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 20,
   },
   processText: {
-    fontSize: 16,
+    fontSize: 15,
     textAlign: "center",
-    fontWeight: "bold",
+    // fontWeight: "bold",
     lineHeight: 25,
+    fontFamily: "Poppins-Semi",
   },
   Blank: {
     padding: 2,

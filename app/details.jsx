@@ -84,7 +84,14 @@ export default function App() {
                 <View
                   style={[styles.lowerBox, { backgroundColor: button.bgColor }]}
                 >
-                  <Text style={styles.buttonText}>{button.label}</Text>
+                  <Text
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.5}
+                    style={styles.buttonText}
+                  >
+                    {button.label}
+                  </Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -139,9 +146,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colorBlack,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 16,
     textAlign: "center",
-    fontFamily: "Poppins-Regular",
+    // fontFamily: "Poppins-Regular",
+    fontFamily: "Poppins-Semi",
   },
 });

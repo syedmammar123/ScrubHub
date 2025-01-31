@@ -15,7 +15,7 @@ export default function IncompleteWordButtons({
   bgColor,
 }) {
   const handlePress = () => {
-    if (selected !== -1) {
+    if (selected !== -1 && words[index].opacity !== 0) {
       console.log(title);
       setProcess((prev) => {
         const updatedProcess = [...prev];
@@ -30,7 +30,7 @@ export default function IncompleteWordButtons({
       setAnswers((prev) => {
         const previous = [...prev];
         const foundIndex = previous.findIndex(
-          (obj) => obj.realIndex === selected,
+          (obj) => obj.realIndex === selected
         );
         console.log("FOUND AT", foundIndex);
 
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 9,
-    fontWeight: "bold",
+    fontFamily: "Poppins-Semi",
+    // fontWeight: "bold",
   },
 });
