@@ -19,7 +19,9 @@ export default function StatusIcon({ text, icon }) {
       ) : (
         <MaterialIcons name="cancel" size={35} color="#EF5555" />
       )}
-      <Text style={{ fontWeight: "bold", fontSize: 18, marginLeft: 10 }}>
+      <Text
+        style={{ fontFamily: "Poppins-Semi", fontSize: 18, marginLeft: 10 }}
+      >
         {text}
       </Text>
     </View>

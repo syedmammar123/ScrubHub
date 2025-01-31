@@ -1,4 +1,11 @@
-import { View, Text, StatusBar, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
@@ -10,7 +17,7 @@ import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
 
-let bgColors = ["#0038FF", "#00C2FF", "#FF0000", "#9747FF"];
+let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
 const types = {
   1: "quickDiagnosis",
@@ -76,8 +83,18 @@ export default function fourOptQues() {
         <BackgroundImage>
           <ScrubLogo />
           {submitted ? (
-            <View>
-              <Text>Loading..</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
             </View>
           ) : (
             <ScrollView style={{ paddingBottom: 20 }}>
@@ -187,8 +204,9 @@ const styles = StyleSheet.create({
   },
   question: {
     textAlign: "center",
+    fontFamily: "Poppins-Semi",
     // fontWeight: "bold",
-    fontSize: 15,
+    fontSize: 14,
     // fontFamily: "Poppins-Regular",
   },
   optionsContainer: {

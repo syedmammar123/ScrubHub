@@ -121,9 +121,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: theme.colorBlack,
-    fontWeight: "bold",
+    // fontWeight: "bold",
     fontSize: 20,
     textAlign: "center",
+    fontFamily: "Poppins-Semi",
   },
   // Modal
   overlay: {

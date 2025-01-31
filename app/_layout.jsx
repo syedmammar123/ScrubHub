@@ -6,6 +6,8 @@ import "./global.css";
 export default function Layout() {
   const [fontsLoaded, error] = useFonts({
     "Poppins-Regular": require("@/assets/fonts/Poppins-Regular.ttf"),
+    "Poppins-Bold": require("@/assets/fonts/Poppins-Bold.ttf"),
+    "Poppins-Semi": require("@/assets/fonts/Poppins-SemiBold.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -69,6 +71,13 @@ export default function Layout() {
         />
         <Stack.Screen
           name="scoreScreen"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="reviewScoreScreen"
           options={{
             headerShown: false,
             animation: "fade",
