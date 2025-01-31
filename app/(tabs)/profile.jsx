@@ -48,7 +48,6 @@ export default function ProfileScreen() {
     return <Redirect href="onboarding" />;
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>

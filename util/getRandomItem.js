@@ -56,4 +56,3 @@ export const formatPhoneNumber = (phoneNumber) => {
   // If the number is not in the correct format, return as it is
   return phoneNumber;
 };
-

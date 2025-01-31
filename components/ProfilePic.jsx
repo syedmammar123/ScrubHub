@@ -35,9 +35,9 @@ const ProfilePic = () => {
   };
 
   const closeModal = () => {
-    setModalVisible(false)
-    setSelectedAvatar(null)
-  }
+    setModalVisible(false);
+    setSelectedAvatar(null);
+  };
 
   const handleSetAvatar = (id) => {
     if (id == selectedAvatar) {
@@ -48,7 +48,7 @@ const ProfilePic = () => {
   };
 
   const newAvatars = Object.keys(avatars).filter(
-    (id) => Number(id) !== user.avatarId
+    (id) => Number(id) !== user.avatarId,
   );
 
   return (

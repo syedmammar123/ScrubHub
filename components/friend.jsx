@@ -13,17 +13,13 @@ export default function Friend({
   onReject,
   onRemove,
   id,
-})
-{
+}) {
   return (
     <>
       <View style={styles.container}>
         <View style={styles.imageName}>
           {position && <Text style={styles.bluefont}>{position}</Text>}
-          <Image
-            style={styles.image}
-            source={avatars[photoUrl]}
-          />
+          <Image style={styles.image} source={avatars[photoUrl]} />
           <Text style={styles.friendName}>{Name}</Text>
         </View>
         {marks ? (

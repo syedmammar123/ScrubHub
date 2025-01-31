@@ -42,7 +42,7 @@ const useCancelRequest = () => {
     }
   };
 
-  return { loading,handleCancelRequest };
+  return { loading, handleCancelRequest };
 };
 
 export default useCancelRequest;
