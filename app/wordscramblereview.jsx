@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import BackgroundImage from "@/components/backgroundImage";
 import BackButton from "@/components/backButton";

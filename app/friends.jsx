@@ -61,7 +61,7 @@ export default function Friends() {
   const { invitations, invitationsLoading, setInvitations } =
     useGetInvitations();
 
-     const router = useRouter();
+  const router = useRouter();
 
   //For testing Purpose only!
   // const uid1 = "FrTsL0JPgZaBSMvPoGHErIpU1iz2";
@@ -397,7 +397,6 @@ export default function Friends() {
     ]);
   };
 
-
   return (
     <View style={styles.container}>
       {showInvitation && (
@@ -426,7 +425,9 @@ export default function Friends() {
             setShowInvitation={setShowInvitation}
             count={invitations.length}
           />
-          <TouchableOpacity onPress={() => router.navigate("FriendsLeaderboard")}>
+          <TouchableOpacity
+            onPress={() => router.navigate("FriendsLeaderboard")}
+          >
             <Image source={leaderBoardImg} style={styles.buttonCircleStyle} />
           </TouchableOpacity>
         </View>
@@ -483,10 +484,7 @@ export default function Friends() {
                   <Friend
                     key={friend.uid}
                     Name={friend.username || "Unknown"}
-                    photoUrl={
-                      friend.avatarId
-                      
-                    }
+                    photoUrl={friend.avatarId}
                     id={friend.uid}
                     onRemove={handleRemoveFriend}
                   />
@@ -499,92 +497,102 @@ export default function Friends() {
               )}
             </ScrollView>
           ) : (
-            <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : "height"}
-              style={styles.inviteFriendContainer}
-            >
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View>
-                  <View style={styles.titleinviteFriend}>
-                    <Text style={styles.titleText}>
-                      Share the Scrub Hub Experience - Invite Today!
-                    </Text>
-                    <Text style={styles.subtitleText}>
-                      Enter your Friend's Mobile Number
-                    </Text>
-                  </View>
-                  <View style={savedStyles.numberinviteFriend}>
-                    {/* Dropdown */}
-                    <DropDownButton
-                      setDropDownActive={setDropDownActive}
-                      countryCode={countryCode}
-                    />
-                    {/* Phone Input */}
-                    <View style={{ flex: 1 }}>
-                      <NumberInput
-                        placeholderTextColor={"black"}
-                        bgColor="rgba(0,0,0,0.2)"
-                        color={"black"}
-                        value={phoneNumber}
-                        onChangeText={setPhoneNumber}
-                      />
+            <ScrollView>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.inviteFriendContainer}
+              >
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <View>
+                    <View style={styles.titleinviteFriend}>
+                      <Text style={styles.titleText}>
+                        Share the Scrub Hub Experience - Invite Today!
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => router.navigate("UserContacts")}
+                      >
+                        <Text style={styles.contactBtn}>Search Contacts</Text>
+                      </TouchableOpacity>
+                      <Text style={{ fontWeight: "bold", marginTop: 15 }}>
+                        OR
+                      </Text>
+                      <Text style={styles.subtitleText}>
+                        Enter your Friend's Mobile Number
+                      </Text>
                     </View>
-                  </View>
-                  <TouchableOpacity style={styles.inviteButton}>
-                    <Text
-                      style={styles.inviteButtonText}
-                      // onPress={() => setInviteSent(true)}
-                      onPress={sendInvite}
-                    >
-                      Send Invite
-                    </Text>
-                  </TouchableOpacity>
-
-                  {/* Dropdown Modal */}
-                  <CountryPickerModal
-                    setCountryCode={setCountryCode}
-                    setDropDownActive={setDropDownActive}
-                    dropDownActive={dropDownActive}
-                  />
-                  {/* {InviteSentModal} */}
-
-                  <Modal
-                    visible={inviteSent}
-                    transparent
-                    animationType="fade"
-                    onRequestClose={() => setInviteSent(false)}
-                  >
-                    <TouchableOpacity
-                      style={styles.overlay}
-                      onPress={() => setInviteSent(false)}
-                      activeOpacity={1}
-                    >
-                      <View style={styles.modalContainer}>
-                        {/* Circle with shadow */}
-                        <View style={styles.iconCircle}>
-                          <Image
-                            source={require("@/assets/invitationSuccess.png")}
-                            style={styles.icon}
-                            resizeMode="contain"
-                          />
-                        </View>
-
-                        {/* Title */}
-                        <Text style={styles.title}>
-                          Invitation Sent Successfully!
-                        </Text>
-
-                        {/* Description */}
-                        <Text style={styles.description}>
-                          Your invite is on its way! Let your friend join the
-                          Scrub Hub fun and start exploring.
-                        </Text>
+                    <View style={savedStyles.numberinviteFriend}>
+                      {/* Dropdown */}
+                      <DropDownButton
+                        setDropDownActive={setDropDownActive}
+                        countryCode={countryCode}
+                      />
+                      {/* Phone Input */}
+                      <View style={{ flex: 1 }}>
+                        <NumberInput
+                          placeholderTextColor={"black"}
+                          bgColor="rgba(0,0,0,0.2)"
+                          color={"black"}
+                          value={phoneNumber}
+                          onChangeText={setPhoneNumber}
+                        />
                       </View>
+                    </View>
+                    <TouchableOpacity style={styles.inviteButton}>
+                      <Text
+                        style={styles.inviteButtonText}
+                        // onPress={() => setInviteSent(true)}
+                        onPress={sendInvite}
+                      >
+                        Send Invite
+                      </Text>
                     </TouchableOpacity>
-                  </Modal>
-                </View>
-              </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+
+                    {/* Dropdown Modal */}
+                    <CountryPickerModal
+                      setCountryCode={setCountryCode}
+                      setDropDownActive={setDropDownActive}
+                      dropDownActive={dropDownActive}
+                    />
+                    {/* {InviteSentModal} */}
+
+                    <Modal
+                      visible={inviteSent}
+                      transparent
+                      animationType="fade"
+                      onRequestClose={() => setInviteSent(false)}
+                    >
+                      <TouchableOpacity
+                        style={styles.overlay}
+                        onPress={() => setInviteSent(false)}
+                        activeOpacity={1}
+                      >
+                        <View style={styles.modalContainer}>
+                          {/* Circle with shadow */}
+                          <View style={styles.iconCircle}>
+                            <Image
+                              source={require("@/assets/invitationSuccess.png")}
+                              style={styles.icon}
+                              resizeMode="contain"
+                            />
+                          </View>
+
+                          {/* Title */}
+                          <Text style={styles.title}>
+                            Invitation Sent Successfully!
+                          </Text>
+
+                          {/* Description */}
+                          <Text style={styles.description}>
+                            Your invite is on its way! Let your friend join the
+                            Scrub Hub fun and start exploring.
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </Modal>
+                  </View>
+                </TouchableWithoutFeedback>
+              </KeyboardAvoidingView>
+            </ScrollView>
           )}
         </BackgroundImage>
       </View>
@@ -633,7 +641,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
-    justifyContent: "center",
+    marginTop: 25,
   },
   titleinviteFriend: { alignItems: "center", marginBottom: 15 },
   titleText: { fontSize: 18, textAlign: "center", fontWeight: "bold" },
@@ -726,5 +734,11 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginRight: 25,
     marginBottom: 10,
+  },
+  contactBtn: {
+    color: "blue",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 10,
   },
 });

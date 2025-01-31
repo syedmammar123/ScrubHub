@@ -69,11 +69,7 @@ const SlideUpView = ({
               key={invitation.uid}
               Name={invitation.username || "Unknown"}
               acceptBtn={true}
-              photoUrl={
-                invitation.avatarId
-                  ? getAvatarImage(invitation.avatarId)
-                  : getAvatarImage(0)
-              }
+              photoUrl={invitation.avatarId}
               onAccept={onAccept}
               onReject={onReject}
               id={invitation.uid}
