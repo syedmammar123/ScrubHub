@@ -49,6 +49,7 @@ function AcceptRequestBtn({ status, itemId }) {
     <TouchableOpacity
       className={`py-2 px-4 rounded-full ${statusColors[status]}`}
       onPress={() => acceptRequestAlert(itemId)}
+      disabled={loading}
     >
       {loading ? (
         <ActivityIndicator size="small" color="white" />
@@ -74,6 +75,7 @@ function SendRequestBtn({ status, itemId }) {
     <TouchableOpacity
       className={`py-2 px-4 rounded-full ${statusColors[status]}`}
       onPress={() => sendRequestAlert(itemId)}
+      disabled={loading}
     >
       {loading ? (
         <ActivityIndicator size="small" color="white" />
@@ -99,6 +101,7 @@ function CancelRequestBtn({ status, itemId }) {
     <TouchableOpacity
       className={`py-2 px-4 rounded-full ${statusColors[status]}`}
       onPress={() => cancelRequestAlert(itemId)}
+      disabled={loading}
     >
       {loading ? (
         <ActivityIndicator size="small" color="white" />
@@ -109,16 +112,28 @@ function CancelRequestBtn({ status, itemId }) {
   );
 }
 
-function SendInvitationBtn({ status, itemId }) {
-
+function SendInvitationBtn({ status, itemId,phoneNumber }) {
 
   const { showAlert: sendInvitationAlert } = CustomAlert({
     title: "Send Invitation",
     message: "Are you sure you want to send an invite?",
     cancelText: "No",
     acceptText: "Yes",
-    onAccept: () => console.log("invite sent"),
+    onAccept: () => handleSendSms(),
   });
+
+  const handleSendSms = async () => {
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      const { result } = await SMS.sendSMSAsync(
+        [phoneNumber],
+        'Hello, I am inviting you to join my app!'
+      );
+      console.log(result);
+    } else {
+      console.log('SMS is not available on this device');
+    }
+  }
 
   return (
     <TouchableOpacity
@@ -140,7 +155,7 @@ function ContactItem({ contact }) {
         <Text className="text-gray-600">{contact.phoneNumber}</Text>
       </View>
       {contact.status === "invite" && (
-        <SendInvitationBtn status="invite" itemId={contact.uuid} />
+        <SendInvitationBtn status="invite" itemId={contact.uuid} phoneNumber={contact.phoneNumber}/>
       )}
       {contact.status === "received" && (
         <AcceptRequestBtn status="received" itemId={contact.uuid} />
@@ -149,7 +164,7 @@ function ContactItem({ contact }) {
         <CancelRequestBtn status="sent" itemId={contact.uuid} />
       )}
       {contact.status === "add" && (
-        <SendRequestBtn status="add" itemId={contact.uuid} />
+        <SendRequestBtn status="add" itemId={contact.uuid}/>
       )}
     </View>
   );
