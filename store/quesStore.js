@@ -72,7 +72,7 @@ const prevQuesLength = async (system, topic) => {
       curUser.id,
       "solved",
       system,
-      topic
+      topic,
     );
     prevQues = await getDocs(getPrevQuesRef);
     return prevQues.docs.length;
@@ -174,12 +174,12 @@ const useQuesStore = create((set, get) => ({
 
         const queryPromises = topic.map(async (t) => {
           const querySnapshot = await getDocs(
-            collection(db, `Questions/${system}/${t}`)
+            collection(db, `Questions/${system}/${t}`),
           );
           console.log(
             `Topic ${t} returned`,
             querySnapshot.docs.length,
-            "questions"
+            "questions",
           );
           return querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -203,7 +203,7 @@ const useQuesStore = create((set, get) => ({
     } else {
       try {
         const querySnapshot = await getDocs(
-          collection(db, `Questions/${system}/${topic}`)
+          collection(db, `Questions/${system}/${topic}`),
         );
 
         let documents = [];
@@ -238,7 +238,7 @@ const useQuesStore = create((set, get) => ({
         curUser.id,
         "solved",
         system,
-        topic
+        topic,
       );
       const docs = await getDocs(getPrevQuesRef);
 
@@ -279,7 +279,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id
+          q.id,
         );
         batch.set(docRef, q); // Add to batch
       });
@@ -366,7 +366,7 @@ const useQuesStore = create((set, get) => ({
             "solved",
             system,
             topic,
-            q.id
+            q.id,
           );
 
           batch.update(docRef, {
@@ -406,7 +406,7 @@ const useQuesStore = create((set, get) => ({
 
       console.log(
         "Current User Challenge ID Current",
-        curUser.lastDailyChallengeID
+        curUser.lastDailyChallengeID,
       );
 
       if (challengeID === userChallengeId) {

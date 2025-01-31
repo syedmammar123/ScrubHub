@@ -9,9 +9,13 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { Redirect, router } from "expo-router";
-import { doc, getDoc, getFirestore, setDoc } from "@react-native-firebase/firestore";
+import {
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+} from "@react-native-firebase/firestore";
 import useCurrentUserStore from "@/store/currentUserStore";
-
 
 export const avatars = {
   1: require("@/assets/avatar1.png"),
@@ -69,7 +73,7 @@ const userInfoScreen = () => {
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists) {
         console.log(userDoc.data());
-        
+
         await setUser(userDoc.data(), uid);
       }
 

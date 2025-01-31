@@ -89,10 +89,7 @@ export default function ChallengeLeaderboard() {
               scores.length < 2 ? { opacity: 0 } : {},
             ]}
           >
-            <Image
-              style={styles.circles}
-              source={avatars[scores[1]?.avatar]}
-            />
+            <Image style={styles.circles} source={avatars[scores[1]?.avatar]} />
             <View style={styles.smallCircle}>
               <Text style={styles.numberText}>02</Text>
             </View>
@@ -117,10 +114,7 @@ export default function ChallengeLeaderboard() {
               scores.length < 3 ? { opacity: 0 } : {},
             ]}
           >
-            <Image
-              style={styles.circles}
-              source={avatars[scores[2]?.avatar]}
-            />
+            <Image style={styles.circles} source={avatars[scores[2]?.avatar]} />
             <View style={styles.smallCircle}>
               <Text style={styles.numberText}>03</Text>
             </View>

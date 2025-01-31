@@ -7,7 +7,7 @@ import CustomAlert from "./CustomAlert";
 import useAcceptRequest from "@/hooks/useAcceptRequest";
 import useSendRequest from "@/hooks/useSendRequest";
 import useCancelRequest from "@/hooks/useCancelRequest";
-import * as SMS from 'expo-sms';
+import * as SMS from "expo-sms";
 
 const statusColors = {
   invite: "bg-blue-500",
@@ -112,8 +112,7 @@ function CancelRequestBtn({ status, itemId }) {
   );
 }
 
-function SendInvitationBtn({ status, itemId,phoneNumber }) {
-
+function SendInvitationBtn({ status, itemId, phoneNumber }) {
   const { showAlert: sendInvitationAlert } = CustomAlert({
     title: "Send Invitation",
     message: "Are you sure you want to send an invite?",
@@ -127,13 +126,13 @@ function SendInvitationBtn({ status, itemId,phoneNumber }) {
     if (isAvailable) {
       const { result } = await SMS.sendSMSAsync(
         [phoneNumber],
-        'Hello, I am inviting you to join my app!'
+        "Hello, I am inviting you to join my app!",
       );
       console.log(result);
     } else {
-      console.log('SMS is not available on this device');
+      console.log("SMS is not available on this device");
     }
-  }
+  };
 
   return (
     <TouchableOpacity
@@ -155,7 +154,11 @@ function ContactItem({ contact }) {
         <Text className="text-gray-600">{contact.phoneNumber}</Text>
       </View>
       {contact.status === "invite" && (
-        <SendInvitationBtn status="invite" itemId={contact.uuid} phoneNumber={contact.phoneNumber}/>
+        <SendInvitationBtn
+          status="invite"
+          itemId={contact.uuid}
+          phoneNumber={contact.phoneNumber}
+        />
       )}
       {contact.status === "received" && (
         <AcceptRequestBtn status="received" itemId={contact.uuid} />
@@ -164,7 +167,7 @@ function ContactItem({ contact }) {
         <CancelRequestBtn status="sent" itemId={contact.uuid} />
       )}
       {contact.status === "add" && (
-        <SendRequestBtn status="add" itemId={contact.uuid}/>
+        <SendRequestBtn status="add" itemId={contact.uuid} />
       )}
     </View>
   );

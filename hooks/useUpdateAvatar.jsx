@@ -1,5 +1,5 @@
 import useCurrentUserStore from "@/store/currentUserStore";
-import firestore from '@react-native-firebase/firestore';
+import firestore from "@react-native-firebase/firestore";
 import { useState } from "react";
 
 const useUpdateAvatar = (setModalVisible) => {
@@ -16,7 +16,7 @@ const useUpdateAvatar = (setModalVisible) => {
       await firestore().collection("Users").doc(currentUserId).update({
         avatarId,
       });
-      
+
       updateUser({ ...user, avatarId });
       setModalVisible(false);
     } catch (error) {

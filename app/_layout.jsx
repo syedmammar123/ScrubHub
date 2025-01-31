@@ -174,7 +174,6 @@ export default function Layout() {
             animation: "fade",
           }}
         />
-       
       </Stack>
     </GestureHandlerRootView>
   );

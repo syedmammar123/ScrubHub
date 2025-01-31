@@ -41,7 +41,11 @@ export default function FriendsLeaderboard() {
                 key={friend.id}
                 position={index + 1}
                 marks={`${friend.totalScore}`}
-                Name={friend.id === currentUserId ? `${friend.name} (You)` : friend.name}
+                Name={
+                  friend.id === currentUserId
+                    ? `${friend.name} (You)`
+                    : friend.name
+                }
                 photoUrl={friend.avatar}
               />
             ))}

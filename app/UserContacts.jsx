@@ -33,7 +33,7 @@ const UserContacts = () => {
         if (data.length > 0) {
           const filteredContacts = data
             .filter(
-              (contact) => contact.firstName && contact.phoneNumbers?.length
+              (contact) => contact.firstName && contact.phoneNumbers?.length,
             )
             .map((contact) => ({
               firstName: contact.firstName,

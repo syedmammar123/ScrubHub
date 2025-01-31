@@ -209,7 +209,7 @@ export default function Friends() {
               .doc(friendId)
               .get();
             return { id: friendId, ...friendDoc.data() };
-          })
+          }),
         );
 
         setFriends(friendsDetails);
@@ -218,7 +218,7 @@ export default function Friends() {
         setFriends([]); // Optional: Reset friends if fetching details fails
         Alert.alert(
           "Error",
-          "Unable to fetch some friends' details. Please try again later."
+          "Unable to fetch some friends' details. Please try again later.",
         );
       } finally {
         setLoadingFriends(false); // Ensure loading state is updated after all async calls
@@ -294,14 +294,14 @@ export default function Friends() {
 
       Alert.alert("Success", "Friend request accepted successfully!");
       setInvitations(
-        invitations.filter((invitation) => invitation.uid !== itemId)
+        invitations.filter((invitation) => invitation.uid !== itemId),
       );
       fetchFriends();
     } catch (error) {
       console.error("Error accepting friend request:", error);
       Alert.alert(
         "Error",
-        "An error occurred while accepting the friend request."
+        "An error occurred while accepting the friend request.",
       );
     }
   };
@@ -340,18 +340,18 @@ export default function Friends() {
 
               Alert.alert("Success", "Friend request rejected successfully!");
               setInvitations(
-                invitations.filter((invitation) => invitation.uid !== itemId)
+                invitations.filter((invitation) => invitation.uid !== itemId),
               );
             } catch (error) {
               console.error("Error rejecting friend request:", error);
               Alert.alert(
                 "Error",
-                "An error occurred while rejecting the friend request."
+                "An error occurred while rejecting the friend request.",
               );
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -389,7 +389,7 @@ export default function Friends() {
             console.error("Error removing friend:", error);
             Alert.alert(
               "Error",
-              "An error occurred while removing the friend."
+              "An error occurred while removing the friend.",
             );
           }
         },

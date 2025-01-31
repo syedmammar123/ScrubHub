@@ -87,7 +87,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val
+        (word) => word.val === process[index].val,
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -188,7 +188,7 @@ export default function IncompleteProcess() {
         const updatedWords = prev.map((word) =>
           correctAnswers.some((item) => item.value === word.val)
             ? { ...word, opacity: 1 }
-            : { ...word, opacity: 0.5 }
+            : { ...word, opacity: 0.5 },
         );
         return updatedWords;
       });
@@ -326,7 +326,7 @@ export default function IncompleteProcess() {
                                     >
                                       {proc.val === ""
                                         ? String.fromCharCode(
-                                            65 + notknown.indexOf(index)
+                                            65 + notknown.indexOf(index),
                                           )
                                         : proc.val}
                                     </Text>
@@ -350,7 +350,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? "#ffffff"
                               : correctMatches.some(
-                                    (item) => item.value === word.val
+                                    (item) => item.value === word.val,
                                   )
                                 ? theme.barColor
                                 : "#ffffff"
@@ -362,7 +362,7 @@ export default function IncompleteProcess() {
                             !isColorsSet
                               ? word.val
                               : correctMatches.some(
-                                    (item) => item.value === word.val
+                                    (item) => item.value === word.val,
                                   )
                                 ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
                                 : word.val
