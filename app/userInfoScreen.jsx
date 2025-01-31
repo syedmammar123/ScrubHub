@@ -8,8 +8,9 @@ import {
   Image,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import { router } from "expo-router";
-import { doc, getFirestore, setDoc } from "@react-native-firebase/firestore";
+import { Redirect, router } from "expo-router";
+import { doc, getDoc, getFirestore, setDoc } from "@react-native-firebase/firestore";
+import useCurrentUserStore from "@/store/currentUserStore";
 
 
 export const avatars = {
@@ -28,7 +29,8 @@ const userInfoScreen = () => {
   const [username, setUsername] = useState(""); // State for username
   const [selectedAvatar, setSelectedAvatar] = useState(null); // State for avatar selection
   const route = useRoute();
-
+  const setUser = useCurrentUserStore((state) => state.setUser);
+  const user = useCurrentUserStore((state) => state.user);
   // Map avatar IDs to their respective image imports
 
   useEffect(() => {
@@ -64,14 +66,26 @@ const userInfoScreen = () => {
       const db = getFirestore();
       const userDocRef = doc(db, "Users", uid);
       await setDoc(userDocRef, userData);
+      const userDoc = await getDoc(userDocRef);
+      if (userDoc.exists) {
+        console.log(userDoc.data());
+        
+        await setUser(userDoc.data(), uid);
+      }
 
       console.log("User information saved successfully!");
+      await setUser(userDoc.data(), uid);
       router.navigate("/"); // Navigate on successful save
     } catch (error) {
       console.error("Error saving user information:", error);
       alert("An error occurred while saving user information.");
     }
   };
+
+  if (user) {
+    console.log("User logged in");
+    return <Redirect href="/" />;
+  }
 
   return (
     <View style={styles.container}>

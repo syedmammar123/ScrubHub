@@ -26,7 +26,7 @@ export default function Friend({
           <Text style={styles.friendName}>{Name}</Text>
         </View>
         {marks ? (
-          <Text style={styles.bluefont}>{marks}</Text>
+          <Text style={styles.bluefont}>{marks === "null" ? 0 : marks}</Text>
         ) : (
           <View style={styles.btns}>
             {acceptBtn ? (
