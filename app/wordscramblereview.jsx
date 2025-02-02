@@ -56,6 +56,7 @@ export default function WordScrambleReview() {
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
   const [letterChoices, setLetterChoices] = useState([]);
+  const [wordCount, setWordCount] = useState(1);
 
   // Submission States
   const [answerCalculated, setAnswerCalculated] = useState(false);
@@ -224,6 +225,11 @@ export default function WordScrambleReview() {
       setQuestion(q);
 
       const ans = q?.answer?.split(" ").join("").toLowerCase();
+      console.log(q?.answer?.split(" "));
+      if (q?.answer?.split(" ").length > 1) {
+        setWordCount(q?.answer?.split(" ").length);
+      }
+
       setAnswer(ans);
       const letters = Array.from(ans, (letter) => letter.toUpperCase());
 
@@ -355,6 +361,14 @@ export default function WordScrambleReview() {
                     <View>
                       <Text style={styles.guideline}>{question?.hint}</Text>
                     </View>
+
+                    {wordCount > 1 && (
+                      <View>
+                        <Text style={[styles.guideline, { fontSize: 16 }]}>
+                          "{wordCount} Words"
+                        </Text>
+                      </View>
+                    )}
 
                     {/* Blanks */}
                     <View style={styles.inputContainer}>
