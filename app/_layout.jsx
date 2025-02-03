@@ -174,6 +174,13 @@ export default function Layout() {
             animation: "fade",
           }}
         />
+        <Stack.Screen
+          name="ChallengeFriend"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

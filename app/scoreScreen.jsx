@@ -48,7 +48,7 @@ export default function ScoreScreen() {
                 style={{
                   color: score < 5 ? "#787878" : theme.barColor,
                   fontSize: 60,
-                  marginBottom: 70,
+                  marginBottom: 30,
                 }}
               >
                 {score}
@@ -63,7 +63,11 @@ export default function ScoreScreen() {
                   / 15
                 </Text>
               </Text>
+              <TouchableOpacity className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`} onPress={() => navigation.navigate("ChallengeFriend")}>
+              <Text className='font-semibold'>Challenge a friend</Text>
+            </TouchableOpacity>
             </View>
+            
             <Text
               style={{
                 width: "80%",
@@ -77,9 +81,7 @@ export default function ScoreScreen() {
               You did a great job, Learn more by solving more questions of
               different topics.
             </Text>
-            <TouchableOpacity>
-              Challenge a friend
-            </TouchableOpacity>
+           
             <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>
