@@ -40,7 +40,7 @@ export default function App() {
   const { getCurrentType } = useQuesStore((state) => state);
 
   const router = useRouter();
-  
+
   const handlePress = (system) => {
     console.log("TYPE", getCurrentType());
 
