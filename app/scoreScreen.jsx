@@ -15,7 +15,6 @@ import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
-import { useRouter } from "expo-router";
 import StatusButton from "@/components/statusButton";
 
 export default function ScoreScreen() {
@@ -78,6 +77,9 @@ export default function ScoreScreen() {
               You did a great job, Learn more by solving more questions of
               different topics.
             </Text>
+            <TouchableOpacity>
+              Challenge a friend
+            </TouchableOpacity>
             <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>

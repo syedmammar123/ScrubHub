@@ -203,6 +203,7 @@ export default function Topics() {
     getTopics();
   }, []);
 
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

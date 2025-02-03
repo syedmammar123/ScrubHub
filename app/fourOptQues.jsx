@@ -33,6 +33,7 @@ export default function fourOptQues() {
     getCurrentQuestion,
     getCurrentType,
     getChallengeQuestion,
+    questions
   } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -74,6 +75,8 @@ export default function fourOptQues() {
       }
     }
   }, []);
+
+  console.log("QUESTION", question);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />

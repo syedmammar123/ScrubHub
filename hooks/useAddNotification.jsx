@@ -14,69 +14,72 @@ const notificationsType = {
 };
 
 const useAddNotification = () => {
-  const [challengeLoading, setChallengeLoading] = useState(false);
-  const [friendRequestLoading, setFriendRequestLoading] = useState(false);
   const { user } = useCurrentUserStore((state) => state);
 
-  const addChallengeNotification = async (friendId) => {
-    setChallengeLoading(true);
-    try {
-      const currentUserId = user.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
+  const addChallengeNotification = async (
+    batch,
+    challengeDocumentId,
+    {
+      friendUid,
+      friendUsername,
+      friendAvatarId,
+      username,
+      avatarId,
+      friendList,
+    }
+  ) => {
+    const notificationsRef = firestore().collection("Notifications");
 
-      const firestoreRef = firestore().collection("Users");
+    // Reference to the friend's notification document in the Notifications collection
+    const friendDocRef = notificationsRef.doc(friendUid);
+    const friendDoc = await friendDocRef.get();
 
-      // Fetch friend's data
-      const friendDoc = await firestoreRef.doc(friendId).get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
+    const newNotification = {
+      text: `${username} has ${notificationsText.challenge}`,
+      read: false,
+      avatars: [avatarId],
+      timestamp: firestore.Timestamp.now(),
+      type: notificationsType.challenge,
+      documentId: challengeDocumentId,
+    };
 
-      const friendData = friendDoc.data();
-
-      // Update the friend's notifications array
-      await firestoreRef.doc(friendId).update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} has ${notificationsText.challenge}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-          type: notificationsType.challenge,
-        }),
+    if (!friendDoc.exists) {
+      batch.set(friendDocRef, { notificationsArray: [newNotification] });
+    } else {
+      batch.update(friendDocRef, {
+        notificationsArray: firestore.FieldValue.arrayUnion(newNotification),
       });
+    }
 
-      // Update other friends' notifications array
-      const otherFriendsIds = user.friendList.filter((id) => id !== friendId);
-      if (otherFriendsIds.length > 0) {
-        const batch = firestore().batch();
+    // Notify mutual friends
+    const otherFriendsIds = friendList.filter((id) => id !== friendUid);
 
-        otherFriendsIds.forEach((otherFriendId) => {
-          const otherFriendDoc = firestoreRef.doc(otherFriendId);
-          batch.update(otherFriendDoc, {
-            notifications: firestore.FieldValue.arrayUnion({
-              text: `${user.username} has challenged ${friendData.username}`,
-              read: false,
-              avatars: [user.avatarId, friendData.avatarId],
-              timestamp: firestore.Timestamp.now(),
-            }),
-          });
+    for (const otherFriendId of otherFriendsIds) {
+      const otherFriendDocRef = notificationsRef.doc(otherFriendId);
+      const otherFriendDoc = await otherFriendDocRef.get();
+
+      const otherFriendNotification = {
+        text: `${username} has challenged ${friendUsername}`,
+        read: false,
+        avatars: [avatarId, friendAvatarId],
+        timestamp: firestore.Timestamp.now(),
+      };
+
+      if (!otherFriendDoc.exists) {
+        batch.set(otherFriendDocRef, {
+          notificationsArray: [otherFriendNotification],
         });
-
-        await batch.commit();
+      } else {
+        batch.update(otherFriendDocRef, {
+          notificationsArray: firestore.FieldValue.arrayUnion(
+            otherFriendNotification
+          ),
+        });
       }
-
-      console.log("Notification added!");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setChallengeLoading(false);
     }
   };
 
   const addFriendRequestNotification = async (friendId) => {
-    setFriendRequestLoading(true);
     try {
       const currentUserId = user?.uid;
       if (!currentUserId) {
@@ -107,10 +110,8 @@ const useAddNotification = () => {
     } catch (error) {
       console.error(
         "Error in addFriendRequestNotification Notification: ",
-        error,
+        error
       );
-    } finally {
-      setFriendRequestLoading(false);
     }
   };
 
@@ -144,7 +145,7 @@ const useAddNotification = () => {
     } catch (error) {
       console.error(
         "Error in addFriendRequestNotification Notification: ",
-        error,
+        error
       );
     } finally {
       setFriendRequestLoading(false);
@@ -153,8 +154,6 @@ const useAddNotification = () => {
 
   return {
     addChallengeNotification,
-    challengeLoading,
-    friendRequestLoading,
     addFriendRequestNotification,
     acceptFriendRequest,
   };
