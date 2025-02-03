@@ -107,14 +107,14 @@ const useAddNotification = () => {
     } catch (error) {
       console.error(
         "Error in addFriendRequestNotification Notification: ",
-        error
+        error,
       );
     } finally {
       setFriendRequestLoading(false);
     }
   };
 
-  const acceptFriendRequest = async (friendId) => { 
+  const acceptFriendRequest = async (friendId) => {
     try {
       const currentUserId = user?.uid;
       if (!currentUserId) {
@@ -144,7 +144,7 @@ const useAddNotification = () => {
     } catch (error) {
       console.error(
         "Error in addFriendRequestNotification Notification: ",
-        error
+        error,
       );
     } finally {
       setFriendRequestLoading(false);
@@ -156,7 +156,7 @@ const useAddNotification = () => {
     challengeLoading,
     friendRequestLoading,
     addFriendRequestNotification,
-    acceptFriendRequest
+    acceptFriendRequest,
   };
 };
 

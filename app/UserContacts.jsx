@@ -37,14 +37,14 @@ const UserContacts = () => {
         console.log("country: ", country);
         const filteredContacts = data
           .filter(
-            (contact) => contact.firstName && contact.phoneNumbers?.length
+            (contact) => contact.firstName && contact.phoneNumbers?.length,
           )
           .map((contact) => ({
             firstName: contact.firstName,
             lastName: contact.lastName,
             phoneNumber: formatPhoneNumber(
               contact.phoneNumbers?.[0]?.number || "",
-              country
+              country,
             ),
           }));
 

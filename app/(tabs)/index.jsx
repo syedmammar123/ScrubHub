@@ -66,6 +66,7 @@ export default function App() {
   //    return <Redirect href="onboarding" />;
   //  }
   const user = useCurrentUserStore((state) => state.user);
+  console.log(user);
 
   // const handleSave = async () => {
   //   console.log(state);

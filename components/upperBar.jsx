@@ -16,7 +16,7 @@ export default function UpperBar() {
         style={[
           styles.innerBar,
           {
-            width: `${((getCurrentType() === "review" ? currentIndexReview : getCurrentType() === "study" ? currentIndex : currentChallengeIndex) + 1) * 11.11}%`,
+            width: `${((getCurrentType() === "review" ? currentIndexReview : getCurrentType() === "study" ? currentIndex : currentChallengeIndex) + 1) * 6.66}%`,
           },
         ]}
       ></View>

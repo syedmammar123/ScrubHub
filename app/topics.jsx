@@ -66,7 +66,7 @@ export default function Topics() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  
+
   const handlePress = async (topic) => {
     console.log(system);
     if (getCurrentType() === "review") {
@@ -98,7 +98,7 @@ export default function Topics() {
         router.navigate("/");
       }
     } else {
-      if (currentIndex < 8) {
+      if (currentIndex < 14) {
         if (getfetchedQuestionTopic() === topic) {
           console.log("HIT");
           console.log(getCurrentQuestion().questionStyle);

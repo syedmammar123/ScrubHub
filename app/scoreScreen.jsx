@@ -36,7 +36,7 @@ export default function ScoreScreen() {
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <Text
               style={{
-                color: score < 5 ? "#787878" : theme.barColor,
+                color: "black",
                 fontSize: 25,
                 marginBottom: 30,
                 fontFamily: "Poppins-Regular",
@@ -46,7 +46,11 @@ export default function ScoreScreen() {
             </Text>
             <View>
               <Text
-                style={{ color: "#EF5555", fontSize: 60, marginBottom: 70 }}
+                style={{
+                  color: score < 5 ? "#787878" : theme.barColor,
+                  fontSize: 60,
+                  marginBottom: 70,
+                }}
               >
                 {score}
                 <Text
@@ -57,7 +61,7 @@ export default function ScoreScreen() {
                   }}
                 >
                   {" "}
-                  / 9
+                  / 15
                 </Text>
               </Text>
             </View>

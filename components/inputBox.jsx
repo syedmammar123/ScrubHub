@@ -32,6 +32,7 @@ export default function InputBox({
         style={{
           // fontWeight: "bold",
           fontFamily: "Poppins-Semi",
+          textTransform: "uppercase",
           color: bgColor === "#EF5555" ? "white" : "black",
         }}
       >
