@@ -29,6 +29,7 @@ import {
 import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
+
 const buttons = [
   { label: "Topic 1" },
   { label: "Test Topic 1" },
@@ -65,6 +66,7 @@ export default function Topics() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  
   const handlePress = async (topic) => {
     console.log(system);
     if (getCurrentType() === "review") {
