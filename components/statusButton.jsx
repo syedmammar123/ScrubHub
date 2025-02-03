@@ -112,7 +112,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
-        if (currentIndex + 1 < 9) {
+        if (currentIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseScore();
           }

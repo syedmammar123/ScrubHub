@@ -26,6 +26,12 @@ import {
 } from "react-native-reanimated";
 import useQuesStore from "@/store/quesStore";
 
+// Function to get a random letter
+const getRandomLetter = () => {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  return alphabet[Math.floor(Math.random() * alphabet.length)];
+};
+
 let boxesPerLine;
 const screenWidth = Dimensions.get("window").width;
 const containerWidth = screenWidth * 0.95;
@@ -39,36 +45,18 @@ function calcLines(totalBoxes) {
   return lines;
 }
 
-let arr = [
-  "A",
-  "N",
-  "T",
-  "I",
-  "C",
-  "O",
-  "A",
-  "G",
-  "U",
-  "L",
-  "A",
-  "N",
-  "T",
-  "S",
-  "B",
-  "D",
-];
-
 export default function WordScrambleReview() {
   //Question Fetch
-  const { getReviewQuestion, getCurrentQuestion, getCurrentType } =
-    useQuesStore((state) => state);
+  const { getReviewQuestion } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({ letterChoices: [] });
   const [answerLength, setAnswerLength] = useState(
-    getReviewQuestion().answer?.length,
+    getReviewQuestion().answer?.replace(/\s/g, "").length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
+  const [letterChoices, setLetterChoices] = useState([]);
+  const [wordCount, setWordCount] = useState(1);
 
   // Submission States
   const [answerCalculated, setAnswerCalculated] = useState(false);
@@ -77,7 +65,7 @@ export default function WordScrambleReview() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 }),
+    Array(answerLength).fill({ value: -1, realIndex: -1 })
   );
 
   console.log("Selected", selected);
@@ -85,18 +73,19 @@ export default function WordScrambleReview() {
   console.log(blankInputLayout);
 
   // Drag drop functions/ Values
-  // const translateValueX = question?.letterChoices.map(() => useSharedValue(0));
-  // const translateValueY = question.letterChoices.map(() => useSharedValue(0));
-  const translateValueX = getReviewQuestion().letterChoices.map(() =>
-    useSharedValue(0),
+  const translateValueX = Array.from(
+    { length: answerLength < 10 ? answerLength + 4 : answerLength },
+    () => useSharedValue(0)
   );
-  const translateValueY = getReviewQuestion().letterChoices.map(() =>
-    useSharedValue(0),
+
+  const translateValueY = Array.from(
+    { length: answerLength < 10 ? answerLength + 4 : answerLength },
+    () => useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
 
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
 
   const line = useSharedValue(-1);
@@ -175,7 +164,7 @@ export default function WordScrambleReview() {
                 translateValueX[selected[i].realIndex].value = withSpring(0);
                 translateValueY[selected[i].realIndex].value = withSpring(0);
               }
-              runOnJS(updatedAnswers)(i, index, question.letterChoices[index]);
+              runOnJS(updatedAnswers)(i, index, letterChoices[index]);
 
               translateValueY[index].value = withSpring(ytranslated.value);
 
@@ -185,7 +174,7 @@ export default function WordScrambleReview() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10,
+                val - letterLayout[index]?.x + 10
               );
 
               break;
@@ -215,8 +204,8 @@ export default function WordScrambleReview() {
       });
   };
 
-  const panGestureHandler = question.letterChoices?.map((_, index) =>
-    CreatePanGesture(index),
+  const panGestureHandler = letterChoices.map((_, index) =>
+    CreatePanGesture(index)
   );
 
   const AnimatedStyle = (index) =>
@@ -236,7 +225,32 @@ export default function WordScrambleReview() {
       setQuestion(q);
 
       const ans = q?.answer?.split(" ").join("").toLowerCase();
+      console.log(q?.answer?.split(" "));
+      if (q?.answer?.split(" ").length > 1) {
+        setWordCount(q?.answer?.split(" ").length);
+      }
+
       setAnswer(ans);
+      const letters = Array.from(ans, (letter) => letter.toUpperCase());
+
+      if (letters.length < 10) {
+        for (let i = 0; i < 4; i++) {
+          letters.push(getRandomLetter());
+        }
+      }
+      // Shuffle the array using Fisher-Yates algorithm
+      const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        }
+      };
+
+      shuffleArray(letters); // Shuffle letters
+      console.log("Shuffled Letters", letters);
+
+      setLetterChoices(letters);
+
       const n = calcLines(answerLength);
       setNofLines(n);
     }
@@ -270,29 +284,26 @@ export default function WordScrambleReview() {
 
       console.log("Selected", selectedString);
       const selectedIndices = selectedString.map((item) => item.realIndex);
-      const missingIndices = question.letterChoices?.reduce(
-        (array, _, index) => {
-          if (!selectedIndices.includes(index)) {
-            array.push(index);
-          }
-          return array;
-        },
-        [],
-      );
+      const missingIndices = letterChoices.reduce((array, _, index) => {
+        if (!selectedIndices.includes(index)) {
+          array.push(index);
+        }
+        return array;
+      }, []);
 
       console.log("MISSING", missingIndices);
       const missingArray = missingIndices.map((item) => {
         return {
           realIndex: item,
           backgroundColor: "white",
-          value: question.letterChoices[item],
+          value: letterChoices[item],
         };
       });
 
       console.log("MISSINGARRAY", missingArray);
       console.log([...selectedString, ...missingArray]);
       const sortedArray = [...selectedString, ...missingArray].sort(
-        (a, b) => a.realIndex - b.realIndex,
+        (a, b) => a.realIndex - b.realIndex
       );
       console.log("Sorted Array", sortedArray);
 
@@ -341,8 +352,8 @@ export default function WordScrambleReview() {
                     <View>
                       <Text style={styles.guideline}>
                         Given a hint with a series of empty spaces and{" "}
-                        {question?.letterChoices?.length} letter options, find
-                        out which word/term is being hinted at
+                        {question?.answer?.length} letter options, find out
+                        which word/term is being hinted at
                       </Text>
                     </View>
 
@@ -350,6 +361,14 @@ export default function WordScrambleReview() {
                     <View>
                       <Text style={styles.guideline}>{question?.hint}</Text>
                     </View>
+
+                    {wordCount > 1 && (
+                      <View>
+                        <Text style={[styles.guideline, { fontSize: 16 }]}>
+                          "{wordCount} Words"
+                        </Text>
+                      </View>
+                    )}
 
                     {/* Blanks */}
                     <View style={styles.inputContainer}>
@@ -365,7 +384,7 @@ export default function WordScrambleReview() {
 
                     {/* Letters to Choose */}
                     <View style={styles.lettersContainer}>
-                      {question?.letterChoices?.map((val, index) => (
+                      {letterChoices.map((val, index) => (
                         <GestureDetector
                           key={index}
                           gesture={panGestureHandler[index]}
