@@ -68,18 +68,18 @@ export default function App() {
   const user = useCurrentUserStore((state) => state.user);
   console.log(user);
 
-  // const handleSave = async () => {
-  //   console.log(state);
+  const handleSave = async () => {
+    // console.log(state);
 
-  //   // console.log("USER FROM TEST", getUser());
-  //   // await submitChallengeQuestions();
-  //   // await submitReviews();
-  //   // await submitQuestions();
-  //   //  router.navigate("scoreScreen");
+    // // console.log("USER FROM TEST", getUser());
+    // // await submitChallengeQuestions();
+    // // await submitReviews();
+    // // await submitQuestions();
+    // //  router.navigate("scoreScreen");
 
-  //   // Testing for saving topics
-  //   // await submitQuestions();
-  // };
+    // // Testing for saving topics
+    await submitQuestions();
+  };
 
   if (!user) {
     return <Redirect href="onboarding" />;

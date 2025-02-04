@@ -48,9 +48,9 @@ export default function WordScrambledChallenge() {
   //Question Fetch
   const { getChallengeQuestion } = useQuesStore((state) => state);
 
-  const [question, setQuestion] = useState({ letterChoices: [] });
+  const [question, setQuestion] = useState({ letterChoices: [], answer: "" });
   const [answerLength, setAnswerLength] = useState(
-    getChallengeQuestion().answer?.replace(/\s/g, "").length
+    getChallengeQuestion()?.answer?.replace(/\s/g, "").length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);

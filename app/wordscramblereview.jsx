@@ -51,7 +51,7 @@ export default function WordScrambleReview() {
 
   const [question, setQuestion] = useState({ letterChoices: [] });
   const [answerLength, setAnswerLength] = useState(
-    getReviewQuestion().answer?.replace(/\s/g, "").length
+    getReviewQuestion()?.answer?.replace(/\s/g, "").length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
