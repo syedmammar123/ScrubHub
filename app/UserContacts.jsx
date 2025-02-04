@@ -1,16 +1,19 @@
 import { View, Text, ActivityIndicator } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as Contacts from "expo-contacts";
 import useCurrentUserStore from "@/store/currentUserStore";
 import BackButton from "@/components/backButton";
 import BackgroundImage from "@/components/backgroundImage";
 import ScrubLogo from "@/components/scrubLogo";
-import { Redirect } from "expo-router";
 import useGetUserContacts from "@/hooks/useGetUserContacts";
-import { formatPhoneNumber } from "@/util/getRandomItem";
+import {
+  formatPhoneNumber,
+  getCountryFromPhoneNumber,
+} from "@/util/getRandomItem";
 import DisplayUserContacts from "@/components/DisplayUserContacts";
 
 const UserContacts = () => {
+  const { user } = useCurrentUserStore((state) => state);
   const [userContacts, setUserContacts] = useState([]);
   const {
     loading,
@@ -21,35 +24,41 @@ const UserContacts = () => {
   });
   const [permissionDenied, setPermissionDenied] = useState(false);
 
-  useEffect(() => {
-    const requestContactsPermission = async () => {
-      const { status } = await Contacts.requestPermissionsAsync();
+  const requestContactsPermission = useCallback(async () => {
+    const { status } = await Contacts.requestPermissionsAsync();
 
-      if (status === "granted") {
-        const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.FirstName, Contacts.Fields.PhoneNumbers],
-        });
+    if (status === "granted") {
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.FirstName, Contacts.Fields.PhoneNumbers],
+      });
 
-        if (data.length > 0) {
-          const filteredContacts = data
-            .filter(
-              (contact) => contact.firstName && contact.phoneNumbers?.length,
-            )
-            .map((contact) => ({
-              firstName: contact.firstName,
-              lastName: contact.lastName,
-              phoneNumber: formatPhoneNumber(contact.phoneNumbers[0]?.number),
-            }));
-          setUserContacts(filteredContacts.slice(0, 10));
-        }
-      } else {
-        console.log("Permission denied");
-        setPermissionDenied(true);
+      if (data.length > 0) {
+        const country = getCountryFromPhoneNumber(user.phoneNumber) || "US";
+        console.log("country: ", country);
+        const filteredContacts = data
+          .filter(
+            (contact) => contact.firstName && contact.phoneNumbers?.length,
+          )
+          .map((contact) => ({
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            phoneNumber: formatPhoneNumber(
+              contact.phoneNumbers?.[0]?.number || "",
+              country,
+            ),
+          }));
+
+        setUserContacts(filteredContacts.slice(0, 10));
       }
-    };
+    } else {
+      console.log("Permission denied");
+      setPermissionDenied(true);
+    }
+  }, [user.phoneNumber]);
 
+  useEffect(() => {
     requestContactsPermission();
-  }, []);
+  }, [requestContactsPermission]);
 
   console.log(loading);
   console.log("contacts: ", finalContacts);

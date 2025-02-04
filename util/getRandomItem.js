@@ -1,3 +1,11 @@
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
+/**
+ * Get the country code from a stored phone number
+ * @param {string} phoneNumber - The E.164 formatted phone number (e.g., "+923333262411")
+ * @returns {string|null} - The country code (e.g., "PK" for Pakistan) or null if invalid
+ */
+
 export const types = [
   "firstLineTreatment",
   "flowChart",
@@ -39,20 +47,12 @@ export const getRandomSolvedQuesArray = (array) => {
   return arr;
 };
 
-export const formatPhoneNumber = (phoneNumber) => {
-  // Remove any spaces or non-numeric characters
-  const formattedNumber = phoneNumber.replace(/\D/g, "");
+export const formatPhoneNumber = (UserPhoneNumber, country) => {
+  const phoneNumber = parsePhoneNumberFromString(UserPhoneNumber, country);
+  return phoneNumber ? phoneNumber.format("E.164") : null;
+};
 
-  // Check if the number starts with "03" and convert it to "+92"
-  if (formattedNumber.startsWith("03")) {
-    return `+92${formattedNumber.slice(2)}`;
-  }
-
-  // If the number starts with "92", return in international format
-  if (formattedNumber.startsWith("92")) {
-    return `+${formattedNumber}`;
-  }
-
-  // If the number is not in the correct format, return as it is
-  return phoneNumber;
+export const getCountryFromPhoneNumber = (phoneNumber) => {
+  const phoneNumberObj = parsePhoneNumberFromString(phoneNumber);
+  return phoneNumberObj ? phoneNumberObj.country : null;
 };
