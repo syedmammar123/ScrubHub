@@ -60,9 +60,6 @@ const UserContacts = () => {
     requestContactsPermission();
   }, [requestContactsPermission]);
 
-  console.log(loading);
-  console.log("contacts: ", finalContacts);
-
   return (
     <View className="flex-1">
       <BackButton />

@@ -88,82 +88,49 @@ const useAddNotification = () => {
     }
   };
 
-  const addFriendRequestNotification = async (friendId) => {
+  const addFriendRequestNotification = (batch, friendId) => {
     try {
       const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-      const friendDoc = await friendDocRef.get();
 
-      // New notification object
-      const newNotification = {
-        text: `${user.username} ${notificationsText.friendRequestRecieved}`,
-        read: false,
-        avatars: [user.avatarId],
-        timestamp: firestore.Timestamp.now(),
-        type: notificationsType.friendRequestRecieved,
-      };
-
-      if (!friendDoc.exists) {
-        // Create document if it doesn't exist
-        await friendDocRef.set({ notificationsArray: [newNotification] });
-      } else {
-        // Retrieve existing notifications safely
-        const existingNotifications =
-          friendDoc.data()?.notificationsArray || [];
-        const updatedNotifications = [
-          newNotification,
-          ...existingNotifications,
-        ]; // Add at the start
-
-        await friendDocRef.update({ notificationsArray: updatedNotifications });
-      }
-
-      console.log("Notification added successfully!");
-    } catch (error) {
-      console.error(
-        "Error in addFriendRequestNotification Notification: ",
-        error
+      batch.set(
+        friendDocRef,
+        {
+          notificationsArray: firestore.FieldValue.arrayUnion({
+            text: `${user.username} ${notificationsText.friendRequestRecieved}`,
+            read: false,
+            avatars: [user.avatarId],
+            timestamp: firestore.Timestamp.now(),
+            type: notificationsType.friendRequestRecieved,
+          }),
+        },
+        { merge: true }
       );
+    } catch (error) {
+      console.error("Error in addFriendRequestNotification:", error);
     }
   };
 
-  const acceptFriendRequestNotification = async (friendId) => {
+  const acceptFriendRequestNotification = (batch, friendId) => {
     try {
-      const currentUserId = user?.uid;
-
       const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-      const friendDoc = await friendDocRef.get();
 
-      // New notification object
-      const newNotification = {
-        text: `${user.username} ${notificationsText.friendRequestAccepted}`,
-        read: false,
-        avatars: [user.avatarId],
-        timestamp: firestore.Timestamp.now(),
-        type: notificationsType.friendRequestAccepted,
-      };
-
-      if (!friendDoc.exists) {
-        // Create document if it doesn't exist
-        await friendDocRef.set({ notificationsArray: [newNotification] });
-      } else {
-        // Retrieve existing notifications safely
-        const existingNotifications =
-          friendDoc.data()?.notificationsArray || [];
-        const updatedNotifications = [
-          newNotification,
-          ...existingNotifications,
-        ]; // Add at the start
-
-        await friendDocRef.update({ notificationsArray: updatedNotifications });
-      }
-
-      console.log("Notification added successfully!");
+      batch.set(
+        friendDocRef,
+        {
+          notificationsArray: firestore.FieldValue.arrayUnion({
+            text: `${user.username} ${notificationsText.friendRequestAccepted}`,
+            read: false,
+            avatars: [user.avatarId],
+            timestamp: firestore.Timestamp.now(),
+            type: notificationsType.friendRequestAccepted,
+          }),
+        },
+        { merge: true }
+      );
     } catch (error) {
-      console.error("Error in acceptFriendRequest Notification: ", error);
-    } finally {
-      setFriendRequestLoading(false);
+      console.error("Error in acceptFriendRequestNotification:", error);
     }
   };
 
