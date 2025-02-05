@@ -6,6 +6,7 @@ const useCurrentUserStore = create(
   persist(
     (set, get) => ({
       user: null, // Initial state
+      userNotifications: [],
       setUser: (user, id) => {
         set({ user: { ...user, id } }); // Properly set the `user` object
       },
@@ -17,6 +18,9 @@ const useCurrentUserStore = create(
       },
       clearUser: () => {
         set({ user: null }); // Reset the `user` state
+      },
+      setUserNotifications: (notifications) => {
+        set({ userNotifications: notifications });
       },
     }),
     {

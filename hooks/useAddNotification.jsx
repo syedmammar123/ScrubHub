@@ -3,149 +3,165 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
 
 const notificationsText = {
-  friendRequest: "sent you a friend request",
+  friendRequestRecieved: "sent you a friend request",
   challenge: "challenged you",
   friendRequestAccepted: "accepted your friend request",
 };
 
 const notificationsType = {
-  friendRequest: "friendRequest",
+  friendRequestRecieved: "friendRequestRecieved",
   challenge: "challenge",
+  friendRequestAccepted: "friendRequestAccepted",
 };
 
 const useAddNotification = () => {
-  const [challengeLoading, setChallengeLoading] = useState(false);
-  const [friendRequestLoading, setFriendRequestLoading] = useState(false);
   const { user } = useCurrentUserStore((state) => state);
 
-  const addChallengeNotification = async (friendId) => {
-    setChallengeLoading(true);
-    try {
-      const currentUserId = user.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
+  const addChallengeNotification = async (
+    batch,
+    challengeDocumentId,
+    {
+      friendUid,
+      friendUsername,
+      friendAvatarId,
+      username,
+      avatarId,
+      friendList,
+    }
+  ) => {
+    const notificationsRef = firestore().collection("Notifications");
 
-      const firestoreRef = firestore().collection("Users");
+    // Reference to the friend's notification document in the Notifications collection
+    const friendDocRef = notificationsRef.doc(friendUid);
+    const friendDoc = await friendDocRef.get();
 
-      // Fetch friend's data
-      const friendDoc = await firestoreRef.doc(friendId).get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
+    const newNotification = {
+      text: `${username} has ${notificationsText.challenge}`,
+      read: false,
+      avatars: [avatarId],
+      timestamp: firestore.Timestamp.now(),
+      type: notificationsType.challenge,
+      documentId: challengeDocumentId,
+    };
 
-      const friendData = friendDoc.data();
+    if (!friendDoc.exists) {
+      batch.set(friendDocRef, { notificationsArray: [newNotification] });
+    } else {
+      const existingNotifications = friendDoc.data()?.notificationsArray || [];
+      const updatedNotifications = [newNotification, ...existingNotifications]; // Add at the start
 
-      // Update the friend's notifications array
-      await firestoreRef.doc(friendId).update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} has ${notificationsText.challenge}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-          type: notificationsType.challenge,
-        }),
+      batch.update(friendDocRef, {
+        notificationsArray: updatedNotifications,
       });
+    }
 
-      // Update other friends' notifications array
-      const otherFriendsIds = user.friendList.filter((id) => id !== friendId);
-      if (otherFriendsIds.length > 0) {
-        const batch = firestore().batch();
+    // Notify mutual friends
+    const otherFriendsIds = friendList.filter((id) => id !== friendUid);
 
-        otherFriendsIds.forEach((otherFriendId) => {
-          const otherFriendDoc = firestoreRef.doc(otherFriendId);
-          batch.update(otherFriendDoc, {
-            notifications: firestore.FieldValue.arrayUnion({
-              text: `${user.username} has challenged ${friendData.username}`,
-              read: false,
-              avatars: [user.avatarId, friendData.avatarId],
-              timestamp: firestore.Timestamp.now(),
-            }),
-          });
+    for (const otherFriendId of otherFriendsIds) {
+      const otherFriendDocRef = notificationsRef.doc(otherFriendId);
+      const otherFriendDoc = await otherFriendDocRef.get();
+
+      const otherFriendNotification = {
+        text: `${username} has challenged ${friendUsername}`,
+        read: false,
+        avatars: [avatarId, friendAvatarId],
+        timestamp: firestore.Timestamp.now(),
+      };
+
+      if (!otherFriendDoc.exists) {
+        batch.set(otherFriendDocRef, {
+          notificationsArray: [otherFriendNotification],
         });
+      } else {
+        const existingNotifications =
+          otherFriendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          otherFriendNotification,
+          ...existingNotifications,
+        ];
 
-        await batch.commit();
+        batch.update(otherFriendDocRef, {
+          notificationsArray: updatedNotifications,
+        });
       }
-
-      console.log("Notification added!");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setChallengeLoading(false);
     }
   };
 
   const addFriendRequestNotification = async (friendId) => {
-    setFriendRequestLoading(true);
     try {
-      const currentUserId = user?.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
-
-      const firestoreRef = firestore().collection("Users");
+      const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-
-      // Ensure friend exists before updating
       const friendDoc = await friendDocRef.get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
 
-      // Update the friend's notifications array
-      await friendDocRef.update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} ${notificationsText.friendRequest}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-          type: notificationsType.friendRequest,
-        }),
-      });
+      // New notification object
+      const newNotification = {
+        text: `${user.username} ${notificationsText.friendRequestRecieved}`,
+        read: false,
+        avatars: [user.avatarId],
+        timestamp: firestore.Timestamp.now(),
+        type: notificationsType.friendRequestRecieved,
+      };
+
+      if (!friendDoc.exists) {
+        // Create document if it doesn't exist
+        await friendDocRef.set({ notificationsArray: [newNotification] });
+      } else {
+        // Retrieve existing notifications safely
+        const existingNotifications =
+          friendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          newNotification,
+          ...existingNotifications,
+        ]; // Add at the start
+
+        await friendDocRef.update({ notificationsArray: updatedNotifications });
+      }
 
       console.log("Notification added successfully!");
     } catch (error) {
       console.error(
         "Error in addFriendRequestNotification Notification: ",
-        error,
+        error
       );
-    } finally {
-      setFriendRequestLoading(false);
     }
   };
 
-  const acceptFriendRequest = async (friendId) => {
+  const acceptFriendRequestNotification = async (friendId) => {
     try {
       const currentUserId = user?.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
 
-      const firestoreRef = firestore().collection("Users");
+      const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-
-      // Ensure friend exists before updating
       const friendDoc = await friendDocRef.get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
 
-      // Update the friend's notifications array
-      await friendDocRef.update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} ${notificationsText.friendRequestAccepted}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-        }),
-      });
+      // New notification object
+      const newNotification = {
+        text: `${user.username} ${notificationsText.friendRequestAccepted}`,
+        read: false,
+        avatars: [user.avatarId],
+        timestamp: firestore.Timestamp.now(),
+        type: notificationsType.friendRequestAccepted,
+      };
+
+      if (!friendDoc.exists) {
+        // Create document if it doesn't exist
+        await friendDocRef.set({ notificationsArray: [newNotification] });
+      } else {
+        // Retrieve existing notifications safely
+        const existingNotifications =
+          friendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          newNotification,
+          ...existingNotifications,
+        ]; // Add at the start
+
+        await friendDocRef.update({ notificationsArray: updatedNotifications });
+      }
 
       console.log("Notification added successfully!");
     } catch (error) {
-      console.error(
-        "Error in addFriendRequestNotification Notification: ",
-        error,
-      );
+      console.error("Error in acceptFriendRequest Notification: ", error);
     } finally {
       setFriendRequestLoading(false);
     }
@@ -153,10 +169,8 @@ const useAddNotification = () => {
 
   return {
     addChallengeNotification,
-    challengeLoading,
-    friendRequestLoading,
     addFriendRequestNotification,
-    acceptFriendRequest,
+    acceptFriendRequestNotification,
   };
 };
 

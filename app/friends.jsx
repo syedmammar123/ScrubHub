@@ -34,6 +34,7 @@ import useGetInvitations from "@/hooks/useGetInvitations";
 import { getAvatarImage } from "@/util/getAvatarImage";
 import leaderBoardImg from "@/assets/leaderboard.png";
 import { useRouter } from "expo-router";
+import useAddNotification from "@/hooks/useAddNotification";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -61,20 +62,15 @@ export default function Friends() {
   const { invitations, invitationsLoading, setInvitations } =
     useGetInvitations();
 
+  const [sendInviteLoading, setSendInviteLoading] = useState(false);
+
+  const { addFriendRequestNotification, acceptFriendRequestNotification } =
+    useAddNotification();
+
   const router = useRouter();
 
-  //For testing Purpose only!
-  // const uid1 = "FrTsL0JPgZaBSMvPoGHErIpU1iz2";
-  // const uid2 = "Nqs82Okhs5U6tPgmWgNCwBfZGa32";
-  // const uid3 = "DQEwsxt5K7g0k95FN7Y6oqGMeAr2";
-  // const myPhoneNumber = "+921111111111";
-  // const myPhoneNumber = "+922222222222";
-  // const myPhoneNumber = "+923333333333";
-
-  // const uid = uid3;
-
   const sendInvite = async () => {
-    if (phoneNumber.length != 10) {
+    if (phoneNumber.length !== 10) {
       Alert.alert("Error", "Please enter a valid phone number.");
       return;
     }
@@ -82,16 +78,19 @@ export default function Friends() {
     const fullPhoneNumber = `${countryCode}${phoneNumber}`;
 
     try {
-      // 1. Validate phone number is not the user's own number(success)
+      
+      // Validate that the user is not adding themselves
       if (fullPhoneNumber === myPhoneNumber) {
         Alert.alert("Error", "You cannot add yourself!");
         return;
       }
-
-      // 2. Search for the user with the given phone number(success)
+      setSendInviteLoading(true);
+      
+      // Search for the target user with this phone number
       const querySnapshot = await firestore()
         .collection("Users")
         .where("phoneNumber", "==", fullPhoneNumber)
+        .limit(1)
         .get();
 
       if (querySnapshot.empty) {
@@ -102,71 +101,68 @@ export default function Friends() {
       const targetUserDoc = querySnapshot.docs[0];
       const targetUid = targetUserDoc.id;
 
-      // 3. Fetch the user's friend list
-      const userDoc = await firestore().collection("Users").doc(myUid).get();
-      const userData = userDoc.data();
+      // Fetch current user's data in one go
+      const userDocSnap = await firestore()
+        .collection("Users")
+        .doc(myUid)
+        .get();
+      const userData = userDocSnap.data() || {};
 
       const friendList = userData.friendList || [];
       const friendRequestsSent = userData.friendRequestsSent || [];
       const friendRequestsReceived = userData.friendRequestsReceived || [];
 
-      // 4. Check if the target user is already a friend(success)
       if (friendList.includes(targetUid)) {
         Alert.alert("Error", "This user is already your friend!");
         return;
       }
 
-      // 5. Check if a friend request was already sent(success)
       if (friendRequestsSent.includes(targetUid)) {
         Alert.alert("Error", "Friend request already sent!");
         return;
       }
 
-      // 6. Check if there is a received request from the target user(success)
+      const batch = firestore().batch();
+      const myRef = firestore().collection("Users").doc(myUid);
+      const targetRef = firestore().collection("Users").doc(targetUid);
+
       if (friendRequestsReceived.includes(targetUid)) {
-        // Add the target user to the friend list
-        await firestore()
-          .collection("Users")
-          .doc(myUid)
-          .update({
-            friendList: firestore.FieldValue.arrayUnion(targetUid),
-            friendRequestsReceived: firestore.FieldValue.arrayRemove(targetUid),
-          });
+        // Accept friend request
+        batch.update(myRef, {
+          friendList: firestore.FieldValue.arrayUnion(targetUid),
+          friendRequestsReceived: firestore.FieldValue.arrayRemove(targetUid),
+        });
 
-        // Update the target user's data
-        await firestore()
-          .collection("Users")
-          .doc(targetUid)
-          .update({
-            friendList: firestore.FieldValue.arrayUnion(myUid),
-            friendRequestsSent: firestore.FieldValue.arrayRemove(myUid),
-          });
+        batch.update(targetRef, {
+          friendList: firestore.FieldValue.arrayUnion(myUid),
+          friendRequestsSent: firestore.FieldValue.arrayRemove(myUid),
+        });
 
+        await batch.commit();
+        acceptFriendRequestNotification(targetUid);
         Alert.alert("Success", "Friend request accepted!");
-        setInviteSent(true);
       } else {
-        // 7. Send a new friend request(success)
-        await firestore()
-          .collection("Users")
-          .doc(myUid)
-          .update({
-            friendRequestsSent: firestore.FieldValue.arrayUnion(targetUid),
-          });
+        // Send friend request
+        batch.update(myRef, {
+          friendRequestsSent: firestore.FieldValue.arrayUnion(targetUid),
+        });
 
-        await firestore()
-          .collection("Users")
-          .doc(targetUid)
-          .update({
-            friendRequestsReceived: firestore.FieldValue.arrayUnion(myUid),
-          });
+        batch.update(targetRef, {
+          friendRequestsReceived: firestore.FieldValue.arrayUnion(myUid),
+        });
 
-        setPhoneNumber("");
+        await batch.commit();
+        addFriendRequestNotification(targetUid);
         Alert.alert("Success", "Friend request sent!");
-        setInviteSent(true);
       }
+
+      setPhoneNumber("");
+      setInviteSent(true);
     } catch (error) {
       console.error("Error sending invite:", error);
       Alert.alert("Error", "An error occurred while sending the invite.");
+    } finally {
+      setSendInviteLoading(false);
     }
   };
 
@@ -209,7 +205,7 @@ export default function Friends() {
               .doc(friendId)
               .get();
             return { id: friendId, ...friendDoc.data() };
-          }),
+          })
         );
 
         setFriends(friendsDetails);
@@ -218,7 +214,7 @@ export default function Friends() {
         setFriends([]); // Optional: Reset friends if fetching details fails
         Alert.alert(
           "Error",
-          "Unable to fetch some friends' details. Please try again later.",
+          "Unable to fetch some friends' details. Please try again later."
         );
       } finally {
         setLoadingFriends(false); // Ensure loading state is updated after all async calls
@@ -294,14 +290,14 @@ export default function Friends() {
 
       Alert.alert("Success", "Friend request accepted successfully!");
       setInvitations(
-        invitations.filter((invitation) => invitation.uid !== itemId),
+        invitations.filter((invitation) => invitation.uid !== itemId)
       );
       fetchFriends();
     } catch (error) {
       console.error("Error accepting friend request:", error);
       Alert.alert(
         "Error",
-        "An error occurred while accepting the friend request.",
+        "An error occurred while accepting the friend request."
       );
     }
   };
@@ -340,18 +336,18 @@ export default function Friends() {
 
               Alert.alert("Success", "Friend request rejected successfully!");
               setInvitations(
-                invitations.filter((invitation) => invitation.uid !== itemId),
+                invitations.filter((invitation) => invitation.uid !== itemId)
               );
             } catch (error) {
               console.error("Error rejecting friend request:", error);
               Alert.alert(
                 "Error",
-                "An error occurred while rejecting the friend request.",
+                "An error occurred while rejecting the friend request."
               );
             }
           },
         },
-      ],
+      ]
     );
   };
 
@@ -389,7 +385,7 @@ export default function Friends() {
             console.error("Error removing friend:", error);
             Alert.alert(
               "Error",
-              "An error occurred while removing the friend.",
+              "An error occurred while removing the friend."
             );
           }
         },
@@ -537,14 +533,22 @@ export default function Friends() {
                         />
                       </View>
                     </View>
-                    <TouchableOpacity style={styles.inviteButton}>
-                      <Text
-                        style={styles.inviteButtonText}
-                        // onPress={() => setInviteSent(true)}
-                        onPress={sendInvite}
-                      >
-                        Send Invite
-                      </Text>
+                    <TouchableOpacity
+                      style={styles.inviteButton}
+                      disabled={sendInviteLoading}
+                      className="flex items-center"
+                    >
+                      {sendInviteLoading ? (
+                        <ActivityIndicator size="small" color="#FFFFFF" />
+                      ) : (
+                        <Text
+                          style={styles.inviteButtonText}
+                          // onPress={() => setInviteSent(true)}
+                          onPress={sendInvite}
+                        >
+                          Send Invite
+                        </Text>
+                      )}
                     </TouchableOpacity>
 
                     {/* Dropdown Modal */}
