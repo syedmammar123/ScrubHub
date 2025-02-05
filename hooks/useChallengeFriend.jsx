@@ -60,8 +60,10 @@ const useChallengeFriend = () => {
 
       await batch.commit();
       console.log("Challenge and notifications added!");
+      return true;
     } catch (error) {
       console.error(error);
+      return false;
     } finally {
       setLoading(false);
     }

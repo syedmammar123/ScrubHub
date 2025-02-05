@@ -4,22 +4,21 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
-  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
-import Entypo from "@expo/vector-icons/Entypo";
-
 import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import StatusButton from "@/components/statusButton";
+import { useRouter } from "expo-router";
 
 export default function ScoreScreen() {
   const { getScore } = useQuesStore((state) => state);
   const [score, setScore] = useState(getScore());
+
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -63,7 +62,7 @@ export default function ScoreScreen() {
                   / 15
                 </Text>
               </Text>
-              <TouchableOpacity className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`} onPress={() => navigation.navigate("ChallengeFriend")}>
+              <TouchableOpacity className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`} onPress={() => router.navigate("ChallengeFriend")}>
               <Text className='font-semibold'>Challenge a friend</Text>
             </TouchableOpacity>
             </View>

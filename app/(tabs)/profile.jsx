@@ -185,7 +185,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => router.navigate("scoreScreen")}
+          onPress={() => router.navigate("ChallengeFriend")}
         >
           <Text>Score Screen</Text>
         </TouchableOpacity>
