@@ -3,14 +3,15 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
 
 const notificationsText = {
-  friendRequest: "sent you a friend request",
+  friendRequestRecieved: "sent you a friend request",
   challenge: "challenged you",
   friendRequestAccepted: "accepted your friend request",
 };
 
 const notificationsType = {
-  friendRequest: "friendRequest",
+  friendRequestRecieved: "friendRequestRecieved",
   challenge: "challenge",
+  friendRequestAccepted: "friendRequestAccepted",
 };
 
 const useAddNotification = () => {
@@ -46,8 +47,11 @@ const useAddNotification = () => {
     if (!friendDoc.exists) {
       batch.set(friendDocRef, { notificationsArray: [newNotification] });
     } else {
+      const existingNotifications = friendDoc.data()?.notificationsArray || [];
+      const updatedNotifications = [newNotification, ...existingNotifications]; // Add at the start
+
       batch.update(friendDocRef, {
-        notificationsArray: firestore.FieldValue.arrayUnion(newNotification),
+        notificationsArray: updatedNotifications,
       });
     }
 
@@ -70,10 +74,15 @@ const useAddNotification = () => {
           notificationsArray: [otherFriendNotification],
         });
       } else {
+        const existingNotifications =
+          otherFriendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          otherFriendNotification,
+          ...existingNotifications,
+        ];
+
         batch.update(otherFriendDocRef, {
-          notificationsArray: firestore.FieldValue.arrayUnion(
-            otherFriendNotification
-          ),
+          notificationsArray: updatedNotifications,
         });
       }
     }
@@ -81,30 +90,33 @@ const useAddNotification = () => {
 
   const addFriendRequestNotification = async (friendId) => {
     try {
-      const currentUserId = user?.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
-
-      const firestoreRef = firestore().collection("Users");
+      const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-
-      // Ensure friend exists before updating
       const friendDoc = await friendDocRef.get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
 
-      // Update the friend's notifications array
-      await friendDocRef.update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} ${notificationsText.friendRequest}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-          type: notificationsType.friendRequest,
-        }),
-      });
+      // New notification object
+      const newNotification = {
+        text: `${user.username} ${notificationsText.friendRequestRecieved}`,
+        read: false,
+        avatars: [user.avatarId],
+        timestamp: firestore.Timestamp.now(),
+        type: notificationsType.friendRequestRecieved,
+      };
+
+      if (!friendDoc.exists) {
+        // Create document if it doesn't exist
+        await friendDocRef.set({ notificationsArray: [newNotification] });
+      } else {
+        // Retrieve existing notifications safely
+        const existingNotifications =
+          friendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          newNotification,
+          ...existingNotifications,
+        ]; // Add at the start
+
+        await friendDocRef.update({ notificationsArray: updatedNotifications });
+      }
 
       console.log("Notification added successfully!");
     } catch (error) {
@@ -115,38 +127,41 @@ const useAddNotification = () => {
     }
   };
 
-  const acceptFriendRequest = async (friendId) => {
+  const acceptFriendRequestNotification = async (friendId) => {
     try {
       const currentUserId = user?.uid;
-      if (!currentUserId) {
-        throw new Error("User not authenticated");
-      }
 
-      const firestoreRef = firestore().collection("Users");
+      const firestoreRef = firestore().collection("Notifications");
       const friendDocRef = firestoreRef.doc(friendId);
-
-      // Ensure friend exists before updating
       const friendDoc = await friendDocRef.get();
-      if (!friendDoc.exists) {
-        throw new Error("Friend data not found");
-      }
 
-      // Update the friend's notifications array
-      await friendDocRef.update({
-        notifications: firestore.FieldValue.arrayUnion({
-          text: `${user.username} ${notificationsText.friendRequestAccepted}`,
-          read: false,
-          avatars: [user.avatarId],
-          timestamp: firestore.Timestamp.now(),
-        }),
-      });
+      // New notification object
+      const newNotification = {
+        text: `${user.username} ${notificationsText.friendRequestAccepted}`,
+        read: false,
+        avatars: [user.avatarId],
+        timestamp: firestore.Timestamp.now(),
+        type: notificationsType.friendRequestAccepted,
+      };
+
+      if (!friendDoc.exists) {
+        // Create document if it doesn't exist
+        await friendDocRef.set({ notificationsArray: [newNotification] });
+      } else {
+        // Retrieve existing notifications safely
+        const existingNotifications =
+          friendDoc.data()?.notificationsArray || [];
+        const updatedNotifications = [
+          newNotification,
+          ...existingNotifications,
+        ]; // Add at the start
+
+        await friendDocRef.update({ notificationsArray: updatedNotifications });
+      }
 
       console.log("Notification added successfully!");
     } catch (error) {
-      console.error(
-        "Error in addFriendRequestNotification Notification: ",
-        error
-      );
+      console.error("Error in acceptFriendRequest Notification: ", error);
     } finally {
       setFriendRequestLoading(false);
     }
@@ -155,7 +170,7 @@ const useAddNotification = () => {
   return {
     addChallengeNotification,
     addFriendRequestNotification,
-    acceptFriendRequest,
+    acceptFriendRequestNotification,
   };
 };
 

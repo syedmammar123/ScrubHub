@@ -5,13 +5,10 @@ import {
   StatusBar,
   ScrollView,
   ActivityIndicator,
-  Image,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
-import BackButton from "@/components/backButton";
 import BackgroundImage from "@/components/backgroundImage";
 import ScrubLogo from "@/components/scrubLogo";
 import useGetFriends from "@/hooks/useGetFriends";
@@ -71,6 +68,5 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
-    paddingTop: 50,
   },
 });
