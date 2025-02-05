@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useCurrentUserStore from "@/store/currentUserStore";
+import firestore from "@react-native-firebase/firestore";
 
 const useGetNotifications = () => {
   const [loading, setLoading] = useState(true);
@@ -11,6 +11,8 @@ const useGetNotifications = () => {
     setError(null);
     if (!user?.uid) {
       console.error("User not authenticated");
+      setError("User not authenticated");
+      setLoading(false);
       return;
     }
     setLoading(true);
@@ -19,21 +21,21 @@ const useGetNotifications = () => {
         .collection("Notifications")
         .doc(user.uid);
       const doc = await notificationsRef.get();
-      if (!doc.exists) {
+
+      if (!doc.exists || !doc.data()?.notificationsArray?.length) {
         console.log("No notifications found.");
+        setError("No notifications found");
         return;
       }
+
       const notifications = doc.data()?.notificationsArray || [];
-
-      if(notifications.length === 0) {
-        console.log("No notifications found.");
-        return;
-      }
-
       console.log("Fetched Notifications:", notifications);
       setUserNotifications(notifications);
     } catch (error) {
-      setError(error);
+      console.error("Error fetching notifications:", error);
+      setError(
+        error.message || "An error occurred while fetching notifications."
+      );
     } finally {
       setLoading(false);
     }
@@ -41,7 +43,7 @@ const useGetNotifications = () => {
 
   useEffect(() => {
     getNotifications();
-  }, []);
+  }, [user?.uid]); 
 
   return { loading, error };
 };

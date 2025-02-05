@@ -31,7 +31,7 @@ export default function Layout() {
       <Tabs.Screen
         name="Notifications"
         options={{
-          title: "Notifications",
+          title: "notifications",
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (

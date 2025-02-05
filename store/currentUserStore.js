@@ -26,8 +26,8 @@ const useCurrentUserStore = create(
     {
       name: "currentUserStore", // Key for localStorage or AsyncStorage
       storage: createJSONStorage(() => AsyncStorage),
-    },
-  ),
+    }
+  )
 );
 
 export default useCurrentUserStore;
