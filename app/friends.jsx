@@ -31,7 +31,6 @@ import auth from "@react-native-firebase/auth";
 import AddFriend from "@/components/addFriend";
 import SlideUpView from "@/components/SlideUpView";
 import useGetInvitations from "@/hooks/useGetInvitations";
-import { getAvatarImage } from "@/util/getAvatarImage";
 import leaderBoardImg from "@/assets/leaderboard.png";
 import { useRouter } from "expo-router";
 import useAddNotification from "@/hooks/useAddNotification";
@@ -78,19 +77,17 @@ export default function Friends() {
     const fullPhoneNumber = `${countryCode}${phoneNumber}`;
 
     try {
-      
-      // Validate that the user is not adding themselves
+      setSendInviteLoading(true);
+      const batch = firestore().batch(); // Create batch
+
       if (fullPhoneNumber === myPhoneNumber) {
         Alert.alert("Error", "You cannot add yourself!");
         return;
       }
-      setSendInviteLoading(true);
-      
-      // Search for the target user with this phone number
+
       const querySnapshot = await firestore()
         .collection("Users")
         .where("phoneNumber", "==", fullPhoneNumber)
-        .limit(1)
         .get();
 
       if (querySnapshot.empty) {
@@ -101,12 +98,8 @@ export default function Friends() {
       const targetUserDoc = querySnapshot.docs[0];
       const targetUid = targetUserDoc.id;
 
-      // Fetch current user's data in one go
-      const userDocSnap = await firestore()
-        .collection("Users")
-        .doc(myUid)
-        .get();
-      const userData = userDocSnap.data() || {};
+      const userDoc = await firestore().collection("Users").doc(myUid).get();
+      const userData = userDoc.data();
 
       const friendList = userData.friendList || [];
       const friendRequestsSent = userData.friendRequestsSent || [];
@@ -122,42 +115,43 @@ export default function Friends() {
         return;
       }
 
-      const batch = firestore().batch();
-      const myRef = firestore().collection("Users").doc(myUid);
-      const targetRef = firestore().collection("Users").doc(targetUid);
-
       if (friendRequestsReceived.includes(targetUid)) {
         // Accept friend request
-        batch.update(myRef, {
+        const userRef = firestore().collection("Users").doc(myUid);
+        const targetUserRef = firestore().collection("Users").doc(targetUid);
+
+        batch.update(userRef, {
           friendList: firestore.FieldValue.arrayUnion(targetUid),
           friendRequestsReceived: firestore.FieldValue.arrayRemove(targetUid),
         });
 
-        batch.update(targetRef, {
+        batch.update(targetUserRef, {
           friendList: firestore.FieldValue.arrayUnion(myUid),
           friendRequestsSent: firestore.FieldValue.arrayRemove(myUid),
         });
 
-        await batch.commit();
-        acceptFriendRequestNotification(targetUid);
-        Alert.alert("Success", "Friend request accepted!");
+        acceptFriendRequestNotification(batch, targetUid);
+        setInviteSent(true);
       } else {
         // Send friend request
-        batch.update(myRef, {
+        const userRef = firestore().collection("Users").doc(myUid);
+        const targetUserRef = firestore().collection("Users").doc(targetUid);
+
+        batch.update(userRef, {
           friendRequestsSent: firestore.FieldValue.arrayUnion(targetUid),
         });
 
-        batch.update(targetRef, {
+        batch.update(targetUserRef, {
           friendRequestsReceived: firestore.FieldValue.arrayUnion(myUid),
         });
 
-        await batch.commit();
-        addFriendRequestNotification(targetUid);
-        Alert.alert("Success", "Friend request sent!");
+        addFriendRequestNotification(batch, targetUid);
+
+        setPhoneNumber("");
+        setInviteSent(true);
       }
 
-      setPhoneNumber("");
-      setInviteSent(true);
+      await batch.commit(); // Commit batch
     } catch (error) {
       console.error("Error sending invite:", error);
       Alert.alert("Error", "An error occurred while sending the invite.");
@@ -286,6 +280,8 @@ export default function Friends() {
       });
 
       // Commit the batch operation
+      acceptFriendRequestNotification(batch, itemId);
+
       await batch.commit();
 
       Alert.alert("Success", "Friend request accepted successfully!");
@@ -533,23 +529,23 @@ export default function Friends() {
                         />
                       </View>
                     </View>
-                    <TouchableOpacity
-                      style={styles.inviteButton}
-                      disabled={sendInviteLoading}
-                      className="flex items-center"
-                    >
-                      {sendInviteLoading ? (
-                        <ActivityIndicator size="small" color="#FFFFFF" />
-                      ) : (
-                        <Text
-                          style={styles.inviteButtonText}
-                          // onPress={() => setInviteSent(true)}
-                          onPress={sendInvite}
-                        >
-                          Send Invite
-                        </Text>
-                      )}
-                    </TouchableOpacity>
+                    <View>
+                      <TouchableOpacity
+                        style={styles.inviteButton}
+                        disabled={sendInviteLoading}
+                      >
+                        {sendInviteLoading ? (
+                          <ActivityIndicator size="small" color="#FFFFFF" />
+                        ) : (
+                          <Text
+                            style={styles.inviteButtonText}
+                            onPress={sendInvite}
+                          >
+                            Send Invite
+                          </Text>
+                        )}
+                      </TouchableOpacity>
+                    </View>
 
                     {/* Dropdown Modal */}
                     <CountryPickerModal

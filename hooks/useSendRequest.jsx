@@ -1,10 +1,12 @@
 import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
 import { useState } from "react";
+import useAddNotification from "./useAddNotification";
 
 const useSendRequest = () => {
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useCurrentUserStore((state) => state);
+  const {addFriendRequestNotification} = useAddNotification();
 
   const handleSendRequest = async (itemId) => {
     setLoading(true);
@@ -23,6 +25,8 @@ const useSendRequest = () => {
       batch.update(theirDocRef, {
         friendRequestsReceived: firestore.FieldValue.arrayUnion(user.uid),
       });
+
+      addFriendRequestNotification(batch, itemId);
 
       // Commit batch
       await batch.commit();
