@@ -70,7 +70,7 @@ export default function Topics() {
   const handlePress = async (topic) => {
     console.log(system);
     if (getCurrentType() === "review") {
-      if (currentIndexReview < 8) {
+      if (currentIndexReview < 15) {
         if (getfetchedReviewTopic() === topic) {
           console.log("Already fetched");
 
@@ -98,7 +98,7 @@ export default function Topics() {
         router.navigate("/");
       }
     } else {
-      if (currentIndex < 14) {
+      if (currentIndex < 15) {
         if (getfetchedQuestionTopic() === topic) {
           console.log("HIT");
           console.log(getCurrentQuestion().questionStyle);
@@ -109,7 +109,11 @@ export default function Topics() {
 
           router.navigate(nextScreen);
         } else {
-          await fetchQuestions(system.toLowerCase(), topic);
+          const questions = await fetchQuestions(system.toLowerCase(), topic);
+          if (questions === 0) {
+            setError(true);
+            return;
+          }
           const nextScreen = getQuestionType(getCurrentQuestion());
 
           router.navigate(nextScreen);

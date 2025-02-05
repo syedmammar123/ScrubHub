@@ -77,6 +77,31 @@ export default function fourOptQues() {
   }, []);
 
   console.log("QUESTION", question);
+  if (submitted)
+    return (
+      <View style={{ flex: 1 }}>
+        <StatusBar style="auto" />
+        <View>
+          <BackgroundImage>
+            <ScrubLogo />
+            <View
+              style={{
+                marginTop: 20,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
+            </View>
+          </BackgroundImage>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -85,7 +110,7 @@ export default function fourOptQues() {
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />
-          {submitted ? (
+          {/* {submitted ? (
             <View
               style={{
                 flex: 1,
@@ -99,90 +124,90 @@ export default function fourOptQues() {
                 color={theme.barColor}
               />
             </View>
-          ) : (
-            <ScrollView style={{ paddingBottom: 20 }}>
-              <View style={styles.mainContainer}>
-                {/* Question */}
-                <View style={styles.questionContainer}>
-                  <Text style={styles.question}>{question?.question}</Text>
-                </View>
-                {/* OPTIONS */}
-                <View style={styles.optionsContainer}>
-                  {question?.options.map((opt, index) => (
-                    <QuestionOption
-                      checked={checked}
-                      key={index}
-                      selected={selected}
-                      setSelected={setSelected}
-                      opacity={
-                        !checked
+          ) : ( */}
+          <ScrollView style={{ paddingBottom: 20 }}>
+            <View style={styles.mainContainer}>
+              {/* Question */}
+              <View style={styles.questionContainer}>
+                <Text style={styles.question}>{question?.question}</Text>
+              </View>
+              {/* OPTIONS */}
+              <View style={styles.optionsContainer}>
+                {question?.options.map((opt, index) => (
+                  <QuestionOption
+                    checked={checked}
+                    key={index}
+                    selected={selected}
+                    setSelected={setSelected}
+                    opacity={
+                      !checked
+                        ? 1
+                        : opt === selected || opt === question.answer
                           ? 1
-                          : opt === selected || opt === question.answer
-                            ? 1
-                            : 0.4
-                      }
-                      bgColor={
-                        !checked
-                          ? selected === opt
-                            ? "white"
-                            : bgColors[index]
-                          : opt !== question.answer && opt !== selected
-                            ? bgColors[index]
-                            : selected === question.answer
-                              ? theme.barColor
-                              : opt === question.answer && opt !== selected
-                                ? theme.barColor
-                                : "#EF5555"
-                      }
-                      Option={`${opt}`}
-                    />
-                  ))}
-                </View>
-              </View>
-              <View style={{ paddingBottom: 20, rowGap: 15 }}>
-                {error ? (
-                  <StatusIcon icon="cancel" text={"No Option Selected!"} />
-                ) : (
-                  ""
-                )}
-                {checked && selected !== "" && !error ? (
-                  <StatusIcon
-                    icon={selected === question.answer ? "correct" : "cancel"}
-                    text={
-                      selected === question.answer
-                        ? "Correct Answer!"
-                        : "Wrong Answer!"
+                          : 0.4
                     }
+                    bgColor={
+                      !checked
+                        ? selected === opt
+                          ? "white"
+                          : bgColors[index]
+                        : opt !== question.answer && opt !== selected
+                          ? bgColors[index]
+                          : selected === question.answer
+                            ? theme.barColor
+                            : opt === question.answer && opt !== selected
+                              ? theme.barColor
+                              : "#EF5555"
+                    }
+                    Option={`${opt}`}
                   />
-                ) : (
-                  ""
-                )}
-                {checked ? (
-                  <StatusButton
-                    scoreIncrease={selected === question.answer}
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    setChecked={setChecked}
-                    checked={checked}
-                    text={"Continue"}
-                    width={"60%"}
-                  />
-                ) : (
-                  <StatusButton
-                    setChecked={setChecked}
-                    checked={checked}
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    text={"Submit"}
-                    width={"60%"}
-                    questionType={"fourOpt"}
-                  />
-                )}
+                ))}
               </View>
-            </ScrollView>
-          )}
+            </View>
+            <View style={{ paddingBottom: 20, rowGap: 15 }}>
+              {error ? (
+                <StatusIcon icon="cancel" text={"No Option Selected!"} />
+              ) : (
+                ""
+              )}
+              {checked && selected !== "" && !error ? (
+                <StatusIcon
+                  icon={selected === question.answer ? "correct" : "cancel"}
+                  text={
+                    selected === question.answer
+                      ? "Correct Answer!"
+                      : "Wrong Answer!"
+                  }
+                />
+              ) : (
+                ""
+              )}
+              {checked ? (
+                <StatusButton
+                  scoreIncrease={selected === question.answer}
+                  setError={setError}
+                  selected={selected}
+                  setSubmitted={setSubmitted}
+                  setChecked={setChecked}
+                  checked={checked}
+                  text={"Continue"}
+                  width={"60%"}
+                />
+              ) : (
+                <StatusButton
+                  setChecked={setChecked}
+                  checked={checked}
+                  setError={setError}
+                  selected={selected}
+                  setSubmitted={setSubmitted}
+                  text={"Submit"}
+                  width={"60%"}
+                  questionType={"fourOpt"}
+                />
+              )}
+            </View>
+          </ScrollView>
+          {/* )} */}
         </BackgroundImage>
       </View>
     </View>

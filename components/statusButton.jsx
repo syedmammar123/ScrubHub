@@ -87,7 +87,7 @@ export default function StatusButton({
       setSubmitted(true);
       if (getCurrentType() === "review") {
         console.log("After Pressing Cont", currentIndexReview);
-        if (currentIndexReview + 1 < 9) {
+        if (currentIndexReview + 1 < 15) {
           if (scoreIncrease) {
             increaseReviewScore();
           }

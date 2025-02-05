@@ -45,7 +45,7 @@ export default function ScoreScreen() {
             <View>
               <Text
                 style={{
-                  color: score < 5 ? "#787878" : theme.barColor,
+                  color: score < 5 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
                   marginBottom: 30,
                 }}
