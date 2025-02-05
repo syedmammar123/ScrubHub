@@ -6,13 +6,14 @@ import {
   doc,
   writeBatch,
   updateDoc,
+  serverTimestamp,
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
 // Pick Random Questions from All Topics
 const pickRandQues = async (questions) => {
   const totalQuestions = questions.length;
-  const numToPick = 9;
+  const numToPick = 15;
 
   const chunkSize = Math.ceil(totalQuestions / numToPick);
 
@@ -38,26 +39,25 @@ const pickRandQues = async (questions) => {
 const reviewQues = (docs) => {
   let unreviewed = docs.filter((doc) => !doc.isReviewed);
 
-  let questions = [];
   if (unreviewed.length === 0) {
     let sortedDocs = docs.sort((a, b) => {
       const dateA = a.lastReviewed ? a.lastReviewed.toDate() : new Date(0);
       const dateB = b.lastReviewed ? b.lastReviewed.toDate() : new Date(0);
-      return dateA - dateB;
+      return dateA - dateB; // Oldest first
     });
-    return sortedDocs.slice(0, 9);
-  } else if (unreviewed.length === 9) {
-    return unreviewed;
-  } else {
-    let index = unreviewed.length / 9;
-    console.log("skip index", index);
-    for (let i = 0; i < 9; i++) {
-      let pickIndex = index * i;
-      questions.push(unreviewed[pickIndex]);
-      console.log(unreviewed[pickIndex]);
-    }
-    return questions;
+    return sortedDocs.slice(0, 15);
   }
+
+  if (unreviewed.length === 15) {
+    return unreviewed;
+  }
+  let sortedUnreviewed = unreviewed.sort((a, b) => {
+    const dateA = a.submittedOn ? a.submittedOn.toDate() : new Date(0);
+    const dateB = b.submittedOn ? b.submittedOn.toDate() : new Date(0);
+    return dateA - dateB; // Oldest first
+  });
+
+  return sortedUnreviewed.slice(0, 15);
 };
 
 const prevSolvedQuestions = async (system, topic) => {
@@ -93,6 +93,11 @@ const pickQues = async (system, topic, docs) => {
     (doc) => !solvedQuestions.includes(doc.id),
   );
 
+  if (unsolvedQuestions.length === 15) {
+    console.log("YES UNSOLVED QUESTIN LENGTH 15");
+
+    return unsolvedQuestions;
+  }
   if (unsolvedQuestions.length < 15) {
     console.log("Not enough unsolved questions, adjusting the number to pick.");
   }
@@ -211,6 +216,8 @@ const useQuesStore = create((set, get) => ({
         set({ questions: pickedQuestions });
         set({ fetchedQuestionSystem: system });
         set({ fetchedQuestionTopic: topic });
+
+        return pickedQuestions.length;
       } catch (error) {
         console.error("Error fetching documents: ", error);
       } finally {
@@ -275,7 +282,8 @@ const useQuesStore = create((set, get) => ({
           topic,
           q.id,
         );
-        batch.set(docRef, q); // Add to batch
+        const data = { ...q, submittedOn: serverTimestamp() };
+        batch.set(docRef, data); // Add to batch
       });
       // Update User
       const userSolvedTopics = user.solvedTopics;
@@ -332,6 +340,7 @@ const useQuesStore = create((set, get) => ({
       const newUser = {
         ...user,
         totalScore: score,
+        totalSolved: totalSolved,
         solvedTopics: userSolvedTopics,
       };
       useCurrentUserStore.getState().updateUser(newUser);
@@ -373,7 +382,7 @@ const useQuesStore = create((set, get) => ({
 
           batch.update(docRef, {
             isReviewed: true,
-            lastReviewed: new Date(), // Current timestamp
+            lastReviewed: serverTimestamp(), // Current timestamp
           });
         });
 
