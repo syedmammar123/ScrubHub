@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
+import useAddNotification from "./useAddNotification";
 
 const useAcceptRequest = () => {
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useCurrentUserStore((state) => state);
+  const {acceptFriendRequestNotification} = useAddNotification();
 
   const handleAcceptRequest = async (itemId) => {
     setLoading(true);
@@ -25,6 +27,8 @@ const useAcceptRequest = () => {
         friendList: firestore.FieldValue.arrayUnion(user.uid),
         friendRequestsSent: firestore.FieldValue.arrayRemove(user.uid),
       });
+
+      acceptFriendRequestNotification(batch, itemId);
 
       // Commit batch
       await batch.commit();
