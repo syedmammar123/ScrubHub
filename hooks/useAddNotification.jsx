@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
 
@@ -12,6 +11,7 @@ const notificationsType = {
   friendRequestRecieved: "friendRequestRecieved",
   challenge: "challenge",
   friendRequestAccepted: "friendRequestAccepted",
+  challengeCompleted: "challengeCompleted",
 };
 
 const useAddNotification = () => {
@@ -131,6 +131,43 @@ const useAddNotification = () => {
       );
     } catch (error) {
       console.error("Error in acceptFriendRequestNotification:", error);
+    }
+  };
+
+  const addChallengeCompletedNotification = (
+    batch,
+    challengeId,
+    friendId,
+    myScore,
+    friendScore,
+    friendName,
+    myName
+  ) => {
+    try {
+      const firestoreRef = firestore().collection("Notifications");
+      const friendDocRef = firestoreRef.doc(friendId);
+
+      const text =
+        myScore > opponentScore
+          ? `${myName} has won the challenge. He scored ${myScore}. While your score was ${friendScore}`
+          : `${myName} has won the challenge. He scored ${myScore}. While your score was ${friendScore}`;
+
+      batch.set(
+        friendDocRef,
+        {
+          notificationsArray: firestore.FieldValue.arrayUnion({
+            text: `${user.username} has completed the challenge`,
+            read: false,
+            avatars: [user.avatarId],
+            timestamp: firestore.Timestamp.now(),
+            type: notificationsType.challengeCompleted,
+            documentId: challengeId,
+          }),
+        },
+        { merge: true }
+      );
+    } catch (error) {
+      console.error("Error in addChallengeCompletedNotification:", error);
     }
   };
 
