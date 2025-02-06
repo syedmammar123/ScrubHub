@@ -7,6 +7,7 @@ const useCurrentUserStore = create(
     (set, get) => ({
       user: null, // Initial state
       userNotifications: [],
+      userChallenges: [],
       setUser: (user, id) => {
         set({ user: { ...user, id } }); // Properly set the `user` object
       },
@@ -22,6 +23,9 @@ const useCurrentUserStore = create(
       setUserNotifications: (notifications) => {
         set({ userNotifications: notifications });
       },
+      setUserChallenges : (challenges) => {
+        set({ userChallenges: challenges });
+      }
     }),
     {
       name: "currentUserStore", // Key for localStorage or AsyncStorage

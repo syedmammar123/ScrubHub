@@ -85,8 +85,6 @@ export const formatTimeOnly = (dateString) => {
   const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
   const dateObj = new Date(cleanedString);
 
-  console.log("ss",dateObj)
-
   if (isNaN(dateObj.getTime())) return "Invalid Time"; // Handle invalid dates
 
   return dateObj.toLocaleTimeString("en-US", {
