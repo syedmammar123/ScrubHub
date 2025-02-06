@@ -56,3 +56,40 @@ export const getCountryFromPhoneNumber = (phoneNumber) => {
   const phoneNumberObj = parsePhoneNumberFromString(phoneNumber);
   return phoneNumberObj ? phoneNumberObj.country : null;
 };
+
+export const formatDateOnly = (dateString) => {
+  // Extract parts of the timestamp
+  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
+
+  // Convert into a valid Date object
+  const dateObj = new Date(cleanedString);
+
+  if (isNaN(dateObj.getTime())) return "Invalid Date"; // Handle invalid dates
+
+  const now = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(now.getDate() - 7); // Get date a week ago
+
+  if (dateObj >= oneWeekAgo) {
+    return dateObj.toLocaleDateString("en-US", { weekday: "short" }); // Mon, Tue, etc.
+  } else {
+    return dateObj.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }); 
+  }
+};
+
+export const formatTimeOnly = (dateString) => {
+  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
+  const dateObj = new Date(cleanedString);
+
+  if (isNaN(dateObj.getTime())) return "Invalid Time"; // Handle invalid dates
+
+  return dateObj.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  })
+};
