@@ -26,6 +26,7 @@ export default function MultipleOptSelect() {
     getCurrentQuestion,
     getCurrentType,
     getChallengeQuestion,
+    getFriendChallengeQuestion,
   } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
@@ -43,7 +44,8 @@ export default function MultipleOptSelect() {
     if (
       getReviewQuestion()?.questionStyle === "medicationUse" ||
       getCurrentQuestion()?.questionStyle === "medicationUse" ||
-      getChallengeQuestion()?.questionStyle === "medicationUse"
+      getChallengeQuestion()?.questionStyle === "medicationUse" ||
+      getFriendChallengeQuestion()?.questionStyle === "medicationUse"
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
@@ -53,6 +55,9 @@ export default function MultipleOptSelect() {
         setQuestion(q);
       } else if (getCurrentType() === "challenge") {
         q = getChallengeQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "friendchallenge") {
+        q = getFriendChallengeQuestion();
         setQuestion(q);
       }
     }
@@ -68,7 +73,7 @@ export default function MultipleOptSelect() {
   useEffect(() => {
     if (checked) {
       const areMatchesCorrect = correctOptions.every(
-        (value, index) => value === selected[index],
+        (value, index) => value === selected[index]
       );
 
       if (!areMatchesCorrect) {
