@@ -6,7 +6,8 @@ import useAddNotification from "./useAddNotification";
 const useChallengeFriend = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useCurrentUserStore((state) => state);
-  const { addChallengeNotification } = useAddNotification();
+  const { addChallengeNotification, addChallengeCompletedNotification } =
+    useAddNotification();
 
   const challengeFriend = async (friendId, myScore, questions) => {
     if (!user?.uid) {
@@ -40,7 +41,7 @@ const useChallengeFriend = () => {
         challengerId: currentUserId,
         opponentId: friendId,
         challengerScore: myScore,
-        opponentScore: 0,
+        opponentScore: null,
         status: "pending",
         questions,
         timestamp: firestore.Timestamp.now(),
@@ -69,7 +70,77 @@ const useChallengeFriend = () => {
     }
   };
 
-  return { challengeFriend, loading };
+  const challengeCompleted = async (
+    challengeId,
+    challengerId,
+    myScore,
+    challengerScore
+  ) => {
+    if (!user?.uid) {
+      console.error("User not authenticated");
+      return false;
+    }
+
+    setLoading(true);
+    try {
+      const { uid: currentUserId, username, avatarId } = user;
+      const firestoreRef = firestore();
+
+      // Fetch user and challenger data in parallel
+      const [userDoc, challengerDoc, challengeDoc] = await firestore().getAll(
+        firestoreRef.collection("Users").doc(currentUserId),
+        firestoreRef.collection("Users").doc(challengerId),
+        firestoreRef.collection("Challenges").doc(challengeId)
+      );
+
+      if (!challengerDoc.exists) throw new Error("Friend data not found");
+      if (!challengeDoc.exists) throw new Error("Challenge document not found");
+
+      const userFriendList = userDoc.data()?.friendList || [];
+      const challengerFriendList = challengerDoc.data()?.friendList || [];
+      const { username: challengerUsername, avatarId: challengerAvatarId } =
+        challengerDoc.data();
+
+      // Firestore batch operation
+      const batch = firestoreRef.batch();
+
+      batch.set(
+        firestoreRef.collection("Challenges").doc(challengeId),
+        {
+          opponentScore: myScore,
+          status: "completed",
+          timestamp: firestore.FieldValue.serverTimestamp(),
+        },
+        { merge: true }
+      );
+
+      // Add challenge notification
+      await addChallengeCompletedNotification(
+        batch,
+        challengeId,
+        challengerId,
+        challengerUsername,
+        challengerScore,
+        challengerAvatarId,
+        userFriendList,
+        challengerFriendList,
+        myScore,
+        username
+      );
+
+      // Commit batch only if there are changes
+      await batch.commit();
+      console.log("Challenge and notifications added!");
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { challengeFriend, loading, challengeCompleted };
 };
 
 export default useChallengeFriend;

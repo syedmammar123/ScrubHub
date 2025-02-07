@@ -54,38 +54,6 @@ const useAddNotification = () => {
         notificationsArray: updatedNotifications,
       });
     }
-
-    // Notify mutual friends
-    const otherFriendsIds = friendList.filter((id) => id !== friendUid);
-
-    for (const otherFriendId of otherFriendsIds) {
-      const otherFriendDocRef = notificationsRef.doc(otherFriendId);
-      const otherFriendDoc = await otherFriendDocRef.get();
-
-      const otherFriendNotification = {
-        text: `${username} has challenged ${friendUsername}`,
-        read: false,
-        avatars: [avatarId, friendAvatarId],
-        timestamp: firestore.Timestamp.now(),
-      };
-
-      if (!otherFriendDoc.exists) {
-        batch.set(otherFriendDocRef, {
-          notificationsArray: [otherFriendNotification],
-        });
-      } else {
-        const existingNotifications =
-          otherFriendDoc.data()?.notificationsArray || [];
-        const updatedNotifications = [
-          otherFriendNotification,
-          ...existingNotifications,
-        ];
-
-        batch.update(otherFriendDocRef, {
-          notificationsArray: updatedNotifications,
-        });
-      }
-    }
   };
 
   const addFriendRequestNotification = (batch, friendId) => {
@@ -134,29 +102,31 @@ const useAddNotification = () => {
     }
   };
 
-  const addChallengeCompletedNotification = (
+  const addChallengeCompletedNotification = async (
     batch,
     challengeId,
-    friendId,
+    challengerId,
+    challengerName,
+    challengerScore,
+    challengerAvatarId,
+    userFriendList,
+    challengerFriendList,
     myScore,
-    friendScore,
-    friendName,
     myName
   ) => {
     try {
       const firestoreRef = firestore().collection("Notifications");
-      const friendDocRef = firestoreRef.doc(friendId);
-
-      const text =
-        myScore > opponentScore
-          ? `${myName} has won the challenge. He scored ${myScore}. While your score was ${friendScore}`
-          : `${myName} has won the challenge. He scored ${myScore}. While your score was ${friendScore}`;
-
+      const notificationText =
+        myScore > challengerScore
+          ? `${myName} has won the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`
+          : `${myName} has lost the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`;
+  
+      // Update the challenger's notifications
       batch.set(
-        friendDocRef,
+        firestoreRef.doc(challengerId),
         {
           notificationsArray: firestore.FieldValue.arrayUnion({
-            text: `${user.username} has completed the challenge`,
+            text: notificationText,
             read: false,
             avatars: [user.avatarId],
             timestamp: firestore.Timestamp.now(),
@@ -166,6 +136,28 @@ const useAddNotification = () => {
         },
         { merge: true }
       );
+  
+      // Merge both user and challenger friend lists and remove duplicates
+      const uniqueFriendList = [...new Set([...userFriendList, ...challengerFriendList])];
+  
+      if (uniqueFriendList.length === 0) return;
+  
+      // Notify mutual friends
+      for (const friendId of uniqueFriendList) {
+        batch.set(
+          firestoreRef.doc(friendId),
+          {
+            notificationsArray: firestore.FieldValue.arrayUnion({
+              text: notificationText,
+              read: false,
+              avatars: [user.avatarId, challengerAvatarId],
+              timestamp: firestore.Timestamp.now(),
+              documentId: challengeId,
+            }),
+          },
+          { merge: true }
+        );
+      }
     } catch (error) {
       console.error("Error in addChallengeCompletedNotification:", error);
     }
@@ -175,6 +167,7 @@ const useAddNotification = () => {
     addChallengeNotification,
     addFriendRequestNotification,
     acceptFriendRequestNotification,
+    addChallengeCompletedNotification
   };
 };
 
