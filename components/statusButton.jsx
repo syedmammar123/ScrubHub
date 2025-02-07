@@ -163,7 +163,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "friendchallenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentFriendChallengeIndex + 1 < 15) {
+        if (currentFriendChallengeIndex + 1 < 5) {
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
