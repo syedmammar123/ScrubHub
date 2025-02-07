@@ -50,6 +50,7 @@ export default function Matching() {
     getCurrentQuestion,
     getCurrentType,
     getChallengeQuestion,
+    getFriendChallengeQuestion,
   } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
@@ -156,7 +157,7 @@ export default function Matching() {
           runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
-            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x,
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -220,7 +221,8 @@ export default function Matching() {
     if (
       getReviewQuestion()?.questionStyle === "matchTheMicrobe" ||
       getCurrentQuestion()?.questionStyle === "matchTheMicrobe" ||
-      getChallengeQuestion()?.questionStyle === "matchTheMicrobe"
+      getChallengeQuestion()?.questionStyle === "matchTheMicrobe" ||
+      getFriendChallengeQuestion()?.questionStyle === "matchTheMicrobe"
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
@@ -231,13 +233,16 @@ export default function Matching() {
       } else if (getCurrentType() === "challenge") {
         q = getChallengeQuestion();
         setQuestion(q);
+      } else if (getCurrentType() === "friendchallenge") {
+        q = getFriendChallengeQuestion();
+        setQuestion(q);
       }
       if (q.treatments.length < 4) {
         const matches = Object.values(q.correctMatches);
         let arr = [];
         for (let i = 0; i < q.treatments.length; i++) {
           const count = matches.filter(
-            (id) => id === q.treatments[i].id,
+            (id) => id === q.treatments[i].id
           ).length;
           console.log("Count of ", q.treatments[i].id, count);
 
@@ -312,7 +317,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Matching Container",
-                        e.nativeEvent.layout.y,
+                        e.nativeEvent.layout.y
                       );
                       setMatchingContainerY(e.nativeEvent.layout.y);
                     }}
@@ -337,7 +342,7 @@ export default function Matching() {
                     onLayout={(e) => {
                       console.log(
                         "Starting of Buttons Container",
-                        e.nativeEvent.layout.y,
+                        e.nativeEvent.layout.y
                       );
                       setAnswerContainerY(e.nativeEvent.layout.y);
                     }}
