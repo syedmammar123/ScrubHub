@@ -57,33 +57,36 @@ export const getCountryFromPhoneNumber = (phoneNumber) => {
   return phoneNumberObj ? phoneNumberObj.country : null;
 };
 
-export const formatDateOnly = (dateString) => {
-  // Extract parts of the timestamp
-  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
+export const formatDateOnly = (timestamp) => {
+  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Date";
 
-  // Convert into a valid Date object
-  const dateObj = new Date(cleanedString);
+  // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
+  const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
 
   if (isNaN(dateObj.getTime())) return "Invalid Date"; // Handle invalid dates
 
+  // Check if the date is within the last 7 days
   const now = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(now.getDate() - 7); // Get date a week ago
 
   if (dateObj >= oneWeekAgo) {
-    return dateObj.toLocaleDateString("en-US", { weekday: "short" }); // Mon, Tue, etc.
+    return dateObj.toLocaleDateString("en-US", { weekday: "short" }); // "Mon", "Tue", etc.
   } else {
     return dateObj.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
-    }); 
+    });
   }
 };
 
-export const formatTimeOnly = (dateString) => {
-  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
-  const dateObj = new Date(cleanedString);
+
+export const formatTimeOnly = (timestamp) => {
+  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Time";
+
+  // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
+  const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
 
   if (isNaN(dateObj.getTime())) return "Invalid Time"; // Handle invalid dates
 
@@ -91,5 +94,6 @@ export const formatTimeOnly = (dateString) => {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-  })
+  });
 };
+
