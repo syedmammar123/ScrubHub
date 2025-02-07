@@ -63,6 +63,11 @@ export default function StatusButton({
     getfetchedQuestionSystem,
     getfetchedReviewTopic,
     increaseReviewScore,
+    currentFriendChallengeIndex,
+    increaseFriendChallengeScore,
+    increaseFriendChallengeIndex,
+    getFriendChallengeQuestion,
+    submitFriendChallenge,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -155,6 +160,28 @@ export default function StatusButton({
           }
           await submitChallengeQuestions();
           router.navigate("challengeLeaderboard");
+        }
+      } else if (getCurrentType() === "friendchallenge") {
+        console.log("After Pressing Cont", currentChallengeIndex);
+        if (currentFriendChallengeIndex + 1 < 9) {
+          if (scoreIncrease) {
+            increaseFriendChallengeScore();
+          }
+          increaseFriendChallengeIndex();
+          const nextScreen = getQuestionType(getFriendChallengeQuestion());
+          if (nextScreen === "wordscrambled") {
+            router.replace("wordscrambledfriendchallenge");
+          } else {
+            router.replace(nextScreen);
+          }
+          console.log("Navigating to:", nextScreen);
+        } else {
+          // Logic to submit Questions
+          if (scoreIncrease) {
+            increaseFriendChallengeScore();
+          }
+          await submitFriendChallenge();
+          // router.navigate("challengeLeaderboard");
         }
       }
     }
