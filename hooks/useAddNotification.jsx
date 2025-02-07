@@ -116,17 +116,18 @@ const useAddNotification = () => {
   ) => {
     try {
       const firestoreRef = firestore().collection("Notifications");
-      const notificationText =
+
+      const challengerNotificationText =
         myScore > challengerScore
-          ? `${myName} has won the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`
-          : `${myName} has lost the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`;
-  
+          ? `${myName} has won the challenge. He scored ${myScore}. While your score was ${challengerScore}`
+          : `${myName} has lost the challenge. He scored ${myScore}. While your score was ${challengerScore}`;
+
       // Update the challenger's notifications
       batch.set(
         firestoreRef.doc(challengerId),
         {
           notificationsArray: firestore.FieldValue.arrayUnion({
-            text: notificationText,
+            text: challengerNotificationText,
             read: false,
             avatars: [user.avatarId],
             timestamp: firestore.Timestamp.now(),
@@ -136,19 +137,26 @@ const useAddNotification = () => {
         },
         { merge: true }
       );
-  
+
       // Merge both user and challenger friend lists and remove duplicates
-      const uniqueFriendList = [...new Set([...userFriendList, ...challengerFriendList])];
-  
+      const uniqueFriendList = [
+        ...new Set([...userFriendList, ...challengerFriendList]),
+      ];
+
       if (uniqueFriendList.length === 0) return;
-  
+
+      const friendNotificationText =
+        myScore > challengerScore
+          ? `${myName} has won the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`
+          : `${myName} has lost the challenge. He scored ${myScore}. While ${challengerName}'s score was ${challengerScore}`;
+
       // Notify mutual friends
       for (const friendId of uniqueFriendList) {
         batch.set(
           firestoreRef.doc(friendId),
           {
             notificationsArray: firestore.FieldValue.arrayUnion({
-              text: notificationText,
+              text: friendNotificationText,
               read: false,
               avatars: [user.avatarId, challengerAvatarId],
               timestamp: firestore.Timestamp.now(),
@@ -167,7 +175,7 @@ const useAddNotification = () => {
     addChallengeNotification,
     addFriendRequestNotification,
     acceptFriendRequestNotification,
-    addChallengeCompletedNotification
+    addChallengeCompletedNotification,
   };
 };
 

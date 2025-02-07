@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { useRouter } from "expo-router";
@@ -23,52 +24,37 @@ import { getQuestionType } from "@/util/utilQuesFunc";
 const dummyNotifications = [
   {
     avatars: [1, 2],
-    timestamp: "5 February 2025 at 10:24:46 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "You have a new message from John.",
   },
   {
     avatars: [3],
-    timestamp: "5 February 2025 at 11:10:30 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "Your order has been shipped.",
   },
   {
     avatars: [2, 3],
-    timestamp: "5 February 2025 at 12:45:15 UTC+5",
+    timestamp:{"nanoseconds": 542000000, "seconds": 1738870965},
     text: "Reminder: Meeting scheduled for 3 PM.",
   },
   {
     avatars: [1],
-    timestamp: "5 February 2025 at 13:20:10 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "System update completed successfully.",
   },
   {
     avatars: [2],
-    timestamp: "5 February 2025 at 14:05:22 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "A new comment was added to your post.",
   },
   {
     avatars: [1, 3],
-    timestamp: "27 January 2025 at 15:30:05 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "Your password was changed successfully.",
   },
   {
-    avatars: [3],
-    timestamp: "1 February 2025 at 16:15:40 UTC+5",
-    text: "You have a new friend request.",
-  },
-  {
-    avatars: [2, 1],
-    timestamp: "2 February 2025 at 17:50:55 UTC+5",
-    text: "Payment of $20 was received.",
-  },
-  {
-    avatars: [1, 2],
-    timestamp: "3 February 2025 at 18:35:20 UTC+5",
-    text: "Your subscription has been renewed.",
-  },
-  {
     avatars: [3, 1],
-    timestamp: "5 January 2025 at 19:10:00 UTC+5",
+    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
     text: "Your scheduled event is starting soon.",
   },
 ];
@@ -86,6 +72,7 @@ const NotificationsScreen = () => {
   } = useQuesStore((state) => state);
 
   // const [error, setError] = useState(false);
+
   const handlePress = async (docId) => {
     setType("friendchallenge");
     const id = "5h0Ivag02puXiUaMLDmg"; // Replace ID here
@@ -97,6 +84,7 @@ const NotificationsScreen = () => {
       console.log("FETCHING");
 
       const questions = await fetchChallengeFriendQuestions(id);
+      questions.slice(0, 2);
       if (questions === 0) {
         console.log("YES");
 
@@ -104,6 +92,7 @@ const NotificationsScreen = () => {
       } else {
         // Questions are fetched
         console.log("FETCH COMPLERE");
+
 
         const nextScreen = getQuestionType(getFriendChallengeQuestion());
 
@@ -120,6 +109,8 @@ const NotificationsScreen = () => {
       }
     }
   };
+
+  console.log(userNotifications[0].timestamp)
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -138,7 +129,7 @@ const NotificationsScreen = () => {
               <ScrollView className="max-h-[74%] pb-96">
                 {dummyNotifications.map((notification) => (
                   <View
-                    key={notification.timestamp}
+                    key={notification.text}
                     className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
                   >
                     <View className="flex-row">
@@ -166,7 +157,7 @@ const NotificationsScreen = () => {
                       </View>
                     </View>
                   </View>
-                ))}{" "}
+                ))}
                 <TouchableOpacity
                   // onPress={()=>handlePress(docId)} Send Doc ID here
                   onPress={handlePress}

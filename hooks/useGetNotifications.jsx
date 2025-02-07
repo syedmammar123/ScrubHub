@@ -29,7 +29,6 @@ const useGetNotifications = () => {
       }
 
       const notifications = doc.data()?.notificationsArray || [];
-      console.log("Fetched Notifications:", notifications);
       setUserNotifications(notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);
