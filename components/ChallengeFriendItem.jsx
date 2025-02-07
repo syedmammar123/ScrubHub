@@ -10,12 +10,12 @@ const ChallengeFriendItem = ({ friend,friends }) => {
 
   const handleChallengeFriend = (friendId) => {
     let score = getScore();
-    const isChanllengeFriendSuccessfull = challengeFriend(
+    const isChallengeFriendSuccessfull = challengeFriend(
       friendId,
       score,
       questions
     );
-    if (isChanllengeFriendSuccessfull) {
+    if (isChallengeFriendSuccessfull) {
       friends.map((friend) => {
         if (friend.id === friendId) {
           friend.challenged = true;

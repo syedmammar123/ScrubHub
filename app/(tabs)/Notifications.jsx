@@ -24,43 +24,43 @@ import { getQuestionType } from "@/util/utilQuesFunc";
 const dummyNotifications = [
   {
     avatars: [1, 2],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "You have a new message from John.",
   },
   {
     avatars: [3],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your order has been shipped.",
   },
   {
     avatars: [2, 3],
-    timestamp:{"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Reminder: Meeting scheduled for 3 PM.",
   },
   {
     avatars: [1],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "System update completed successfully.",
   },
   {
     avatars: [2],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "A new comment was added to your post.",
   },
   {
     avatars: [1, 3],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your password was changed successfully.",
   },
   {
     avatars: [3, 1],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your scheduled event is starting soon.",
   },
 ];
 
 const NotificationsScreen = () => {
-  const { user, userNotifications } = useCurrentUserStore((state) => state);
+  const { userNotifications } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetNotifications();
   const router = useRouter();
 
@@ -70,8 +70,6 @@ const NotificationsScreen = () => {
     getFetchedFriendChallengeID,
     setType,
   } = useQuesStore((state) => state);
-
-  // const [error, setError] = useState(false);
 
   const handlePress = async (docId) => {
     setType("friendchallenge");
@@ -83,8 +81,8 @@ const NotificationsScreen = () => {
       // Add || currentChallenge!==docId in if to fetch again if same Id isnt same
       console.log("FETCHING");
 
-      const questions = await fetchChallengeFriendQuestions(id);
-      questions.slice(0, 2);
+      let questions = await fetchChallengeFriendQuestions(id);
+      questions = questions.slice(0, 2);
       if (questions === 0) {
         console.log("YES");
 
@@ -92,7 +90,6 @@ const NotificationsScreen = () => {
       } else {
         // Questions are fetched
         console.log("FETCH COMPLERE");
-
 
         const nextScreen = getQuestionType(getFriendChallengeQuestion());
 
@@ -110,7 +107,6 @@ const NotificationsScreen = () => {
     }
   };
 
-  console.log(userNotifications[0].timestamp)
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -118,18 +114,18 @@ const NotificationsScreen = () => {
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
-          {/* {error && userNotifications.length === 0 && (
+          {error && userNotifications.length === 0 && (
             <Text className="text-center text-red-500 mt-10">{error}</Text>
-          )} */}
-          {/* {loading && userNotifications.length === 0 && (
+          )}
+          {loading && userNotifications.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
-          )} */}
-          {dummyNotifications.length > 0 && (
+          )}
+          {userNotifications.length > 0 && (
             <View>
               <ScrollView className="max-h-[74%] pb-96">
-                {dummyNotifications.map((notification) => (
+                {userNotifications.map((notification) => (
                   <View
-                    key={notification.text}
+                    key={notification.timestamp.nanoseconds}
                     className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
                   >
                     <View className="flex-row">
