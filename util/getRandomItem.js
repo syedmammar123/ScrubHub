@@ -57,30 +57,11 @@ export const getCountryFromPhoneNumber = (phoneNumber) => {
   return phoneNumberObj ? phoneNumberObj.country : null;
 };
 
-export const formatDateOnly = (dateString) => {
-  console.log("Original Date String:", dateString);
+export const formatDateOnly = (timestamp) => {
+  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Date";
 
-  // Extracting date, time, and timezone parts manually
-  const match = dateString.match(/(\d{1,2}) (\w+) (\d{4}) at (\d{2}:\d{2}:\d{2}) UTC([+-]\d+)/);
-
-  if (!match) return "Invalid Date"; // Handle incorrect formats
-
-  const [, day, month, year, time, utcOffset] = match;
-
-  // Convert month name to number
-  const months = {
-    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
-    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
-  };
-
-  if (!(month in months)) return "Invalid Date"; // Invalid month name
-
-  // Construct a valid ISO string
-  const isoString = `${year}-${String(months[month] + 1).padStart(2, "0")}-${day.padStart(2, "0")}T${time}${utcOffset.padStart(3, "0")}:00`;
-
-  // Parse the date
-  const dateObj = new Date(isoString);
-  console.log("Parsed Date Object:", dateObj);
+  // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
+  const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
 
   if (isNaN(dateObj.getTime())) return "Invalid Date"; // Handle invalid dates
 
@@ -101,30 +82,11 @@ export const formatDateOnly = (dateString) => {
 };
 
 
-export const formatTimeOnly = (dateString) => {
-  console.log("Original Date String:", dateString);
+export const formatTimeOnly = (timestamp) => {
+  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Time";
 
-  // Extracting date, time, and timezone parts manually
-  const match = dateString.match(/(\d{1,2}) (\w+) (\d{4}) at (\d{2}:\d{2}:\d{2}) UTC([+-]\d+)/);
-
-  if (!match) return "Invalid Time"; // Handle incorrect formats
-
-  const [, day, month, year, time, utcOffset] = match;
-
-  // Convert month name to number
-  const months = {
-    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
-    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
-  };
-
-  if (!(month in months)) return "Invalid Time"; // Invalid month name
-
-  // Construct a valid ISO string
-  const isoString = `${year}-${String(months[month] + 1).padStart(2, "0")}-${day.padStart(2, "0")}T${time}${utcOffset.padStart(3, "0")}:00`;
-
-  // Parse the date
-  const dateObj = new Date(isoString);
-  console.log("Parsed Date Object:", dateObj);
+  // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
+  const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
 
   if (isNaN(dateObj.getTime())) return "Invalid Time"; // Handle invalid dates
 
@@ -134,5 +96,4 @@ export const formatTimeOnly = (dateString) => {
     hour12: true,
   });
 };
-
 
