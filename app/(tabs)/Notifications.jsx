@@ -81,8 +81,8 @@ const NotificationsScreen = () => {
       // Add || currentChallenge!==docId in if to fetch again if same Id isnt same
       console.log("FETCHING");
 
-      let questions = await fetchChallengeFriendQuestions(id);
-      questions = questions.slice(0, 2);
+      const questions = await fetchChallengeFriendQuestions(id);
+      // questions.slice(0, 2);
       if (questions === 0) {
         console.log("YES");
 
@@ -107,6 +107,7 @@ const NotificationsScreen = () => {
     }
   };
 
+  
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
