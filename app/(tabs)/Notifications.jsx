@@ -24,37 +24,37 @@ import { getQuestionType } from "@/util/utilQuesFunc";
 const dummyNotifications = [
   {
     avatars: [1, 2],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "You have a new message from John.",
   },
   {
     avatars: [3],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your order has been shipped.",
   },
   {
     avatars: [2, 3],
-    timestamp:{"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Reminder: Meeting scheduled for 3 PM.",
   },
   {
     avatars: [1],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "System update completed successfully.",
   },
   {
     avatars: [2],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "A new comment was added to your post.",
   },
   {
     avatars: [1, 3],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your password was changed successfully.",
   },
   {
     avatars: [3, 1],
-    timestamp: {"nanoseconds": 542000000, "seconds": 1738870965},
+    timestamp: { nanoseconds: 542000000, seconds: 1738870965 },
     text: "Your scheduled event is starting soon.",
   },
 ];
@@ -84,7 +84,7 @@ const NotificationsScreen = () => {
       console.log("FETCHING");
 
       const questions = await fetchChallengeFriendQuestions(id);
-      questions.slice(0, 2);
+      // questions.slice(0, 2);
       if (questions === 0) {
         console.log("YES");
 
@@ -92,7 +92,6 @@ const NotificationsScreen = () => {
       } else {
         // Questions are fetched
         console.log("FETCH COMPLERE");
-
 
         const nextScreen = getQuestionType(getFriendChallengeQuestion());
 
@@ -110,7 +109,7 @@ const NotificationsScreen = () => {
     }
   };
 
-  console.log(userNotifications[0].timestamp)
+  // console.log(userNotifications[0].timestamp);
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
