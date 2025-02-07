@@ -58,32 +58,73 @@ export const getCountryFromPhoneNumber = (phoneNumber) => {
 };
 
 export const formatDateOnly = (dateString) => {
-  // Extract parts of the timestamp
-  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
+  console.log("Original Date String:", dateString);
 
-  // Convert into a valid Date object
-  const dateObj = new Date(cleanedString);
+  // Extracting date, time, and timezone parts manually
+  const match = dateString.match(/(\d{1,2}) (\w+) (\d{4}) at (\d{2}:\d{2}:\d{2}) UTC([+-]\d+)/);
+
+  if (!match) return "Invalid Date"; // Handle incorrect formats
+
+  const [, day, month, year, time, utcOffset] = match;
+
+  // Convert month name to number
+  const months = {
+    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
+  };
+
+  if (!(month in months)) return "Invalid Date"; // Invalid month name
+
+  // Construct a valid ISO string
+  const isoString = `${year}-${String(months[month] + 1).padStart(2, "0")}-${day.padStart(2, "0")}T${time}${utcOffset.padStart(3, "0")}:00`;
+
+  // Parse the date
+  const dateObj = new Date(isoString);
+  console.log("Parsed Date Object:", dateObj);
 
   if (isNaN(dateObj.getTime())) return "Invalid Date"; // Handle invalid dates
 
+  // Check if the date is within the last 7 days
   const now = new Date();
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(now.getDate() - 7); // Get date a week ago
 
   if (dateObj >= oneWeekAgo) {
-    return dateObj.toLocaleDateString("en-US", { weekday: "short" }); // Mon, Tue, etc.
+    return dateObj.toLocaleDateString("en-US", { weekday: "short" }); // "Mon", "Tue", etc.
   } else {
     return dateObj.toLocaleDateString("en-US", {
       day: "numeric",
       month: "long",
       year: "numeric",
-    }); 
+    });
   }
 };
 
+
 export const formatTimeOnly = (dateString) => {
-  const cleanedString = dateString.replace(" at ", " "); // Remove 'at'
-  const dateObj = new Date(cleanedString);
+  console.log("Original Date String:", dateString);
+
+  // Extracting date, time, and timezone parts manually
+  const match = dateString.match(/(\d{1,2}) (\w+) (\d{4}) at (\d{2}:\d{2}:\d{2}) UTC([+-]\d+)/);
+
+  if (!match) return "Invalid Time"; // Handle incorrect formats
+
+  const [, day, month, year, time, utcOffset] = match;
+
+  // Convert month name to number
+  const months = {
+    January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+    July: 6, August: 7, September: 8, October: 9, November: 10, December: 11,
+  };
+
+  if (!(month in months)) return "Invalid Time"; // Invalid month name
+
+  // Construct a valid ISO string
+  const isoString = `${year}-${String(months[month] + 1).padStart(2, "0")}-${day.padStart(2, "0")}T${time}${utcOffset.padStart(3, "0")}:00`;
+
+  // Parse the date
+  const dateObj = new Date(isoString);
+  console.log("Parsed Date Object:", dateObj);
 
   if (isNaN(dateObj.getTime())) return "Invalid Time"; // Handle invalid dates
 
@@ -91,5 +132,7 @@ export const formatTimeOnly = (dateString) => {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-  })
+  });
 };
+
+

@@ -109,7 +109,7 @@ const useChallengeFriend = () => {
         {
           opponentScore: myScore,
           status: "completed",
-          timestamp: firestore.FieldValue.serverTimestamp(),
+          timestamp: firestore.Timestamp.now(),
         },
         { merge: true }
       );
