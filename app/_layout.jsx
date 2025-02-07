@@ -112,6 +112,13 @@ export default function Layout() {
           }}
         />
         <Stack.Screen
+          name="wordscrambledfriendchallenge"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
           name="matching"
           options={{
             headerShown: false,
