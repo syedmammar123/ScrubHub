@@ -148,7 +148,7 @@ const DisplayChallenges = ({}) => {
     }
   };
 
-  console.log(user);
+  console.log("userChallenges", userChallenges);
 
   return (
     <View style={styles.container}>
@@ -169,7 +169,7 @@ const DisplayChallenges = ({}) => {
                 {userChallenges.map((challenge) => {
                   return (
                     <View
-                      key={challenge.timestamp.nanoseconds}
+                      key={challenge.id}
                       className="flex-row items-center p-3 px-4 rounded-lg border-b border-gray-300"
                     >
                       <View className="flex-row">

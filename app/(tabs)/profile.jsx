@@ -123,7 +123,6 @@ const data = [
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
-  const { challengeFriend, loading } = useChallengeFriend();
 
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",
@@ -159,11 +158,6 @@ export default function ProfileScreen() {
     return <Redirect href="onboarding" />;
   }
 
-  const handleChallengeFriend = () => {
-    challengeFriend("FrTsL0JPgZaBSMvPoGHErIpU1iz2", 10, data);
-  };
-
-  console.log("loading", loading);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -177,18 +171,6 @@ export default function ProfileScreen() {
           Questions Solved: <Text>40</Text>/60
         </Text>
         <ScrubButton title="logout" onPress={handleLogout} />
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleChallengeFriend}
-        >
-          <Text>Challenge a friend</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => router.navigate("ChallengeFriend")}
-        >
-          <Text>Score Screen</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => router.navigate("DisplayChallenges")}

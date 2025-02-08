@@ -15,10 +15,12 @@ import StatusButton from "@/components/statusButton";
 import { useRouter } from "expo-router";
 
 export default function ScoreScreen() {
-  const { getScore } = useQuesStore((state) => state);
+  const { getScore,getFriendChallengeScore } = useQuesStore((state) => state);
   const [score, setScore] = useState(getScore());
 
-  console.log("score: ",score)
+  const friendChallengeScore = getFriendChallengeScore()
+
+  console.log("friendChallengeScore: ",friendChallengeScore)
 
   const router = useRouter();
   return (
