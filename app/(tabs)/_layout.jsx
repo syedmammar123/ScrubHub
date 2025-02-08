@@ -18,17 +18,6 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ size, color }) => (
-            <Feather name="user" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="Notifications"
         options={{
           title: "notifications",
@@ -36,6 +25,17 @@ export default function Layout() {
           tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
             <Feather name="bell" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ size, color }) => (
+            <Feather name="user" size={size} color={color} />
           ),
         }}
       />

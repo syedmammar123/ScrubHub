@@ -138,17 +138,20 @@ const useQuesStore = create((set, get) => ({
   friendChallengeQuestions: [],
   currentFriendChallengeId: "",
   currentFriendChallengeIndex: 0,
-  currentFriendChallengeScore: 0,
+  currentFriendChallengeScore: null,
   currentOpponentScore: 0,
   currentChallengerId : '',
+  challengerUsername: "",
   
   clearFields: () => {
-    set({ currentFriendChallengeScore: 0 });
+    set({ currentFriendChallengeScore: null });
     set({ currentFriendChallengeIndex: 0 });
     set({ currentFriendChallengeId: "" });
     set({ currentOpponentScore: 0 });
     set({ currentChallengerId: '' });
     set({ friendChallengeQuestions: [] });
+    set({ type: "" });
+    set({challengerUsername: ""})
   },
   increaseFriendChallengeScore: () =>
     set((state) => ({
@@ -165,6 +168,10 @@ const useQuesStore = create((set, get) => ({
   getOpponentScore: () => {
     const { currentOpponentScore } = get();
     return currentOpponentScore;
+  },
+  getChallengerUsername: () => {  
+    const { challengerUsername } = get();
+    return challengerUsername;
   },
   getFriendChallengeQuestion: () => {
     const { friendChallengeQuestions, currentFriendChallengeIndex } = get();
@@ -183,6 +190,7 @@ const useQuesStore = create((set, get) => ({
       set({ currentOpponentScore: challenge.challengerScore });
       set({ currentFriendChallengeId: challenge.id });
       set({ currentChallengerId: challenge.challengerId });
+      set({challengerUsername: challengerUsername})
       return challenge.questions.length;
     } else {
       return 0;

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import BackButton from "@/components/backButton";
@@ -15,14 +10,28 @@ import StatusButton from "@/components/statusButton";
 import { useRouter } from "expo-router";
 
 export default function ScoreScreen() {
-  const { getScore,getFriendChallengeScore,currentOpponentScore } = useQuesStore((state) => state);
+  const {
+    getScore,
+    getFriendChallengeScore,
+    getOpponentScore,
+    getCurrentType,
+    getChallengerUsername,
+  } = useQuesStore((state) => state);
   const [score, setScore] = useState(getScore());
 
-  const friendChallengeScore = getFriendChallengeScore()
+  const friendChallengeScore = getFriendChallengeScore();
+  const currentOpponentScore = getOpponentScore();
+  const type = getCurrentType();
+  const challengerUsername = getChallengerUsername();
 
-  console.log("friendChallengeScore: ",friendChallengeScore)
-  console.log("currentOpponentScore: ",currentOpponentScore)
+  // const friendChallengeScore = 10;
+  // const type = "friendchallenge";
+  // const currentOpponentScore = 15;
+  // const challengerUsername = "Ammar3";
 
+  console.log("friendChallengeScore: ", friendChallengeScore);
+  console.log("currentOpponentScore: ", currentOpponentScore);
+  console.log("type: ", type);
 
   const router = useRouter();
   return (
@@ -48,7 +57,7 @@ export default function ScoreScreen() {
             >
               Your Score
             </Text>
-            <View>
+            <View className="flex flex-col items-center">
               <Text
                 style={{
                   color: score < 5 ? "#EF5555" : theme.barColor,
@@ -56,7 +65,7 @@ export default function ScoreScreen() {
                   marginBottom: 30,
                 }}
               >
-                {score}
+                {friendChallengeScore ? friendChallengeScore : score}
                 <Text
                   style={{
                     color: "#3d3d3d",
@@ -68,11 +77,52 @@ export default function ScoreScreen() {
                   / 15
                 </Text>
               </Text>
-              <TouchableOpacity className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`} onPress={() => router.navigate("ChallengeFriend")}>
-              <Text className='font-semibold'>Challenge a friend</Text>
-            </TouchableOpacity>
+              {type !== "friendchallenge" && (
+                <TouchableOpacity
+                  className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`}
+                  onPress={() => router.navigate("ChallengeFriend")}
+                >
+                  <Text className="font-semibold">Challenge a friend</Text>
+                </TouchableOpacity>
+              )}
+              <View className="mb-5 px-5">
+                {type === "friendchallenge" &&
+                  friendChallengeScore > currentOpponentScore && (
+                    <Text className="text-center text-lg font-semibold">
+                      Hooray you{" "}
+                      <Text className="font-bold text-green-700">won</Text>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
+                      <Text className="font-semibold">
+                        {currentOpponentScore}
+                      </Text>{" "}
+                      points.
+                    </Text>
+                  )}
+                {type === "friendchallenge" &&
+                  friendChallengeScore < currentOpponentScore && (
+                    <Text className="text-center text-lg font-semibold">
+                      You <Text className="font-bold text-red-500">lost</Text>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
+                      <Text className="font-semibold">
+                        {currentOpponentScore}
+                      </Text>{" "}
+                      points.
+                    </Text>
+                  )}
+                {type === "friendchallenge" &&
+                  friendChallengeScore === currentOpponentScore && (
+                    <Text className="text-center text-lg font-semibold">
+                      It's a <Text className="font-bold">draw</Text> against{" "}
+                      {challengerUsername}. {challengerUsername} scored{" "}
+                      <Text className="font-semibold">
+                        {currentOpponentScore}
+                      </Text>{" "}
+                      points.
+                    </Text>
+                  )}
+              </View>
             </View>
-            
+
             <Text
               style={{
                 width: "80%",
@@ -86,7 +136,7 @@ export default function ScoreScreen() {
               You did a great job, Learn more by solving more questions of
               different topics.
             </Text>
-           
+
             <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>

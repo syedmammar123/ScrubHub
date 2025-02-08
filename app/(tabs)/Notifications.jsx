@@ -63,7 +63,19 @@ const NotificationsScreen = () => {
   const router = useRouter();
 
 
-  const handlePress = () => {}
+  const handlePress = (notificationType) => {
+    if(notificationType === "friendRequestRecieved") {
+      router.push({
+        pathname: "/friends",
+        params: { openFriendRequests: true },
+      });
+    }
+    else if(notificationType === "challenge") {
+      router.push("DisplayChallenges");
+    }
+  }
+
+  console.log("userNotifications", userNotifications);
  
 
   return (
@@ -83,6 +95,10 @@ const NotificationsScreen = () => {
             <View>
               <ScrollView className="max-h-[74%] pb-96">
                 {userNotifications.map((notification) => (
+                  <TouchableOpacity
+                    key={notification.timestamp.nanoseconds}
+                    onPress={() => handlePress(notification.type)}
+                  >
                   <View
                     key={notification.timestamp.nanoseconds}
                     className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
@@ -112,6 +128,7 @@ const NotificationsScreen = () => {
                       </View>
                     </View>
                   </View>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>

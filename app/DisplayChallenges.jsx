@@ -145,8 +145,7 @@ const DisplayChallenges = ({}) => {
       ? opponentScore
       : challengerScore;
 
-    console.log("myScore", myScore);
-    console.log("otherPlayerScoreValue", otherPlayerScoreValue);
+    
 
     if (myScore > otherPlayerScoreValue) {
       return `You won against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
@@ -189,7 +188,7 @@ const DisplayChallenges = ({}) => {
     }
   };
 
-  console.log("userChallenges", userChallenges[0]);
+  console.log("userChallenges", userChallenges)
 
   return (
     <View style={styles.container}>

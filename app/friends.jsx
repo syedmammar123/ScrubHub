@@ -32,7 +32,7 @@ import AddFriend from "@/components/addFriend";
 import SlideUpView from "@/components/SlideUpView";
 import useGetInvitations from "@/hooks/useGetInvitations";
 import leaderBoardImg from "@/assets/leaderboard.png";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import useAddNotification from "@/hooks/useAddNotification";
 
 /* TODO:
@@ -65,6 +65,8 @@ export default function Friends() {
 
   const { addFriendRequestNotification, acceptFriendRequestNotification } =
     useAddNotification();
+
+    const { openFriendRequests } = useLocalSearchParams();
 
   const router = useRouter();
 
@@ -225,6 +227,12 @@ export default function Friends() {
       fetchFriends(); // Fetch friends when the "My Friends" tab is active
     }
   }, [active]);
+
+  useEffect(() => {
+    if (openFriendRequests) {
+      setShowInvitation(true);
+    }
+  }, []);
 
   // const sendInviteInstructions = async()=>{
   //   /*
