@@ -18,6 +18,8 @@ export default function ScoreScreen() {
   const { getScore } = useQuesStore((state) => state);
   const [score, setScore] = useState(getScore());
 
+  console.log("score: ",score)
+
   const router = useRouter();
   return (
     <View style={styles.container}>
