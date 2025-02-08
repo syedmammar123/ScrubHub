@@ -82,7 +82,6 @@ const NotificationsScreen = () => {
       console.log("FETCHING");
 
       let questions = await fetchChallengeFriendQuestions(id);
-      questions = questions.slice(0, 5);
       if (questions === 0) {
         console.log("YES");
 

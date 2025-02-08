@@ -182,6 +182,7 @@ export default function StatusButton({
           }
           await submitFriendChallenge();
           // router.navigate("challengeLeaderboard");
+          router.navigate("scoreScreen");
         }
       }
     }
