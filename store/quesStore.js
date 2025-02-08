@@ -140,6 +140,16 @@ const useQuesStore = create((set, get) => ({
   currentFriendChallengeIndex: 0,
   currentFriendChallengeScore: 0,
   currentOpponentScore: 0,
+  currentChallengerId : '',
+  
+  clearFields: () => {
+    set({ currentFriendChallengeScore: 0 });
+    set({ currentFriendChallengeIndex: 0 });
+    set({ currentFriendChallengeId: "" });
+    set({ currentOpponentScore: 0 });
+    set({ currentChallengerId: '' });
+    set({ friendChallengeQuestions: [] });
+  },
   increaseFriendChallengeScore: () =>
     set((state) => ({
       currentFriendChallengeScore: state.currentFriendChallengeScore + 1,
@@ -164,31 +174,18 @@ const useQuesStore = create((set, get) => ({
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
   },
-  fetchChallengeFriendQuestions: async (docId) => {
-    try {
-      // Getting dailyChallenge ID First Here
-      const docRef = doc(db, "Challenges", docId);
+  fetchChallengeFriendQuestions: async (challenge) => {
 
-      // Fetch the document
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap) {
-        if (docSnap.data().questions.length > 0) {
-          set({ currentFriendChallengeIndex: 0 });
-          set({ friendChallengeQuestions: docSnap.data().questions });
-          set({ currentFriendChallengeScore: 0 });
-          set({ currentOpponentScore: docSnap.data().challengerScore });
-          set({ currentFriendChallengeId: docId });
-          return docSnap.data().questions.length;
-        } else {
-          return 0;
-        }
-      } else {
-        console.log("No such document!");
-        return 0;
-      }
-    } catch (error) {
-      console.error("Error fetching documents: ", error);
+    if (challenge.questions.length > 0) {
+      set({ currentFriendChallengeIndex: 0 });
+      set({ friendChallengeQuestions: challenge.questions });
+      set({ currentFriendChallengeScore: 0 });
+      set({ currentOpponentScore: challenge.challengerScore });
+      set({ currentFriendChallengeId: challenge.id });
+      set({ currentChallengerId: challenge.challengerId });
+      return challenge.questions.length;
+    } else {
+      return 0;
     }
   },
   submitFriendChallenge: async () => {
@@ -586,8 +583,6 @@ const useQuesStore = create((set, get) => ({
     const { fetchedReviewQuestionTopic } = get();
     return fetchedReviewQuestionTopic;
   },
-
-
 
   // For Review All
   setReviewAllQuestions: (questions) => {

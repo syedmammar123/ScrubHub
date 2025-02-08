@@ -4,6 +4,7 @@ import { theme } from "@/theme";
 import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
+import useChallengeFriend from "@/hooks/useChallengeFriend";
 
 const checkAnswerArray = (selected) => {
   for (let i = 0; i < selected.length; i++) {
@@ -67,9 +68,15 @@ export default function StatusButton({
     increaseFriendChallengeScore,
     increaseFriendChallengeIndex,
     getFriendChallengeQuestion,
-    submitFriendChallenge,
+    currentFriendChallengeId,
+    currentChallengerId,
+    currentFriendChallengeScore,
+    currentOpponentScore,
+    clearFields
   } = useQuesStore((state) => state);
   const router = useRouter();
+
+  const { challengeCompleted } = useChallengeFriend();
 
   const handlePress = async () => {
     console.log("Type", questionType);
@@ -180,7 +187,13 @@ export default function StatusButton({
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
-          await submitFriendChallenge();
+          await challengeCompleted(
+            currentFriendChallengeId,
+            currentChallengerId,
+            currentFriendChallengeScore,
+            currentOpponentScore
+          );
+          clearFields()
           // router.navigate("challengeLeaderboard");
           router.navigate("scoreScreen");
         }

@@ -6,8 +6,6 @@ import {
   ActivityIndicator,
   ScrollView,
   Image,
-  Animated,
-  Touchable,
   TouchableOpacity,
 } from "react-native";
 import BackgroundImage from "@/components/backgroundImage";
@@ -18,6 +16,9 @@ import useGetChallenges from "@/hooks/useGetChallenges";
 import { avatars } from "./userInfoScreen";
 import { formatDateOnly, formatTimeOnly } from "@/util/getRandomItem";
 import { theme } from "@/theme";
+import useQuesStore from "@/store/quesStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
+import { useRouter } from "expo-router";
 
 const dummyData = [
   {
@@ -114,41 +115,81 @@ const DisplayChallenges = ({}) => {
   const { userChallenges, user } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetChallenges();
 
+  const {
+    fetchChallengeFriendQuestions,
+    getFriendChallengeQuestion,
+    getFetchedFriendChallengeID,
+    setType,
+    clearFields,
+  } = useQuesStore((state) => state);
+
+  const router = useRouter();
+
   const handleText = (challenge) => {
-    const isChallenger = challenge.challengerId === user.uid;
-    const isOpponent = challenge.opponentId === user.uid;
-    const challengerName = challenge.challengerUsername;
-    const opponentName = challenge.opponentUsername;
+    const isChallenger = challenge.challengerId === user?.uid;
+
+    const otherPlayerName = isChallenger
+      ? challenge.opponentUsername
+      : challenge.challengerUsername;
+
     const { challengerScore, opponentScore, status } = challenge;
 
     if (status === "pending") {
       return isChallenger
-        ? `You challenged ${opponentName}. Waiting for response`
-        : isOpponent
-          ? `${challengerName} challenged you`
-          : `${challengerName} challenged you`;
+        ? `You challenged ${otherPlayerName}. Waiting for response`
+        : `${otherPlayerName} challenged you`;
     }
 
-    const userScore = isChallenger ? challengerScore : opponentScore;
-    const opponentScoreValue = isChallenger ? opponentScore : challengerScore;
-    const opponentDisplayName = isChallenger ? opponentName : challengerName;
+    const myScore = isChallenger ? challengerScore : opponentScore;
+    const otherPlayerScoreValue = isChallenger
+      ? opponentScore
+      : challengerScore;
 
-    if (userScore > opponentScoreValue) {
-      return isChallenger
-        ? `You won against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} won against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
-    } else if (userScore < opponentScoreValue) {
-      return isChallenger
-        ? `You lost against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} lost against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
+    console.log("myScore", myScore);
+    console.log("otherPlayerScoreValue", otherPlayerScoreValue);
+
+    if (myScore > otherPlayerScoreValue) {
+      return `You won against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
+    } else if (myScore < otherPlayerScoreValue) {
+      return `You lost against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
     } else {
-      return isChallenger
-        ? `You drew against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} drew against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
+      return `You drew against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
     }
   };
 
-  console.log("userChallenges", userChallenges);
+  const handleAttemptChallenge = (challenge) => {
+    clearFields();
+    setType("friendchallenge");
+    const id = challenge.id;
+    const currentChallenge = getFetchedFriendChallengeID();
+    console.log("CURRENTCHALLENGE", currentChallenge);
+
+    if (currentChallenge === "") {
+      console.log("FETCHING");
+
+      let questions = fetchChallengeFriendQuestions(challenge);
+      if (questions === 0) {
+        console.log("YES");
+      } else {
+        console.log("FETCH COMPLERE");
+
+        const nextScreen = getQuestionType(getFriendChallengeQuestion());
+
+        console.log("NEXT SCREEN", nextScreen);
+        router.navigate(nextScreen);
+      }
+    } else {
+      // Already Fetched Questions
+      const nextScreen = getQuestionType(getFriendChallengeQuestion());
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledfriendchallenge");
+      } else {
+        router.replace(nextScreen);
+      }
+    }
+  };
+
+  console.log("userChallenges", userChallenges[0]);
 
   return (
     <View style={styles.container}>
@@ -157,12 +198,12 @@ const DisplayChallenges = ({}) => {
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
-          {/* {error && userChallenges.length === 0 && (
+          {error && userChallenges.length === 0 && (
             <Text className="text-center text-red-500 mt-10">{error}</Text>
           )}
           {loading && userChallenges.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
-          )} */}
+          )}
           {userChallenges.length > 0 && (
             <View>
               <ScrollView className="max-h-[74%] pb-96">
@@ -191,7 +232,12 @@ const DisplayChallenges = ({}) => {
                           </Text>
                           {challenge.status === "pending" &&
                             challenge.opponentId === user.uid && (
-                              <TouchableOpacity className=" rounded-full py-2 w-24 bg-[#93D334] animate-pulse ">
+                              <TouchableOpacity
+                                className=" rounded-full py-2 w-24 bg-[#93D334] animate-pulse "
+                                onPress={() => {
+                                  handleAttemptChallenge(challenge);
+                                }}
+                              >
                                 <Text className="font-semibold text-center">
                                   Attempt
                                 </Text>
