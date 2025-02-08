@@ -173,12 +173,6 @@ export default function ProfileScreen() {
         <ScrubButton title="logout" onPress={handleLogout} />
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => router.navigate("scoreScreen")}
-        >
-          <Text>Score Screen</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
           onPress={() => deleteAccountAlert(user.uid)}
         >
           <Text style={styles.deleteButtonText}>Delete Account</Text>
