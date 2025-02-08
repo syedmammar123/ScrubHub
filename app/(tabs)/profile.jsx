@@ -191,6 +191,12 @@ export default function ProfileScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
+          onPress={() => router.navigate("DisplayChallenges")}
+        >
+          <Text>Challenges Screen</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
           onPress={() => deleteAccountAlert(user.uid)}
         >
           <Text style={styles.deleteButtonText}>Delete Account</Text>
