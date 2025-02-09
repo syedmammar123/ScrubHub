@@ -122,12 +122,14 @@ export default function IncompleteProcess() {
             let text = "";
 
             // console.log("PUSHING", extractedText);
-            if (trimmed[0] === "{") {
-              position = "before";
+            console.log(trimmed);
 
+            if (trimmed[0] === "{") {
+              position = "after";
+              text = trimmed.slice(5);
               console.log("text===", trimmed.slice(5));
             } else {
-              position = "after";
+              position = "before";
               text = extractBeforeBrackets(item);
               console.log("TEXT", text);
             }
@@ -321,7 +323,6 @@ export default function IncompleteProcess() {
                       }}
                     >
                       {(() => {
-                        let index = 0;
                         let notknown = [];
                         process.forEach((proc, index) => {
                           if (proc.notknown) {
