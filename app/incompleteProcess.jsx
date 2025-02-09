@@ -210,12 +210,16 @@ export default function IncompleteProcess() {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar style="auto" />
-        <View>
+        <View
+          style={{
+            marginTop: 100,
+          }}
+        >
           <BackgroundImage>
             <ScrubLogo />
             <View
               style={{
-                marginTop: 20,
+                marginTop: 150,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
@@ -290,14 +294,13 @@ export default function IncompleteProcess() {
                         </Text>
                       </View> */}
 
-
-                      {/* Hint */}
-                      <View>
-                        <CustomText style={styles.hint}>
-                          {question?.question}
-                        </CustomText>
-                      </View>
+                    {/* Hint */}
+                    <View>
+                      <CustomText style={styles.hint}>
+                        {question?.question}
+                      </CustomText>
                     </View>
+                    {/* </View> */}
                   </View>
 
                   {/* Process */}
@@ -318,7 +321,6 @@ export default function IncompleteProcess() {
                         justifyContent: "center",
                       }}
                     >
-
                       <View
                         style={{
                           flexDirection: "row",
@@ -350,7 +352,7 @@ export default function IncompleteProcess() {
                                       handlePress(index);
                                     }}
                                   >
-                          <CustomText
+                                    <CustomText
                                       style={{
                                         fontWeight: "bold",
                                         fontSize: proc.val === "" ? 15 : 9,

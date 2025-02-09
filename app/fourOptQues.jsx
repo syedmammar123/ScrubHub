@@ -18,6 +18,14 @@ import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
 import CustomText from "@/components/CustomText";
 
+const shuffleArray = (array) => {
+  let shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
 const types = {
@@ -71,15 +79,35 @@ export default function fourOptQues() {
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
+        if (q?.options) {
+          q.options = shuffleArray(q.options);
+        }
+
+        setQuestion(q);
         setQuestion(q);
       } else if (getCurrentType() === "study") {
         q = getCurrentQuestion();
+        if (q?.options) {
+          q.options = shuffleArray(q.options);
+        }
+
+        setQuestion(q);
         setQuestion(q);
       } else if (getCurrentType() === "challenge") {
         q = getChallengeQuestion();
+        if (q?.options) {
+          q.options = shuffleArray(q.options);
+        }
+
+        setQuestion(q);
         setQuestion(q);
       } else if (getCurrentType() === "friendchallenge") {
         q = getFriendChallengeQuestion();
+        if (q?.options) {
+          q.options = shuffleArray(q.options);
+        }
+
+        setQuestion(q);
         setQuestion(q);
       }
     }
@@ -89,13 +117,17 @@ export default function fourOptQues() {
   if (submitted)
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar style="dark" />
-        <View>
+        <StatusBar style="auto" />
+        <View
+          style={{
+            marginTop: 100,
+          }}
+        >
           <BackgroundImage>
             <ScrubLogo />
             <View
               style={{
-                marginTop: 20,
+                marginTop: 150,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",

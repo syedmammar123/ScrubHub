@@ -320,12 +320,16 @@ export default function WordScrambledFriendChallenge() {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar style="auto" />
-        <View>
+        <View
+          style={{
+            marginTop: 100,
+          }}
+        >
           <BackgroundImage>
             <ScrubLogo />
             <View
               style={{
-                marginTop: 20,
+                marginTop: 150,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
@@ -352,7 +356,7 @@ export default function WordScrambledFriendChallenge() {
           <ScrollView style={{ paddingBottom: 20 }}>
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* UPPER CONTAINER */}
-              {submitted ? (
+              {/* {submitted ? (
                 <View
                   style={{
                     flex: 1,
@@ -366,73 +370,71 @@ export default function WordScrambledFriendChallenge() {
                     color={theme.barColor}
                   />
                 </View>
-              ) : (
-                <>
-                  {/* UPPER CONTAINER */}
+              ) : ( */}
+              <>
+                {/* UPPER CONTAINER */}
+                <View>
+                  {/* Guideline */}
                   <View>
-                    {/* Guideline */}
-                    <View>
-                      <CustomText style={styles.guideline}>
-                        Given a hint with a series of empty spaces and{" "}
-                        {question?.answer?.length} letter options, find out
-                        which word/term is being hinted at
-                      </CustomText>
-                    </View>
-
-                    {/* Hint */}
-                    <View>
-                      <CustomText style={styles.guideline}>
-                        {question?.hint}
-                      </CustomText>
-                    </View>
-
-                    {wordCount > 1 && (
-                      <View>
-                        <CustomText
-                          style={[styles.guideline, { fontSize: 16 }]}
-                        >
-                          "{wordCount} Words"
-                        </CustomText>
-                      </View>
-                    )}
-
-                    {/* Blanks */}
-                    <View style={styles.inputContainer}>
-                      {selected.map((_, index) => (
-                        <BlankInput
-                          checked={checked}
-                          key={index}
-                          setBlankInputLayout={setBlankInputLayout}
-                          index={index}
-                        />
-                      ))}
-                    </View>
-
-                    {/* Letters to Choose */}
-                    <View style={styles.lettersContainer}>
-                      {letterChoices.map((val, index) => (
-                        <GestureDetector
-                          key={index}
-                          gesture={panGestureHandler[index]}
-                        >
-                          <InputBox
-                            answerCalculated={answerCalculated}
-                            bgColor={
-                              !answerCalculated
-                                ? "white"
-                                : selected[index].backgroundColor
-                            }
-                            letter={val}
-                            setLetterLayout={setLetterLayout}
-                            index={index}
-                            AnimatedStyle={AnimatedStyle}
-                          />
-                        </GestureDetector>
-                      ))}
-                    </View>
+                    <CustomText style={styles.guideline}>
+                      Given a hint with a series of empty spaces and{" "}
+                      {question?.answer?.length} letter options, find out which
+                      word/term is being hinted at
+                    </CustomText>
                   </View>
-                </>
-              )}
+
+                  {/* Hint */}
+                  <View>
+                    <CustomText style={styles.guideline}>
+                      {question?.hint}
+                    </CustomText>
+                  </View>
+
+                  {wordCount > 1 && (
+                    <View>
+                      <CustomText style={[styles.guideline, { fontSize: 16 }]}>
+                        "{wordCount} Words"
+                      </CustomText>
+                    </View>
+                  )}
+
+                  {/* Blanks */}
+                  <View style={styles.inputContainer}>
+                    {selected.map((_, index) => (
+                      <BlankInput
+                        checked={checked}
+                        key={index}
+                        setBlankInputLayout={setBlankInputLayout}
+                        index={index}
+                      />
+                    ))}
+                  </View>
+
+                  {/* Letters to Choose */}
+                  <View style={styles.lettersContainer}>
+                    {letterChoices.map((val, index) => (
+                      <GestureDetector
+                        key={index}
+                        gesture={panGestureHandler[index]}
+                      >
+                        <InputBox
+                          answerCalculated={answerCalculated}
+                          bgColor={
+                            !answerCalculated
+                              ? "white"
+                              : selected[index].backgroundColor
+                          }
+                          letter={val}
+                          setLetterLayout={setLetterLayout}
+                          index={index}
+                          AnimatedStyle={AnimatedStyle}
+                        />
+                      </GestureDetector>
+                    ))}
+                  </View>
+                </View>
+              </>
+              {/* )} */}
 
               {/* LOWER CONTAINER */}
               <View>

@@ -89,12 +89,16 @@ export default function MultipleOptSelect() {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar style="auto" />
-        <View>
+        <View
+          style={{
+            marginTop: 100,
+          }}
+        >
           <BackgroundImage>
             <ScrubLogo />
             <View
               style={{
-                marginTop: 20,
+                marginTop: 150,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
@@ -133,29 +137,25 @@ export default function MultipleOptSelect() {
               />
             </View>
 
-          ) : (
-            <ScrollView style={{ paddingBottom: 40 }}>
-              <View style={styles.mainContainer}>
-                {/* Question */}
-                <View style={styles.questionContainer}>
-                  <CustomText style={styles.question}>
-                    {question?.description}
-                  </CustomText>
-                  <CustomText style={[styles.question, { fontSize: 20 }]}>
-                    "{question?.name}"
-                  </CustomText>
-                </View>
-                {/* OPTIONS */}
-                <View style={styles.optionsContainer}>
-                  {question?.options?.map((opt, index) => (
-                    <QuestionOption
-                      checked={checked}
-                      index={index}
-                      opacity={
-                        !checked
-                          ? 1
-                          : 0.4
-                    }
+          ) : ( */}
+          <ScrollView style={{ paddingBottom: 40 }}>
+            <View style={styles.mainContainer}>
+              {/* Question */}
+              <View style={styles.questionContainer}>
+                <CustomText style={styles.question}>
+                  {question?.description}
+                </CustomText>
+                <CustomText style={[styles.question, { fontSize: 20 }]}>
+                  "{question?.name}"
+                </CustomText>
+              </View>
+              {/* OPTIONS */}
+              <View style={styles.optionsContainer}>
+                {question?.options?.map((opt, index) => (
+                  <QuestionOption
+                    checked={checked}
+                    index={index}
+                    opacity={!checked ? 1 : 0.4}
                     bgColor={
                       !checked
                         ? selected.includes(index)
