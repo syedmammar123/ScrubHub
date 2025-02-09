@@ -16,6 +16,7 @@ import StatusButton from "@/components/statusButton";
 import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
+import CustomText from "@/components/CustomText";
 
 let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
@@ -86,7 +87,7 @@ export default function MultipleOptSelect() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <UpperBar />
       <View style={{ flex: 1 }}>
@@ -111,10 +112,12 @@ export default function MultipleOptSelect() {
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
-                  <Text style={styles.question}>{question?.description}</Text>
-                  <Text style={[styles.question, { fontSize: 20 }]}>
+                  <CustomText style={styles.question}>
+                    {question?.description}
+                  </CustomText>
+                  <CustomText style={[styles.question, { fontSize: 20 }]}>
                     "{question?.name}"
-                  </Text>
+                  </CustomText>
                 </View>
                 {/* OPTIONS */}
                 <View style={styles.optionsContainer}>

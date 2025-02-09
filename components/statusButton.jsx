@@ -4,6 +4,8 @@ import { theme } from "@/theme";
 import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
+import useChallengeFriend from "@/hooks/useChallengeFriend";
+import CustomText from "./CustomText";
 
 const checkAnswerArray = (selected) => {
   for (let i = 0; i < selected.length; i++) {
@@ -67,9 +69,15 @@ export default function StatusButton({
     increaseFriendChallengeScore,
     increaseFriendChallengeIndex,
     getFriendChallengeQuestion,
-    submitFriendChallenge,
+    currentFriendChallengeId,
+    currentChallengerId,
+    currentFriendChallengeScore,
+    currentOpponentScore,
+    clearFields
   } = useQuesStore((state) => state);
   const router = useRouter();
+
+  const { challengeCompleted } = useChallengeFriend();
 
   const handlePress = async () => {
     console.log("Type", questionType);
@@ -163,7 +171,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "friendchallenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentFriendChallengeIndex + 1 < 5) {
+        if (currentFriendChallengeIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
@@ -180,7 +188,13 @@ export default function StatusButton({
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
-          await submitFriendChallenge();
+          await challengeCompleted(
+            currentFriendChallengeId,
+            currentChallengerId,
+            currentFriendChallengeScore,
+            currentOpponentScore
+          );
+          clearFields()
           // router.navigate("challengeLeaderboard");
           router.navigate("scoreScreen");
         }
@@ -199,7 +213,7 @@ export default function StatusButton({
         }
         style={styles.btn}
       >
-        <Text style={styles.text}>{text}</Text>
+        <CustomText style={styles.text}>{text}</CustomText>
       </TouchableOpacity>
       <TouchableOpacity disabled style={styles.lowerbox}></TouchableOpacity>
     </View>

@@ -10,7 +10,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 export default function questionmark() {
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>

@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, StyleSheet } from "react-native";
+import { View, StatusBar, StyleSheet } from "react-native";
 import React from "react";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
@@ -9,7 +9,7 @@ import { theme } from "@/theme";
 export default function casemystery() {
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>

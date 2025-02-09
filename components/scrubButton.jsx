@@ -1,6 +1,7 @@
 import { theme } from "@/theme";
 import { StyleSheet, Text, Pressable, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
+import CustomText from "./CustomText";
 
 export function ScrubButton({ title, onPress, color, width }) {
   const handlePress = () => {
@@ -19,9 +20,9 @@ export function ScrubButton({ title, onPress, color, width }) {
       style={{ backgroundColor: color || theme.colorGreen }}
     >
       {({ pressed }) => (
-        <Text className={`text-white text-sm font-normal text-center `}>
+        <CustomText className={`text-white text-sm font-normal text-center `}>
           {title}
-        </Text>
+        </CustomText>
       )}
     </Pressable>
   );

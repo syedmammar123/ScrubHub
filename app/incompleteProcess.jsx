@@ -208,7 +208,7 @@ export default function IncompleteProcess() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -267,7 +267,9 @@ export default function IncompleteProcess() {
 
                       {/* Hint */}
                       <View>
-                        <Text style={styles.hint}>{question?.question}</Text>
+                        <CustomText style={styles.hint}>
+                          {question?.question}
+                        </CustomText>
                       </View>
                     </View>
 
@@ -299,9 +301,9 @@ export default function IncompleteProcess() {
                           return process.map((proc, index) => (
                             <View style={{ flexDirection: "row" }} key={index}>
                               {!proc.notknown ? (
-                                <Text style={styles.processText}>
+                                <CustomText style={styles.processText}>
                                   {proc.val}
-                                </Text>
+                                </CustomText>
                               ) : (
                                 <View>
                                   <Pressable
@@ -322,7 +324,7 @@ export default function IncompleteProcess() {
                                       },
                                     ]}
                                   >
-                                    <Text
+                                    <CustomText
                                       style={{
                                         fontWeight: "bold",
                                         fontSize: proc.val === "" ? 15 : 9,
@@ -334,14 +336,14 @@ export default function IncompleteProcess() {
                                             65 + notknown.indexOf(index)
                                           )
                                         : proc.val}
-                                    </Text>
+                                    </CustomText>
                                   </Pressable>
                                 </View>
                               )}
-                              <Text>
+                              <CustomText>
                                 {" "}
                                 {index !== process.length - 1 && "→"}{" "}
-                              </Text>
+                              </CustomText>
                             </View>
                           ));
                         })()}

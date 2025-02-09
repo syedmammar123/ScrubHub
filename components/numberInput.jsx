@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TextInput } from "react-native";
 import React from "react";
+import CustomTextInput from "./CustomTextInput";
 
 export default function NumberInput({
   value,
@@ -9,7 +10,7 @@ export default function NumberInput({
   color,
 }) {
   return (
-    <TextInput
+    <CustomTextInput
       style={[
         styles.phoneInputStyles,
         { backgroundColor: bgColor, color: color },

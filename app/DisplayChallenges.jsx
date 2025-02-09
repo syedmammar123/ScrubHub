@@ -6,8 +6,6 @@ import {
   ActivityIndicator,
   ScrollView,
   Image,
-  Animated,
-  Touchable,
   TouchableOpacity,
 } from "react-native";
 import BackgroundImage from "@/components/backgroundImage";
@@ -18,6 +16,10 @@ import useGetChallenges from "@/hooks/useGetChallenges";
 import { avatars } from "./userInfoScreen";
 import { formatDateOnly, formatTimeOnly } from "@/util/getRandomItem";
 import { theme } from "@/theme";
+import useQuesStore from "@/store/quesStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
+import { useRouter } from "expo-router";
+import CustomText from "@/components/CustomText";
 
 const dummyData = [
   {
@@ -114,37 +116,74 @@ const DisplayChallenges = ({}) => {
   const { userChallenges, user } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetChallenges();
 
+  const {
+    fetchChallengeFriendQuestions,
+    getFriendChallengeQuestion,
+    getFetchedFriendChallengeID,
+    setType,
+    clearFields,
+  } = useQuesStore((state) => state);
+
+  const router = useRouter();
+
   const handleText = (challenge) => {
-    const isChallenger = challenge.challengerId === user.uid;
-    const isOpponent = challenge.opponentId === user.uid;
-    const challengerName = challenge.challengerUsername;
-    const opponentName = challenge.opponentUsername;
+    const isChallenger = challenge.challengerId === user?.uid;
+
+    const otherPlayerName = isChallenger
+      ? challenge.opponentUsername
+      : challenge.challengerUsername;
+
     const { challengerScore, opponentScore, status } = challenge;
 
     if (status === "pending") {
       return isChallenger
-        ? `You challenged ${opponentName}. Waiting for response`
-        : isOpponent
-          ? `${challengerName} challenged you`
-          : `${challengerName} challenged you`;
+        ? `You challenged ${otherPlayerName}. Waiting for response`
+        : `${otherPlayerName} challenged you`;
     }
 
-    const userScore = isChallenger ? challengerScore : opponentScore;
-    const opponentScoreValue = isChallenger ? opponentScore : challengerScore;
-    const opponentDisplayName = isChallenger ? opponentName : challengerName;
+    const myScore = isChallenger ? challengerScore : opponentScore;
+    const otherPlayerScoreValue = isChallenger
+      ? opponentScore
+      : challengerScore;
 
-    if (userScore > opponentScoreValue) {
-      return isChallenger
-        ? `You won against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} won against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
-    } else if (userScore < opponentScoreValue) {
-      return isChallenger
-        ? `You lost against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} lost against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
+    if (myScore > otherPlayerScoreValue) {
+      return `You won against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
+    } else if (myScore < otherPlayerScoreValue) {
+      return `You lost against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
     } else {
-      return isChallenger
-        ? `You drew against ${opponentDisplayName}. You scored ${userScore} and ${opponentDisplayName} scored ${opponentScoreValue}`
-        : `${challengerName} drew against you. ${challengerName} scored ${challengerScore} and you scored ${opponentScore}`;
+      return `You drew against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
+    }
+  };
+
+  const handleAttemptChallenge = (challenge) => {
+    clearFields();
+    setType("friendchallenge");
+    const id = challenge.id;
+    const currentChallenge = getFetchedFriendChallengeID();
+    console.log("CURRENTCHALLENGE", currentChallenge);
+
+    if (currentChallenge === "") {
+      console.log("FETCHING");
+
+      let questions = fetchChallengeFriendQuestions(challenge);
+      if (questions === 0) {
+        console.log("YES");
+      } else {
+        console.log("FETCH COMPLERE");
+
+        const nextScreen = getQuestionType(getFriendChallengeQuestion());
+
+        console.log("NEXT SCREEN", nextScreen);
+        router.navigate(nextScreen);
+      }
+    } else {
+      // Already Fetched Questions
+      const nextScreen = getQuestionType(getFriendChallengeQuestion());
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledfriendchallenge");
+      } else {
+        router.replace(nextScreen);
+      }
     }
   };
 
@@ -152,17 +191,19 @@ const DisplayChallenges = ({}) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
-          {/* {error && userChallenges.length === 0 && (
-            <Text className="text-center text-red-500 mt-10">{error}</Text>
+          {error && userChallenges.length === 0 && (
+            <CustomText className="text-center text-red-500 mt-10">
+              {error}
+            </CustomText>
           )}
           {loading && userChallenges.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
-          )} */}
+          )}
           {userChallenges.length > 0 && (
             <View>
               <ScrollView className="max-h-[74%] pb-96">
@@ -186,26 +227,31 @@ const DisplayChallenges = ({}) => {
                       </View>
                       <View className={`flex-1 flex-col w-full ml-3`}>
                         <View className="w-full flex flex-row justify-between">
-                          <Text className="text-sm text-gray-900">
+                          <CustomText className="text-sm text-gray-900">
                             {handleText(challenge)}
-                          </Text>
+                          </CustomText>
                           {challenge.status === "pending" &&
                             challenge.opponentId === user.uid && (
-                              <TouchableOpacity className=" rounded-full py-2 w-24 bg-[#93D334] animate-pulse ">
-                                <Text className="font-semibold text-center">
+                              <TouchableOpacity
+                                className=" rounded-full py-2 w-24 bg-[#93D334] animate-pulse "
+                                onPress={() => {
+                                  handleAttemptChallenge(challenge);
+                                }}
+                              >
+                                <CustomText className="font-semibold text-center">
                                   Attempt
-                                </Text>
+                                </CustomText>
                               </TouchableOpacity>
                             )}
                         </View>
 
                         <View className="flex-row justify-between items-center mt-3">
-                          <Text className="text-xs text-gray-500">
+                          <CustomText className="text-xs text-gray-500">
                             {formatDateOnly(challenge.timestamp)}
-                          </Text>
-                          <Text className="text-xs text-gray-500">
+                          </CustomText>
+                          <CustomText className="text-xs text-gray-500">
                             {formatTimeOnly(challenge.timestamp)}
-                          </Text>
+                          </CustomText>
                         </View>
                       </View>
                     </View>

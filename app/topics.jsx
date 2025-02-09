@@ -29,6 +29,7 @@ import {
 import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
+import CustomText from "@/components/CustomText";
 
 const buttons = [
   { label: "Topic 1" },
@@ -81,7 +82,7 @@ export default function Topics() {
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic,
+            topic
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
@@ -132,7 +133,7 @@ export default function Topics() {
     const topicsCollectionRef = doc(
       db,
       "Topics",
-      system.toLowerCase().replace(/\s+/g, ""),
+      system.toLowerCase().replace(/\s+/g, "")
     );
     try {
       const topics = await getDoc(topicsCollectionRef);
@@ -207,10 +208,9 @@ export default function Topics() {
     getTopics();
   }, []);
 
-
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
 
       <BackButton />
 
@@ -252,9 +252,11 @@ export default function Topics() {
                 }}
               >
                 <View>
-                  <Text style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}>
+                  <CustomText
+                    style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}
+                  >
                     {topics && "Choose From Topics..."}
-                  </Text>
+                  </CustomText>
                 </View>
                 <View>
                   {topics && (
@@ -277,7 +279,7 @@ export default function Topics() {
                         elevation: 20, // Adds shadow on Android
                       }}
                     >
-                      <Text
+                      <CustomText
                         style={{
                           // fontWeight: "bold",
                           fontSize: 14,
@@ -286,7 +288,7 @@ export default function Topics() {
                         }}
                       >
                         Random
-                      </Text>
+                      </CustomText>
                     </Pressable>
                   )}
                 </View>
@@ -299,7 +301,7 @@ export default function Topics() {
                     key={index}
                     style={[styles.button]}
                   >
-                    <Text style={styles.buttonText}>{button}</Text>
+                    <CustomText style={styles.buttonText}>{button}</CustomText>
                     <AntDesign
                       name="rightcircle"
                       size={24}
@@ -329,13 +331,15 @@ export default function Topics() {
                 </View>
 
                 {/* Title */}
-                <Text style={styles.title}>No Question Fetched!</Text>
+                <CustomText style={styles.title}>
+                  No Question Fetched!
+                </CustomText>
 
                 {/* Description */}
-                <Text style={styles.description}>
+                <CustomText style={styles.description}>
                   Error fetching questions. No questions available at the
                   moment.
-                </Text>
+                </CustomText>
               </View>
             </TouchableOpacity>
           </Modal>
@@ -343,7 +347,7 @@ export default function Topics() {
           {/* <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
-            <Text>Topics Coming Soon...</Text>
+            <CustomText>Topics Coming Soon...</CustomText>
           </View> */}
         </ScrollView>
       </BackgroundImage>

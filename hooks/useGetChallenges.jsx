@@ -42,30 +42,47 @@ const useGetChallenges = () => {
       const userIds = new Set();
       allChallenges.forEach((doc) => {
         const data = doc.data();
-        userIds.add(data.challengerId);
-        userIds.add(data.opponentId);
+        if (data.challengerId !== user.uid) userIds.add(data.challengerId);
+        if (data.opponentId !== user.uid) userIds.add(data.opponentId);
       });
+
+      if (userIds.size === 0) {
+        console.log("No additional users to fetch.");
+        setUserChallenges(
+          allChallenges.map((doc) => ({ id: doc.id, ...doc.data() }))
+        );
+        return;
+      }
 
       // Fetch all user data in a single query
       const userDocs = await userRef
         .where(firestore.FieldPath.documentId(), "in", Array.from(userIds))
         .get();
+
       const userMap = userDocs.docs.reduce((acc, doc) => {
         acc[doc.id] = doc.data(); // Store user data by user ID
         return acc;
       }, {});
 
-      // Map challenges with user details
+      // Map challenges with user details, only adding properties if they exist
       const formattedChallenges = allChallenges.map((doc) => {
         const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          challengerUsername: userMap[data.challengerId]?.username || "Unknown",
-          challengerAvatarId: userMap[data.challengerId]?.avatarId || "",
-          opponentUsername: userMap[data.opponentId]?.username || "Unknown",
-          opponentAvatarId: userMap[data.opponentId]?.avatarId || "",
-        };
+        const challengeObj = { id: doc.id, ...data };
+
+        if (userMap[data.challengerId]?.username) {
+          challengeObj.challengerUsername = userMap[data.challengerId].username;
+        }
+        if (userMap[data.challengerId]?.avatarId) {
+          challengeObj.challengerAvatarId = userMap[data.challengerId].avatarId;
+        }
+        if (userMap[data.opponentId]?.username) {
+          challengeObj.opponentUsername = userMap[data.opponentId].username;
+        }
+        if (userMap[data.opponentId]?.avatarId) {
+          challengeObj.opponentAvatarId = userMap[data.opponentId].avatarId;
+        }
+
+        return challengeObj;
       });
 
       console.log("Fetched Challenges:", formattedChallenges);
@@ -82,7 +99,7 @@ const useGetChallenges = () => {
 
   useEffect(() => {
     getChallenges();
-  }, [user.uid]);
+  }, []);
 
   return { loading, error };
 };

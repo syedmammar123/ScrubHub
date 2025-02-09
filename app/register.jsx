@@ -18,6 +18,7 @@ import NumberInput from "@/components/numberInput";
 import CountryPickerModal from "@/components/countryPickerModal";
 import { useNavigation } from "@react-navigation/native";
 import useCurrentUserStore from "@/store/currentUserStore";
+import CustomText from "@/components/CustomText";
 
 export default function Register() {
   const [dropDownActive, setDropDownActive] = useState(false);
@@ -57,7 +58,7 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inviteFriendContainer}
@@ -71,11 +72,13 @@ export default function Register() {
               color="black"
             />
             <View style={styles.titleinviteFriend}>
-              <Text style={styles.titleText}>Enter mobile number</Text>
-              <Text style={styles.subtitleText}>
+              <CustomText style={styles.titleText}>
+                Enter mobile number
+              </CustomText>
+              <CustomText style={styles.subtitleText}>
                 Add your phone number. We'll send you a verification code so we
                 know you're real.
-              </Text>
+              </CustomText>
             </View>
             <View style={styles.numberinviteFriend}>
               <DropDownButton
@@ -96,12 +99,12 @@ export default function Register() {
               style={styles.inviteButton}
               onPress={handleConfirm}
             >
-              <Text style={styles.inviteButtonText}>Confirm</Text>
+              <CustomText style={styles.inviteButtonText}>Confirm</CustomText>
             </TouchableOpacity>
-            <Text style={[styles.subtitleText, { color: "black" }]}>
+            <CustomText style={[styles.subtitleText, { color: "black" }]}>
               By providing my phone number, I hereby agree and accept the Terms
               of Service and Privacy Policy.
-            </Text>
+            </CustomText>
             <CountryPickerModal
               setCountryCode={setCountryCode}
               setDropDownActive={setDropDownActive}

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import CustomText from "./CustomText";
 
 const styles = StyleSheet.create({
   root: {
@@ -28,7 +29,7 @@ const Word = ({ word }) => (
   <View style={styles.root}>
     <View>
       <View style={styles.container}>
-        <Text style={styles.text}>{word}</Text>
+        <CustomText style={styles.text}>{word}</CustomText>
       </View>
       <View style={styles.shadow} />
     </View>

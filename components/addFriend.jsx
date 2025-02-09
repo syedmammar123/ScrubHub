@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import CustomText from "./CustomText";
 
 const AddFriend = ({ setShowInvitation, count }) => {
   const handlePress = () => {
@@ -8,7 +9,7 @@ const AddFriend = ({ setShowInvitation, count }) => {
   return (
     <TouchableOpacity style={styles.buttonCircleStyle} onPress={handlePress}>
       <Ionicons name="person-add" size={18} color="black" />
-      {count > 0 && <Text style={styles.count}>{count}</Text>}
+      {count > 0 && <CustomText style={styles.count}>{count}</CustomText>}
     </TouchableOpacity>
   );
 };

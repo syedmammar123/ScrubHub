@@ -42,7 +42,7 @@ const useGetNotifications = () => {
 
   useEffect(() => {
     getNotifications();
-  }, [user?.uid]); 
+  }, []); 
 
   return { loading, error };
 };

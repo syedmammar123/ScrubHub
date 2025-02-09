@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
+import CustomText from "./CustomText";
 
 export default function IncompleteWordButtons({
   title,
@@ -55,9 +56,9 @@ export default function IncompleteWordButtons({
       ]}
       onPress={handlePress}
     >
-      <Text style={[styles.title, { opacity: words[index].opacity }]}>
+      <CustomText style={[styles.title, { opacity: words[index].opacity }]}>
         {title}
-      </Text>
+      </CustomText>
     </Pressable>
   );
 }

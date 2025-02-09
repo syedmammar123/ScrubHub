@@ -2,6 +2,7 @@ import { View, StyleSheet, Text } from "react-native";
 import React from "react";
 import { theme } from "@/theme";
 import Animated from "react-native-reanimated";
+import CustomText from "./CustomText";
 
 export default function InputBox({
   letter,
@@ -28,7 +29,7 @@ export default function InputBox({
         { backgroundColor: bgColor, borderWidth: answerCalculated ? 0 : 1 },
       ]}
     >
-      <Text
+      <CustomText
         style={{
           // fontWeight: "bold",
           fontFamily: "Poppins-Semi",
@@ -37,7 +38,7 @@ export default function InputBox({
         }}
       >
         {letter}
-      </Text>
+      </CustomText>
     </Animated.View>
 
     //   <View style={[styles.outerBorder]}></View>
