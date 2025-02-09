@@ -316,7 +316,31 @@ export default function WordScrambledFriendChallenge() {
       setAnswerCalculated(true);
     }
   }, [checked]);
-
+  if (submitted)
+    return (
+      <View style={{ flex: 1 }}>
+        <StatusBar style="auto" />
+        <View>
+          <BackgroundImage>
+            <ScrubLogo />
+            <View
+              style={{
+                marginTop: 20,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
+            </View>
+          </BackgroundImage>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />

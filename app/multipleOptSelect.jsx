@@ -85,6 +85,31 @@ export default function MultipleOptSelect() {
     }
   }, [checked]);
 
+  if (submitted)
+    return (
+      <View style={{ flex: 1 }}>
+        <StatusBar style="auto" />
+        <View>
+          <BackgroundImage>
+            <ScrubLogo />
+            <View
+              style={{
+                marginTop: 20,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
+            </View>
+          </BackgroundImage>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -93,7 +118,7 @@ export default function MultipleOptSelect() {
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo />
-          {submitted ? (
+          {/* {submitted ? (
             <View
               style={{
                 flex: 1,
@@ -107,6 +132,7 @@ export default function MultipleOptSelect() {
                 color={theme.barColor}
               />
             </View>
+
           ) : (
             <ScrollView style={{ paddingBottom: 40 }}>
               <View style={styles.mainContainer}>
@@ -128,77 +154,74 @@ export default function MultipleOptSelect() {
                       opacity={
                         !checked
                           ? 1
-                          : selected.includes(index) ||
-                              correctOptions.includes(index)
-                            ? 1
-                            : 0.4
-                      }
-                      bgColor={
-                        !checked
-                          ? selected.includes(index)
-                            ? "white"
-                            : bgColors[index % bgColors.length]
-                          : (selected.includes(index) &&
-                                correctOptions.includes(index)) ||
-                              (!selected.includes(index) &&
-                                correctOptions.includes(index))
-                            ? theme.barColor
-                            : selected.includes(index) &&
-                                !correctOptions.includes(index)
-                              ? "#EF5555"
-                              : bgColors[index % bgColors.length]
-                      }
-                      key={index}
-                      setSelected={setSelected}
-                      Option={`${opt.option}`}
-                    />
-                  ))}
-                </View>
-              </View>
-              <View style={{ rowGap: 15, paddingBottom: 40 }}>
-                {error ? (
-                  <StatusIcon icon="cancel" text={"No Option Selected!"} />
-                ) : (
-                  ""
-                )}
-                {checked && !error ? (
-                  <StatusIcon
-                    icon={isMatchesCorrect ? "correct" : "cancel"}
-                    text={
-                      isMatchesCorrect
-                        ? "Correct Selections!"
-                        : "Wrong Selections!"
+                          : 0.4
                     }
+                    bgColor={
+                      !checked
+                        ? selected.includes(index)
+                          ? "white"
+                          : bgColors[index % bgColors.length]
+                        : (selected.includes(index) &&
+                              correctOptions.includes(index)) ||
+                            (!selected.includes(index) &&
+                              correctOptions.includes(index))
+                          ? theme.barColor
+                          : selected.includes(index) &&
+                              !correctOptions.includes(index)
+                            ? "#EF5555"
+                            : bgColors[index % bgColors.length]
+                    }
+                    key={index}
+                    setSelected={setSelected}
+                    Option={`${opt.option}`}
                   />
-                ) : (
-                  ""
-                )}
-                {checked ? (
-                  <StatusButton
-                    setError={setError}
-                    scoreIncrease={isMatchesCorrect}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    setChecked={setChecked}
-                    checked={checked}
-                    text={"Continue"}
-                    width={"60%"}
-                  />
-                ) : (
-                  <StatusButton
-                    setChecked={setChecked}
-                    checked={checked}
-                    setError={setError}
-                    selected={selected}
-                    setSubmitted={setSubmitted}
-                    text={"Submit"}
-                    questionType={"multipleOpt"}
-                    width={"60%"}
-                  />
-                )}
+                ))}
               </View>
-            </ScrollView>
-          )}
+            </View>
+            <View style={{ rowGap: 15, paddingBottom: 40 }}>
+              {error ? (
+                <StatusIcon icon="cancel" text={"No Option Selected!"} />
+              ) : (
+                ""
+              )}
+              {checked && !error ? (
+                <StatusIcon
+                  icon={isMatchesCorrect ? "correct" : "cancel"}
+                  text={
+                    isMatchesCorrect
+                      ? "Correct Selections!"
+                      : "Wrong Selections!"
+                  }
+                />
+              ) : (
+                ""
+              )}
+              {checked ? (
+                <StatusButton
+                  setError={setError}
+                  scoreIncrease={isMatchesCorrect}
+                  selected={selected}
+                  setSubmitted={setSubmitted}
+                  setChecked={setChecked}
+                  checked={checked}
+                  text={"Continue"}
+                  width={"60%"}
+                />
+              ) : (
+                <StatusButton
+                  setChecked={setChecked}
+                  checked={checked}
+                  setError={setError}
+                  selected={selected}
+                  setSubmitted={setSubmitted}
+                  text={"Submit"}
+                  questionType={"multipleOpt"}
+                  width={"60%"}
+                />
+              )}
+            </View>
+          </ScrollView>
+          {/* )} */}
         </BackgroundImage>
       </View>
     </View>

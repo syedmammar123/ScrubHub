@@ -206,6 +206,31 @@ export default function IncompleteProcess() {
     }
   }, [checked]);
 
+  if (submitted)
+    return (
+      <View style={{ flex: 1 }}>
+        <StatusBar style="auto" />
+        <View>
+          <BackgroundImage>
+            <ScrubLogo />
+            <View
+              style={{
+                marginTop: 20,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
+            </View>
+          </BackgroundImage>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -215,7 +240,7 @@ export default function IncompleteProcess() {
 
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          {submitted ? (
+          {/* {submitted ? (
             <View
               style={{
                 flex: 1,
@@ -229,34 +254,34 @@ export default function IncompleteProcess() {
                 color={theme.barColor}
               />
             </View>
-          ) : (
-            <>
-              <ScrollView
+          ) : ( */}
+          <>
+            <ScrollView
+              style={{
+                flexGrow: 1,
+                width: "95%",
+                alignSelf: "center",
+              }}
+            >
+              <View
                 style={{
-                  flexGrow: 1,
-                  width: "95%",
-                  alignSelf: "center",
+                  flex: 1,
+                  justifyContent: "space-between",
+                  height: scale(650),
                 }}
               >
+                {/* UPPER CONTAINER */}
                 <View
                   style={{
+                    width: "100%",
                     flex: 1,
-                    justifyContent: "space-between",
-                    height: scale(650),
+                    rowGap: scale(40),
                   }}
                 >
-                  {/* UPPER CONTAINER */}
-                  <View
-                    style={{
-                      width: "100%",
-                      flex: 1,
-                      rowGap: scale(40),
-                    }}
-                  >
-                    {/* Guideline */}
-                    <View>
-                      {/* Instruction Removed */}
-                      {/* <View>
+                  {/* Guideline */}
+                  <View>
+                    {/* Instruction Removed */}
+                    {/* <View>
                         <Text style={styles.Text}>
                           Given an incomplete flowchart of a process that occurs
                           in the human body or in a disease, complete the
@@ -265,6 +290,7 @@ export default function IncompleteProcess() {
                         </Text>
                       </View> */}
 
+
                       {/* Hint */}
                       <View>
                         <CustomText style={styles.hint}>
@@ -272,15 +298,27 @@ export default function IncompleteProcess() {
                         </CustomText>
                       </View>
                     </View>
+                  </View>
 
-                    {/* Process */}
+                  {/* Process */}
 
+                  <View
+                    style={{
+                      width: "90%",
+                      alignSelf: "center",
+                    }}
+                  >
                     <View
                       style={{
-                        width: "90%",
-                        alignSelf: "center",
+                        flexDirection: "row",
+                        width: "100%",
+                        rowGap: 6,
+                        flexWrap: "wrap",
+                        alignItems: "center",
+                        justifyContent: "center",
                       }}
                     >
+
                       <View
                         style={{
                           flexDirection: "row",
@@ -311,20 +349,8 @@ export default function IncompleteProcess() {
                                     onPress={() => {
                                       handlePress(index);
                                     }}
-                                    style={[
-                                      styles.Blank,
-                                      {
-                                        backgroundColor: !isColorsSet
-                                          ? selected === index
-                                            ? `${theme.barColor}`
-                                            : `${theme.barBgColor}`
-                                          : wrongMatches.includes(proc.val)
-                                            ? theme.barColor
-                                            : "#EF5555",
-                                      },
-                                    ]}
                                   >
-                                    <CustomText
+                          <CustomText
                                       style={{
                                         fontWeight: "bold",
                                         fontSize: proc.val === "" ? 15 : 9,
@@ -384,62 +410,92 @@ export default function IncompleteProcess() {
                       ))}
                     </View>
                   </View>
-                  {/* LOWER CONTAINER */}
-                  <View>
-                    {/* Button */}
-                    <View
-                      style={[
-                        styles.btncontainer,
-                        { rowGap: 10, marginTop: 60 },
-                      ]}
-                    >
-                      {error ? (
-                        <StatusIcon
-                          icon="cancel"
-                          text={"All Boxes should be filled!"}
-                        />
-                      ) : (
-                        ""
-                      )}
-                      {checked && !error ? (
-                        <StatusIcon
-                          icon={isMatchesCorrect ? "correct" : "cancel"}
-                          text={
-                            isMatchesCorrect ? "Amazing!" : "Wrong Matches!"
-                          }
-                        />
-                      ) : (
-                        ""
-                      )}
-                      {checked ? (
-                        <StatusButton
-                          scoreIncrease={isMatchesCorrect}
-                          setError={setError}
-                          selected={answers}
-                          setSubmitted={setSubmitted}
-                          setChecked={setChecked}
-                          checked={checked}
-                          text={"Continue"}
-                          width={"60%"}
-                        />
-                      ) : (
-                        <StatusButton
-                          setChecked={setChecked}
-                          checked={checked}
-                          setError={setError}
-                          selected={answers}
-                          setSubmitted={setSubmitted}
-                          text={"Submit"}
-                          questionType={"incomplete"}
-                          width={"60%"}
-                        />
-                      )}
-                    </View>
+                  {/* Buttons */}
+                  <View style={styles.wordsCotainer}>
+                    {words.map((word, index) => (
+                      <IncompleteWordButtons
+                        bgColor={
+                          !isColorsSet
+                            ? "#ffffff"
+                            : correctMatches.some(
+                                  (item) => item.value === word.val
+                                )
+                              ? theme.barColor
+                              : "#ffffff"
+                        }
+                        setAnswers={setAnswers}
+                        key={index}
+                        opacity={word.opacity}
+                        title={
+                          !isColorsSet
+                            ? word.val
+                            : correctMatches.some(
+                                  (item) => item.value === word.val
+                                )
+                              ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
+                              : word.val
+                        }
+                        selected={selected}
+                        setProcess={setProcess}
+                        setSelected={setSelected}
+                        setWords={setWords}
+                        index={index}
+                        words={words}
+                      />
+                    ))}
                   </View>
                 </View>
-              </ScrollView>
-            </>
-          )}
+                {/* LOWER CONTAINER */}
+                <View>
+                  {/* Button */}
+                  <View
+                    style={[styles.btncontainer, { rowGap: 10, marginTop: 60 }]}
+                  >
+                    {error ? (
+                      <StatusIcon
+                        icon="cancel"
+                        text={"All Boxes should be filled!"}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {checked && !error ? (
+                      <StatusIcon
+                        icon={isMatchesCorrect ? "correct" : "cancel"}
+                        text={isMatchesCorrect ? "Amazing!" : "Wrong Matches!"}
+                      />
+                    ) : (
+                      ""
+                    )}
+                    {checked ? (
+                      <StatusButton
+                        scoreIncrease={isMatchesCorrect}
+                        setError={setError}
+                        selected={answers}
+                        setSubmitted={setSubmitted}
+                        setChecked={setChecked}
+                        checked={checked}
+                        text={"Continue"}
+                        width={"60%"}
+                      />
+                    ) : (
+                      <StatusButton
+                        setChecked={setChecked}
+                        checked={checked}
+                        setError={setError}
+                        selected={answers}
+                        setSubmitted={setSubmitted}
+                        text={"Submit"}
+                        questionType={"incomplete"}
+                        width={"60%"}
+                      />
+                    )}
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+          </>
+          {/* )} */}
         </BackgroundImage>
       </View>
     </View>
