@@ -18,8 +18,7 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import useGetNotifications from "@/hooks/useGetNotifications";
 import { formatDateOnly, formatTimeOnly } from "@/util/getRandomItem";
 import { avatars } from "../userInfoScreen";
-import useQuesStore from "@/store/quesStore";
-import { getQuestionType } from "@/util/utilQuesFunc";
+import CustomText from "@/components/CustomText";
 
 const dummyNotifications = [
   {
@@ -60,110 +59,77 @@ const dummyNotifications = [
 ];
 
 const NotificationsScreen = () => {
-  const { user, userNotifications } = useCurrentUserStore((state) => state);
+  const { userNotifications } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetNotifications();
   const router = useRouter();
 
-  const {
-    fetchChallengeFriendQuestions,
-    getFriendChallengeQuestion,
-    getFetchedFriendChallengeID,
-    setType,
-  } = useQuesStore((state) => state);
-
-  // const [error, setError] = useState(false);
-
-  const handlePress = async (docId) => {
-    setType("friendchallenge");
-    const id = "5h0Ivag02puXiUaMLDmg"; // Replace ID here
-    const currentChallenge = getFetchedFriendChallengeID();
-    console.log("CURRENTCHALLENGE", currentChallenge);
-
-    if (currentChallenge === "") {
-      // Add || currentChallenge!==docId in if to fetch again if same Id isnt same
-      console.log("FETCHING");
-
-      const questions = await fetchChallengeFriendQuestions(id);
-      // questions.slice(0, 2);
-      if (questions === 0) {
-        console.log("YES");
-
-        // setError(true);
-      } else {
-        // Questions are fetched
-        console.log("FETCH COMPLERE");
-
-        const nextScreen = getQuestionType(getFriendChallengeQuestion());
-
-        console.log("NEXT SCREEN", nextScreen);
-        router.navigate(nextScreen);
-      }
-    } else {
-      // Already Fetched Questions
-      const nextScreen = getQuestionType(getFriendChallengeQuestion());
-      if (nextScreen === "wordscrambled") {
-        router.replace("wordscrambledfriendchallenge");
-      } else {
-        router.replace(nextScreen);
-      }
+  const handlePress = (notificationType) => {
+    if (notificationType === "friendRequestRecieved") {
+      router.push({
+        pathname: "/friends",
+        params: { openFriendRequests: true },
+      });
+    } else if (notificationType === "challenge") {
+      router.push("DisplayChallenges");
     }
   };
 
-  // console.log(userNotifications[0].timestamp);
+  console.log("userNotifications", userNotifications);
+
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
-          {/* {error && userNotifications.length === 0 && (
-            <Text className="text-center text-red-500 mt-10">{error}</Text>
-          )} */}
-          {/* {loading && userNotifications.length === 0 && (
+          {error && userNotifications.length === 0 && (
+            <CustomText className="text-center text-red-500 mt-10">
+              {error}
+            </CustomText>
+          )}
+          {loading && userNotifications.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
-          )} */}
-          {dummyNotifications.length > 0 && (
+          )}
+          {userNotifications.length > 0 && (
             <View>
               <ScrollView className="max-h-[74%] pb-96">
-                {dummyNotifications.map((notification) => (
-                  <View
-                    key={notification.text}
-                    className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
+                {userNotifications.map((notification) => (
+                  <TouchableOpacity
+                    key={notification.timestamp.nanoseconds}
+                    onPress={() => handlePress(notification.type)}
                   >
-                    <View className="flex-row">
-                      {notification.avatars.map((avatar, index) => (
-                        <Image
-                          key={index}
-                          source={avatars[avatar]}
-                          className={`w-10 h-10 rounded-full ${index !== 0 ? "-ml-3" : ""}`}
-                        />
-                      ))}
-                    </View>
                     <View
-                      className={`flex-1 flex-col w-full ${notification.avatars.length > 1 ? "ml-3" : "ml-10"}`}
+                      key={notification.timestamp.nanoseconds}
+                      className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
                     >
-                      <Text className="text-sm text-gray-900">
-                        {notification.text}
-                      </Text>
-                      <View className="flex-row justify-between items-center mt-3">
-                        <Text className="text-xs text-gray-500">
-                          {formatDateOnly(notification.timestamp)}
-                        </Text>
-                        <Text className="text-xs text-gray-500">
-                          {formatTimeOnly(notification.timestamp)}
-                        </Text>
+                      <View className="flex-row">
+                        {notification.avatars.map((avatar, index) => (
+                          <Image
+                            key={index}
+                            source={avatars[avatar]}
+                            className={`w-10 h-10 rounded-full ${index !== 0 ? "-ml-3" : ""}`}
+                          />
+                        ))}
+                      </View>
+                      <View
+                        className={`flex-1 flex-col w-full ${notification.avatars.length > 1 ? "ml-3" : "ml-10"}`}
+                      >
+                        <CustomText className="text-sm text-gray-900">
+                          {notification.text}
+                        </CustomText>
+                        <View className="flex-row justify-between items-center mt-3">
+                          <CustomText className="text-xs text-gray-500">
+                            {formatDateOnly(notification.timestamp)}
+                          </CustomText>
+                          <CustomText className="text-xs text-gray-500">
+                            {formatTimeOnly(notification.timestamp)}
+                          </CustomText>
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 ))}
-                <TouchableOpacity
-                  // onPress={()=>handlePress(docId)} Send Doc ID here
-                  onPress={handlePress}
-                  style={{ backgroundColor: "red", padding: 20 }}
-                >
-                  <Text>Get CHALLENGE</Text>
-                </TouchableOpacity>
               </ScrollView>
             </View>
           )}

@@ -1,5 +1,6 @@
 import { Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import React, { useState } from "react";
+import CustomText from "./CustomText";
 
 export default function questionOption({
   bgColor,
@@ -34,7 +35,7 @@ export default function questionOption({
         { backgroundColor: bgColor, opacity: opacity },
       ]}
     >
-      <Text
+      <CustomText
         style={{
           textTransform: "uppercase",
           // fontWeight: "bold",
@@ -44,7 +45,7 @@ export default function questionOption({
         }}
       >
         {Option}
-      </Text>
+      </CustomText>
     </TouchableOpacity>
   );
 }

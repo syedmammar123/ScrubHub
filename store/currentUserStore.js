@@ -19,6 +19,8 @@ const useCurrentUserStore = create(
       },
       clearUser: () => {
         set({ user: null }); // Reset the `user` state
+        set({ userNotifications: [] });
+        set({ userChallenges: [] });
       },
       setUserNotifications: (notifications) => {
         set({ userNotifications: notifications });

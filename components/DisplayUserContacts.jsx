@@ -8,6 +8,7 @@ import useAcceptRequest from "@/hooks/useAcceptRequest";
 import useSendRequest from "@/hooks/useSendRequest";
 import useCancelRequest from "@/hooks/useCancelRequest";
 import * as SMS from "expo-sms";
+import CustomText from "./CustomText";
 
 const statusColors = {
   invite: "bg-blue-500",
@@ -148,10 +149,10 @@ function ContactItem({ contact }) {
   return (
     <View className="flex-row items-center p-4 border-b border-gray-300">
       <View className="flex-1">
-        <Text className="text-lg font-bold text-gray-900">
+        <CustomText className="text-lg font-bold text-gray-900">
           {contact.firstName} {contact.lastName || ""}
-        </Text>
-        <Text className="text-gray-600">{contact.phoneNumber}</Text>
+        </CustomText>
+        <CustomText className="text-gray-600">{contact.phoneNumber}</CustomText>
       </View>
       {contact.status === "invite" && (
         <SendInvitationBtn

@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import "./global.css";
+import { Text } from "react-native";
 export default function Layout() {
   const [fontsLoaded, error] = useFonts({
     "Poppins-Regular": require("@/assets/fonts/Poppins-Regular.ttf"),
@@ -17,6 +18,7 @@ export default function Layout() {
     }
     return null; // You can show a loading screen or spinner here until fonts are loaded
   }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
@@ -183,6 +185,13 @@ export default function Layout() {
         />
         <Stack.Screen
           name="ChallengeFriend"
+          options={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        />
+        <Stack.Screen
+          name="DisplayChallenges"
           options={{
             headerShown: false,
             animation: "fade",

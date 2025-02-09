@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import React from "react";
+import CustomText from "./CustomText";
 
 export default function MatchingDropBox({ setMatchingDropLayout, index }) {
   return (
@@ -14,7 +15,7 @@ export default function MatchingDropBox({ setMatchingDropLayout, index }) {
       }}
       style={styles.btn}
     >
-      <Text style={styles.btnTitle}></Text>
+      <CustomText style={styles.btnTitle}></CustomText>
     </View>
   );
 }

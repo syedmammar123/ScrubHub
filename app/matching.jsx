@@ -25,6 +25,7 @@ import {
 } from "react-native-reanimated";
 import { ScaledSheet } from "react-native-size-matters";
 import useQuesStore from "@/store/quesStore";
+import CustomText from "@/components/CustomText";
 
 let options = [
   "1. Vancomycin",
@@ -319,7 +320,7 @@ export default function Matching() {
     );
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -355,73 +356,77 @@ export default function Matching() {
                 {/* Guideline */}
                 {/* <View>
                     Instruction Remove 
-                    <Text style={styles.Text}>
+                    <CustomText style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
                       match the microbe to the first line treatment:
-                    </Text>
+                    </CustomText>
                   </View> */}
 
-                {/* Hint */}
-                <View>
-                  <Text style={styles.heading}>{question?.question}</Text>
-                </View>
 
-                {/* Input Of Word  */}
-                <View
-                  onLayout={(e) => {
-                    console.log(
-                      "Starting of Matching Container",
-                      e.nativeEvent.layout.y
-                    );
-                    setMatchingContainerY(e.nativeEvent.layout.y);
-                  }}
-                  style={styles.matchablesContainer}
-                >
-                  {question.microbes?.map((val, index) => (
-                    <View style={styles.row} key={val.id}>
-                      <Text style={styles.TextMatching}>
-                        {val.id + "." + val.name}
-                      </Text>
+                  {/* Hint */}
+                  <View>
+                    <CustomText style={styles.heading}>
+                      {question?.question}
+                    </CustomText>
+                  </View>
 
-                      {/* Drop Box */}
-                      <MatchingDropBox
-                        index={index}
-                        setMatchingDropLayout={setMatchingDropLayout}
-                      />
-                    </View>
-                  ))}
-                </View>
+                  {/* Input Of Word  */}
+                  <View
+                    onLayout={(e) => {
+                      console.log(
+                        "Starting of Matching Container",
+                        e.nativeEvent.layout.y
+                      );
+                      setMatchingContainerY(e.nativeEvent.layout.y);
+                    }}
+                    style={styles.matchablesContainer}
+                  >
+                    {question.microbes?.map((val, index) => (
+                      <View style={styles.row} key={val.id}>
+                        <CustomText style={styles.TextMatching}>
+                          {val.id + "." + val.name}
+                        </CustomText>
 
-                <View
-                  onLayout={(e) => {
-                    console.log(
-                      "Starting of Buttons Container",
-                      e.nativeEvent.layout.y
-                    );
-                    setAnswerContainerY(e.nativeEvent.layout.y);
-                  }}
-                  style={styles.answerBtnContainer}
-                >
-                  {questionOptions?.map((val, index) => (
-                    <GestureDetector
-                      key={index}
-                      gesture={panGestureHandler[index]}
-                    >
-                      <MatchingButton
-                        bgColor={
-                          !checked
-                            ? "#ffffff"
-                            : answers[index] !== -1
-                              ? theme.barColor
-                              : "#EF5555"
-                        }
-                        title={val.name}
-                        AnimatedStyle={AnimatedStyle}
-                        index={index}
-                        setMatchingOptionsLayout={setMatchingOptionsLayout}
-                      />
-                    </GestureDetector>
-                  ))}
+                        {/* Drop Box */}
+                        <MatchingDropBox
+                          index={index}
+                          setMatchingDropLayout={setMatchingDropLayout}
+                        />
+                      </View>
+                    ))}
+                  </View>
+
+                  <View
+                    onLayout={(e) => {
+                      console.log(
+                        "Starting of Buttons Container",
+                        e.nativeEvent.layout.y
+                      );
+                      setAnswerContainerY(e.nativeEvent.layout.y);
+                    }}
+                    style={styles.answerBtnContainer}
+                  >
+                    {questionOptions?.map((val, index) => (
+                      <GestureDetector
+                        key={index}
+                        gesture={panGestureHandler[index]}
+                      >
+                        <MatchingButton
+                          bgColor={
+                            !checked
+                              ? "#ffffff"
+                              : answers[index] !== -1
+                                ? theme.barColor
+                                : "#EF5555"
+                          }
+                          title={val.name}
+                          AnimatedStyle={AnimatedStyle}
+                          index={index}
+                          setMatchingOptionsLayout={setMatchingOptionsLayout}
+                        />
+                      </GestureDetector>
+                    ))}
+                  </View>
                 </View>
               </View>
             </>

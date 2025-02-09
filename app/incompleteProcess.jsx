@@ -233,7 +233,7 @@ export default function IncompleteProcess() {
     );
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -290,9 +290,13 @@ export default function IncompleteProcess() {
                         </Text>
                       </View> */}
 
-                    {/* Hint */}
-                    <View>
-                      <Text style={styles.hint}>{question?.question}</Text>
+
+                      {/* Hint */}
+                      <View>
+                        <CustomText style={styles.hint}>
+                          {question?.question}
+                        </CustomText>
+                      </View>
                     </View>
                   </View>
 
@@ -314,57 +318,96 @@ export default function IncompleteProcess() {
                         justifyContent: "center",
                       }}
                     >
-                      {(() => {
-                        let notknown = [];
-                        process.forEach((proc, index) => {
-                          if (proc.notknown) {
-                            notknown.push(index);
-                          }
-                        });
-                        return process.map((proc, index) => (
-                          <View style={{ flexDirection: "row" }} key={index}>
-                            {!proc.notknown ? (
-                              <Text style={styles.processText}>{proc.val}</Text>
-                            ) : (
-                              <View>
-                                <Pressable
-                                  disabled={isColorsSet}
-                                  onPress={() => {
-                                    handlePress(index);
-                                  }}
-                                  style={[
-                                    styles.Blank,
-                                    {
-                                      backgroundColor: !isColorsSet
-                                        ? selected === index
-                                          ? `${theme.barColor}`
-                                          : `${theme.barBgColor}`
-                                        : wrongMatches.includes(proc.val)
-                                          ? theme.barColor
-                                          : "#EF5555",
-                                    },
-                                  ]}
-                                >
-                                  <Text
-                                    style={{
-                                      fontWeight: "bold",
-                                      fontSize: proc.val === "" ? 15 : 9,
-                                      textAlign: "center",
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          width: "100%",
+                          rowGap: 6,
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {(() => {
+                          let notknown = [];
+                          process.forEach((proc, index) => {
+                            if (proc.notknown) {
+                              notknown.push(index);
+                            }
+                          });
+                          return process.map((proc, index) => (
+                            <View style={{ flexDirection: "row" }} key={index}>
+                              {!proc.notknown ? (
+                                <CustomText style={styles.processText}>
+                                  {proc.val}
+                                </CustomText>
+                              ) : (
+                                <View>
+                                  <Pressable
+                                    disabled={isColorsSet}
+                                    onPress={() => {
+                                      handlePress(index);
                                     }}
                                   >
-                                    {proc.val === ""
-                                      ? String.fromCharCode(
-                                          65 + notknown.indexOf(index)
-                                        )
-                                      : proc.val}
-                                  </Text>
-                                </Pressable>
-                              </View>
-                            )}
-                            <Text> {index !== process.length - 1 && "→"} </Text>
-                          </View>
-                        ));
-                      })()}
+                          <CustomText
+                                      style={{
+                                        fontWeight: "bold",
+                                        fontSize: proc.val === "" ? 15 : 9,
+                                        textAlign: "center",
+                                      }}
+                                    >
+                                      {proc.val === ""
+                                        ? String.fromCharCode(
+                                            65 + notknown.indexOf(index)
+                                          )
+                                        : proc.val}
+                                    </CustomText>
+                                  </Pressable>
+                                </View>
+                              )}
+                              <CustomText>
+                                {" "}
+                                {index !== process.length - 1 && "→"}{" "}
+                              </CustomText>
+                            </View>
+                          ));
+                        })()}
+                      </View>
+                    </View>
+                    {/* Buttons */}
+                    <View style={styles.wordsCotainer}>
+                      {words.map((word, index) => (
+                        <IncompleteWordButtons
+                          bgColor={
+                            !isColorsSet
+                              ? "#ffffff"
+                              : correctMatches.some(
+                                    (item) => item.value === word.val
+                                  )
+                                ? theme.barColor
+                                : "#ffffff"
+                          }
+                          setAnswers={setAnswers}
+                          key={index}
+                          opacity={word.opacity}
+                          title={
+                            !isColorsSet
+                              ? word.val
+                              : correctMatches.some(
+                                    (item) => item.value === word.val
+                                  )
+                                ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
+                                : word.val
+                          }
+                          selected={selected}
+                          setProcess={setProcess}
+                          setSelected={setSelected}
+                          setWords={setWords}
+                          index={index}
+                          words={words}
+                        />
+                      ))}
                     </View>
                   </View>
                   {/* Buttons */}

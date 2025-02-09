@@ -138,8 +138,21 @@ const useQuesStore = create((set, get) => ({
   friendChallengeQuestions: [],
   currentFriendChallengeId: "",
   currentFriendChallengeIndex: 0,
-  currentFriendChallengeScore: 0,
+  currentFriendChallengeScore: null,
   currentOpponentScore: 0,
+  currentChallengerId : '',
+  challengerUsername: "",
+  
+  clearFields: () => {
+    set({ currentFriendChallengeScore: null });
+    set({ currentFriendChallengeIndex: 0 });
+    set({ currentFriendChallengeId: "" });
+    set({ currentOpponentScore: 0 });
+    set({ currentChallengerId: '' });
+    set({ friendChallengeQuestions: [] });
+    set({ type: "" });
+    set({challengerUsername: ""})
+  },
   increaseFriendChallengeScore: () =>
     set((state) => ({
       currentFriendChallengeScore: state.currentFriendChallengeScore + 1,
@@ -156,6 +169,10 @@ const useQuesStore = create((set, get) => ({
     const { currentOpponentScore } = get();
     return currentOpponentScore;
   },
+  getChallengerUsername: () => {  
+    const { challengerUsername } = get();
+    return challengerUsername;
+  },
   getFriendChallengeQuestion: () => {
     const { friendChallengeQuestions, currentFriendChallengeIndex } = get();
     return friendChallengeQuestions[currentFriendChallengeIndex];
@@ -164,31 +181,19 @@ const useQuesStore = create((set, get) => ({
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
   },
-  fetchChallengeFriendQuestions: async (docId) => {
-    try {
-      // Getting dailyChallenge ID First Here
-      const docRef = doc(db, "Challenges", docId);
+  fetchChallengeFriendQuestions: async (challenge) => {
 
-      // Fetch the document
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap) {
-        if (docSnap.data().questions.length > 0) {
-          set({ currentFriendChallengeIndex: 0 });
-          set({ friendChallengeQuestions: docSnap.data().questions });
-          set({ currentFriendChallengeScore: 0 });
-          set({ currentOpponentScore: docSnap.data().challengerScore });
-          set({ currentFriendChallengeId: docId });
-          return docSnap.data().questions.length;
-        } else {
-          return 0;
-        }
-      } else {
-        console.log("No such document!");
-        return 0;
-      }
-    } catch (error) {
-      console.error("Error fetching documents: ", error);
+    if (challenge.questions.length > 0) {
+      set({ currentFriendChallengeIndex: 0 });
+      set({ friendChallengeQuestions: challenge.questions });
+      set({ currentFriendChallengeScore: 0 });
+      set({ currentOpponentScore: challenge.challengerScore });
+      set({ currentFriendChallengeId: challenge.id });
+      set({ currentChallengerId: challenge.challengerId });
+      set({challengerUsername: challengerUsername})
+      return challenge.questions.length;
+    } else {
+      return 0;
     }
   },
   submitFriendChallenge: async () => {

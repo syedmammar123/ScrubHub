@@ -24,6 +24,7 @@ import {
   withSpring,
 } from "react-native-reanimated";
 import useQuesStore from "@/store/quesStore";
+import CustomText from "@/components/CustomText";
 
 // Function to get a random letter
 const getRandomLetter = () => {
@@ -315,34 +316,10 @@ export default function WordScrambledChallenge() {
       setAnswerCalculated(true);
     }
   }, [checked]);
-  if (submitted)
-    return (
-      <View style={{ flex: 1 }}>
-        <StatusBar style="auto" />
-        <View>
-          <BackgroundImage>
-            <ScrubLogo />
-            <View
-              style={{
-                marginTop: 20,
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator
-                style={styles.loadingIndicator}
-                size={"large"}
-                color={theme.barColor}
-              />
-            </View>
-          </BackgroundImage>
-        </View>
-      </View>
-    );
+
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -351,7 +328,7 @@ export default function WordScrambledChallenge() {
           <ScrollView style={{ paddingBottom: 20 }}>
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* UPPER CONTAINER */}
-              {/* {submitted ? (
+              {submitted ? (
                 <View
                   style={{
                     flex: 1,
@@ -365,69 +342,73 @@ export default function WordScrambledChallenge() {
                     color={theme.barColor}
                   />
                 </View>
-              ) : ( */}
-              <>
-                {/* UPPER CONTAINER */}
-                <View>
-                  {/* Guideline */}
+              ) : (
+                <>
+                  {/* UPPER CONTAINER */}
                   <View>
-                    <Text style={styles.guideline}>
-                      Given a hint with a series of empty spaces and{" "}
-                      {question?.answer?.length} letter options, find out which
-                      word/term is being hinted at
-                    </Text>
-                  </View>
-
-                  {/* Hint */}
-                  <View>
-                    <Text style={styles.guideline}>{question?.hint}</Text>
-                  </View>
-
-                  {wordCount > 1 && (
+                    {/* Guideline */}
                     <View>
-                      <Text style={[styles.guideline, { fontSize: 16 }]}>
-                        "{wordCount} Words"
-                      </Text>
+                      <CustomText style={styles.guideline}>
+                        Given a hint with a series of empty spaces and{" "}
+                        {question?.answer?.length} letter options, find out
+                        which word/term is being hinted at
+                      </CustomText>
                     </View>
-                  )}
 
-                  {/* Blanks */}
-                  <View style={styles.inputContainer}>
-                    {selected.map((_, index) => (
-                      <BlankInput
-                        checked={checked}
-                        key={index}
-                        setBlankInputLayout={setBlankInputLayout}
-                        index={index}
-                      />
-                    ))}
-                  </View>
+                    {/* Hint */}
+                    <View>
+                      <CustomText style={styles.guideline}>
+                        {question?.hint}
+                      </CustomText>
+                    </View>
 
-                  {/* Letters to Choose */}
-                  <View style={styles.lettersContainer}>
-                    {letterChoices.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <InputBox
-                          answerCalculated={answerCalculated}
-                          bgColor={
-                            !answerCalculated
-                              ? "white"
-                              : selected[index].backgroundColor
-                          }
-                          letter={val}
-                          setLetterLayout={setLetterLayout}
+                    {wordCount > 1 && (
+                      <View>
+                        <CustomText
+                          style={[styles.guideline, { fontSize: 16 }]}
+                        >
+                          "{wordCount} Words"
+                        </CustomText>
+                      </View>
+                    )}
+
+                    {/* Blanks */}
+                    <View style={styles.inputContainer}>
+                      {selected.map((_, index) => (
+                        <BlankInput
+                          checked={checked}
+                          key={index}
+                          setBlankInputLayout={setBlankInputLayout}
                           index={index}
-                          AnimatedStyle={AnimatedStyle}
                         />
-                      </GestureDetector>
-                    ))}
+                      ))}
+                    </View>
+
+                    {/* Letters to Choose */}
+                    <View style={styles.lettersContainer}>
+                      {letterChoices.map((val, index) => (
+                        <GestureDetector
+                          key={index}
+                          gesture={panGestureHandler[index]}
+                        >
+                          <InputBox
+                            answerCalculated={answerCalculated}
+                            bgColor={
+                              !answerCalculated
+                                ? "white"
+                                : selected[index].backgroundColor
+                            }
+                            letter={val}
+                            setLetterLayout={setLetterLayout}
+                            index={index}
+                            AnimatedStyle={AnimatedStyle}
+                          />
+                        </GestureDetector>
+                      ))}
+                    </View>
                   </View>
-                </View>
-              </>
-              {/* )} */}
+                </>
+              )}
 
               {/* LOWER CONTAINER */}
               <View>

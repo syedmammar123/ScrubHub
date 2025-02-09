@@ -15,6 +15,7 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { avatars } from "@/app/userInfoScreen";
 import { theme } from "@/theme";
 import useUpdateAvatar from "@/hooks/useUpdateAvatar";
+import CustomText from "./CustomText";
 
 const ProfilePic = () => {
   const { user } = useCurrentUserStore((state) => state);
@@ -72,7 +73,7 @@ const ProfilePic = () => {
       >
         <Pressable onPress={closeModal} style={[styles.modalOverlay]}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Edit Profile Picture</Text>
+            <CustomText style={styles.modalText}>Edit Profile Picture</CustomText>
             <View style={styles.newProfileContainer}>
               {newAvatars.map((id) => (
                 <TouchableOpacity
@@ -101,9 +102,9 @@ const ProfilePic = () => {
               {loading ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <Text style={styles.closeButtonText}>
+                <CustomText style={styles.closeButtonText}>
                   {selectedAvatar ? "Update" : "Close"}
-                </Text>
+                </CustomText>
               )}
             </TouchableOpacity>
           </View>

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import BackButton from "@/components/backButton";
@@ -13,15 +8,36 @@ import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import StatusButton from "@/components/statusButton";
 import { useRouter } from "expo-router";
+import CustomText from "@/components/CustomText";
 
 export default function ScoreScreen() {
-  const { getScore } = useQuesStore((state) => state);
+  const {
+    getScore,
+    getFriendChallengeScore,
+    getOpponentScore,
+    getCurrentType,
+    getChallengerUsername,
+  } = useQuesStore((state) => state);
   const [score, setScore] = useState(getScore());
+
+  const friendChallengeScore = getFriendChallengeScore();
+  const currentOpponentScore = getOpponentScore();
+  const type = getCurrentType();
+  const challengerUsername = getChallengerUsername();
+
+  // const friendChallengeScore = 10;
+  // const type = "friendchallenge";
+  // const currentOpponentScore = 15;
+  // const challengerUsername = "Ammar3";
+
+  console.log("friendChallengeScore: ", friendChallengeScore);
+  console.log("currentOpponentScore: ", currentOpponentScore);
+  console.log("type: ", type);
 
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Curvy Lines Background */}
       <BackgroundImage>
@@ -32,7 +48,7 @@ export default function ScoreScreen() {
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text
+            <CustomText
               style={{
                 color: "black",
                 fontSize: 25,
@@ -41,17 +57,17 @@ export default function ScoreScreen() {
               }}
             >
               Your Score
-            </Text>
-            <View>
-              <Text
+            </CustomText>
+            <View className="flex flex-col items-center">
+              <CustomText
                 style={{
                   color: score < 5 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
                   marginBottom: 30,
                 }}
               >
-                {score}
-                <Text
+                {friendChallengeScore ? friendChallengeScore : score}
+                <CustomText
                   style={{
                     color: "#3d3d3d",
                     fontSize: 60,
@@ -60,14 +76,62 @@ export default function ScoreScreen() {
                 >
                   {" "}
                   / 15
-                </Text>
-              </Text>
-              <TouchableOpacity className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`} onPress={() => router.navigate("ChallengeFriend")}>
-              <Text className='font-semibold'>Challenge a friend</Text>
-            </TouchableOpacity>
+                </CustomText>
+              </CustomText>
+              {type !== "friendchallenge" && (
+                <TouchableOpacity
+                  className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`}
+                  onPress={() => router.navigate("ChallengeFriend")}
+                >
+                  <CustomText className="font-semibold">
+                    Challenge a friend
+                  </CustomText>
+                </TouchableOpacity>
+              )}
+              <View className="mb-5 px-5">
+                {type === "friendchallenge" &&
+                  friendChallengeScore > currentOpponentScore && (
+                    <CustomText className="text-center text-lg font-semibold">
+                      Hooray you{" "}
+                      <CustomText className="font-bold text-green-700">
+                        won
+                      </CustomText>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
+                      <CustomText className="font-semibold">
+                        {currentOpponentScore}
+                      </CustomText>{" "}
+                      points.
+                    </CustomText>
+                  )}
+                {type === "friendchallenge" &&
+                  friendChallengeScore < currentOpponentScore && (
+                    <CustomText className="text-center text-lg font-semibold">
+                      You{" "}
+                      <CustomText className="font-bold text-red-500">
+                        lost
+                      </CustomText>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
+                      <CustomText className="font-semibold">
+                        {currentOpponentScore}
+                      </CustomText>{" "}
+                      points.
+                    </CustomText>
+                  )}
+                {type === "friendchallenge" &&
+                  friendChallengeScore === currentOpponentScore && (
+                    <CustomText className="text-center text-lg font-semibold">
+                      It's a <CustomText className="font-bold">draw</CustomText>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
+                      <CustomText className="font-semibold">
+                        {currentOpponentScore}
+                      </CustomText>{" "}
+                      points.
+                    </CustomText>
+                  )}
+              </View>
             </View>
-            
-            <Text
+
+            <CustomText
               style={{
                 width: "80%",
                 textAlign: "center",
@@ -79,8 +143,8 @@ export default function ScoreScreen() {
             >
               You did a great job, Learn more by solving more questions of
               different topics.
-            </Text>
-           
+            </CustomText>
+
             <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>

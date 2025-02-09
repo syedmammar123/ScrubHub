@@ -3,6 +3,7 @@ import React from "react";
 import { avatars } from "@/app/userInfoScreen";
 import useChallengeFriend from "@/hooks/useChallengeFriend";
 import useQuesStore from "@/store/quesStore";
+import CustomText from "./CustomText";
 
 const ChallengeFriendItem = ({ friend,friends }) => {
   const { challengeFriend, loading } = useChallengeFriend();
@@ -10,12 +11,12 @@ const ChallengeFriendItem = ({ friend,friends }) => {
 
   const handleChallengeFriend = (friendId) => {
     let score = getScore();
-    const isChanllengeFriendSuccessfull = challengeFriend(
+    const isChallengeFriendSuccessfull = challengeFriend(
       friendId,
       score,
       questions
     );
-    if (isChanllengeFriendSuccessfull) {
+    if (isChallengeFriendSuccessfull) {
       friends.map((friend) => {
         if (friend.id === friendId) {
           friend.challenged = true;
@@ -33,11 +34,11 @@ const ChallengeFriendItem = ({ friend,friends }) => {
           source={avatars[friend.avatarId]}
           className="rounded w-14 h-14"
         />
-        <Text className="text-lg">{friend.username}</Text>
+        <CustomText className="text-lg">{friend.username}</CustomText>
       </View>
       {friend.challenged ? (
         <Pressable className="bg-[#FF0000] py-2 px-3 rounded min-w-30">
-          <Text className="text-white">Challenged</Text>
+          <CustomText className="text-white">Challenged</CustomText>
         </Pressable>
       ) : (
         <TouchableOpacity
@@ -49,7 +50,7 @@ const ChallengeFriendItem = ({ friend,friends }) => {
         >{
             loading ? (
                 <ActivityIndicator size="small" color="#FFFFFF" />
-            ) : ( <Text className="text-white">Challenge</Text> )
+            ) : ( <CustomText className="text-white">Challenge</CustomText> )
         }
         </TouchableOpacity>
       )}

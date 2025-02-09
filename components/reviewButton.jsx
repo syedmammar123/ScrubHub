@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import useQuesStore from "@/store/quesStore";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import { getQuestionType } from "@/util/utilQuesFunc";
+import CustomText from "./CustomText";
 
 export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   const {
@@ -60,7 +61,7 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
           <MaterialIcons name="reviews" size={40} color="black" />
         </View>
         <View style={[styles.lowerBox, { backgroundColor: bgColor }]}>
-          <Text style={styles.buttonText}>{btnTitle}</Text>
+          <CustomText style={styles.buttonText}>{btnTitle}</CustomText>
         </View>
       </TouchableOpacity>
       {/* Error Modal */}
@@ -82,12 +83,12 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
             </View>
 
             {/* Title */}
-            <Text style={styles.title}>No Question Fetched!</Text>
+            <CustomText style={styles.title}>No Question Fetched!</CustomText>
 
             {/* Description */}
-            <Text style={styles.description}>
+            <CustomText style={styles.description}>
               Error fetching questions. No questions available at the moment.
-            </Text>
+            </CustomText>
           </View>
         </TouchableOpacity>
       </Modal>

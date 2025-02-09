@@ -32,8 +32,9 @@ import AddFriend from "@/components/addFriend";
 import SlideUpView from "@/components/SlideUpView";
 import useGetInvitations from "@/hooks/useGetInvitations";
 import leaderBoardImg from "@/assets/leaderboard.png";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import useAddNotification from "@/hooks/useAddNotification";
+import CustomText from "@/components/CustomText";
 
 /* TODO:
 Mechanism to remove friend, see requests.
@@ -65,6 +66,8 @@ export default function Friends() {
 
   const { addFriendRequestNotification, acceptFriendRequestNotification } =
     useAddNotification();
+
+  const { openFriendRequests } = useLocalSearchParams();
 
   const router = useRouter();
 
@@ -225,6 +228,12 @@ export default function Friends() {
       fetchFriends(); // Fetch friends when the "My Friends" tab is active
     }
   }, [active]);
+
+  useEffect(() => {
+    if (openFriendRequests) {
+      setShowInvitation(true);
+    }
+  }, []);
 
   // const sendInviteInstructions = async()=>{
   //   /*
@@ -401,7 +410,7 @@ export default function Friends() {
           onReject={handleRejectRequest}
         />
       )}
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <BackButton />
         <View
@@ -431,24 +440,24 @@ export default function Friends() {
           {/* Tabs */}
           <View style={styles.tabs}>
             <Pressable onPress={() => setActive("friends")}>
-              <Text
+              <CustomText
                 style={[
                   styles.tabHeader,
                   active === "friends" ? styles.current : styles.inactive,
                 ]}
               >
                 My Friends
-              </Text>
+              </CustomText>
             </Pressable>
             <Pressable onPress={() => setActive("invite")}>
-              <Text
+              <CustomText
                 style={[
                   styles.tabHeader,
                   active === "invite" ? styles.current : styles.inactive,
                 ]}
               >
                 Invite Friend
-              </Text>
+              </CustomText>
             </Pressable>
           </View>
           <View style={styles.tabDivider}>
@@ -482,10 +491,10 @@ export default function Friends() {
                   />
                 ))
               ) : (
-                <Text style={styles.noFriendsText}>
+                <CustomText style={styles.noFriendsText}>
                   It seems you're flying solo. Add some friends and make it more
                   fun!
-                </Text>
+                </CustomText>
               )}
             </ScrollView>
           ) : (
@@ -497,20 +506,22 @@ export default function Friends() {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   <View>
                     <View style={styles.titleinviteFriend}>
-                      <Text style={styles.titleText}>
+                      <CustomText style={styles.titleText}>
                         Share the Scrub Hub Experience - Invite Today!
-                      </Text>
+                      </CustomText>
                       <TouchableOpacity
                         onPress={() => router.navigate("UserContacts")}
                       >
-                        <Text style={styles.contactBtn}>Search Contacts</Text>
+                        <CustomText style={styles.contactBtn}>
+                          Search Contacts
+                        </CustomText>
                       </TouchableOpacity>
-                      <Text style={{ fontWeight: "bold", marginTop: 15 }}>
+                      <CustomText style={{ fontWeight: "bold", marginTop: 15 }}>
                         OR
-                      </Text>
-                      <Text style={styles.subtitleText}>
+                      </CustomText>
+                      <CustomText style={styles.subtitleText}>
                         Enter your Friend's Mobile Number
-                      </Text>
+                      </CustomText>
                     </View>
                     <View style={savedStyles.numberinviteFriend}>
                       {/* Dropdown */}
@@ -537,12 +548,12 @@ export default function Friends() {
                         {sendInviteLoading ? (
                           <ActivityIndicator size="small" color="#FFFFFF" />
                         ) : (
-                          <Text
+                          <CustomText
                             style={styles.inviteButtonText}
                             onPress={sendInvite}
                           >
                             Send Invite
-                          </Text>
+                          </CustomText>
                         )}
                       </TouchableOpacity>
                     </View>
@@ -577,15 +588,15 @@ export default function Friends() {
                           </View>
 
                           {/* Title */}
-                          <Text style={styles.title}>
+                          <CustomText style={styles.title}>
                             Invitation Sent Successfully!
-                          </Text>
+                          </CustomText>
 
                           {/* Description */}
-                          <Text style={styles.description}>
+                          <CustomText style={styles.description}>
                             Your invite is on its way! Let your friend join the
                             Scrub Hub fun and start exploring.
-                          </Text>
+                          </CustomText>
                         </View>
                       </TouchableOpacity>
                     </Modal>

@@ -1,6 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import CustomText from "./CustomText";
 
 export default function DropDownButton({ setDropDownActive, countryCode }) {
   return (
@@ -8,7 +9,7 @@ export default function DropDownButton({ setDropDownActive, countryCode }) {
       onPress={() => setDropDownActive(true)}
       style={styles.dropdownButton}
     >
-      <Text style={styles.dropdownText}>{countryCode}</Text>
+      <CustomText style={styles.dropdownText}>{countryCode}</CustomText>
 
       <Ionicons
         name="chevron-down"

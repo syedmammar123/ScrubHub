@@ -10,6 +10,7 @@ import ProfilePic from "@/components/ProfilePic";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomAlert from "@/components/CustomAlert";
 import useChallengeFriend from "@/hooks/useChallengeFriend";
+import CustomText from "@/components/CustomText";
 
 const data = [
   {
@@ -123,7 +124,6 @@ const data = [
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
-  const { challengeFriend, loading } = useChallengeFriend();
 
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",
@@ -159,41 +159,24 @@ export default function ProfileScreen() {
     return <Redirect href="onboarding" />;
   }
 
-  const handleChallengeFriend = () => {
-    challengeFriend("FrTsL0JPgZaBSMvPoGHErIpU1iz2", 10, data);
-  };
-
-  console.log("loading", loading);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
         <ProfilePic />
-        <Text style={styles.userText}>Hello, {user.username}</Text>
+        <CustomText style={styles.userText}>Hello, {user.username}</CustomText>
       </View>
 
       <View style={styles.profileOptions}>
-        <Text>
-          Questions Solved: <Text>40</Text>/60
-        </Text>
+        <CustomText>
+          Questions Solved: <CustomText>40</CustomText>/60
+        </CustomText>
         <ScrubButton title="logout" onPress={handleLogout} />
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleChallengeFriend}
-        >
-          <Text>Challenge a friend</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => router.navigate("ChallengeFriend")}
-        >
-          <Text>Score Screen</Text>
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => deleteAccountAlert(user.uid)}
         >
-          <Text style={styles.deleteButtonText}>Delete Account</Text>
+          <CustomText style={styles.deleteButtonText}>Delete Account</CustomText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

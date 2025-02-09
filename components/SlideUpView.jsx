@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
 import Friend from "./friend";
 import { getAvatarImage } from "@/util/getAvatarImage";
+import CustomText from "./CustomText";
 
 const SlideUpView = ({
   visible,
@@ -54,7 +55,7 @@ const SlideUpView = ({
             <Feather name="chevron-down" size={24} color="black" />
           </TouchableOpacity>
 
-          <Text style={styles.heading}>Invitations</Text>
+          <CustomText style={styles.heading}>Invitations</CustomText>
         </View>
 
         {invitationsLoading ? (
@@ -76,7 +77,7 @@ const SlideUpView = ({
             />
           ))
         ) : (
-          <Text style={styles.noFriendsText}>No invitations found</Text>
+          <CustomText style={styles.noFriendsText}>No invitations found</CustomText>
         )}
       </SafeAreaView>
     </Animated.View>

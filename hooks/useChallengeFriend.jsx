@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useCurrentUserStore from "@/store/currentUserStore";
-import firestore, { doc } from "@react-native-firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import useAddNotification from "./useAddNotification";
 
 const useChallengeFriend = () => {
@@ -87,17 +87,17 @@ const useChallengeFriend = () => {
       const firestoreRef = firestore();
 
       // Fetch user and challenger data in parallel
-      const [userDoc, challengerDoc, challengeDoc] = await firestore().getAll(
-        firestoreRef.collection("Users").doc(currentUserId),
-        firestoreRef.collection("Users").doc(challengerId),
-        firestoreRef.collection("Challenges").doc(challengeId)
-      );
+      const [userDoc, challengerDoc, challengeDoc] = await Promise.all([
+        firestoreRef.collection("Users").doc(currentUserId).get(),
+        firestoreRef.collection("Users").doc(challengerId).get(),
+        firestoreRef.collection("Challenges").doc(challengeId).get(),
+      ]);
 
       if (!challengerDoc.exists) throw new Error("Friend data not found");
       if (!challengeDoc.exists) throw new Error("Challenge document not found");
 
-      const userFriendList = userDoc.data()?.friendList || [];
-      const challengerFriendList = challengerDoc.data()?.friendList || [];
+      const userFriendList = userDoc.data()?.friendList.filter((id) => id !== challengerId) || [];
+      const challengerFriendList = challengerDoc.data()?.friendList.filter((id) => id !== currentUserId) || [];
       const { username: challengerUsername, avatarId: challengerAvatarId } =
         challengerDoc.data();
 
@@ -131,9 +131,10 @@ const useChallengeFriend = () => {
       // Commit batch only if there are changes
       await batch.commit();
       console.log("Challenge and notifications added!");
+
       return true;
     } catch (error) {
-      console.error(error);
+      console.error("Error in challengeCompleted:", error);
       return false;
     } finally {
       setLoading(false);

@@ -11,6 +11,7 @@ import {
   getCountryFromPhoneNumber,
 } from "@/util/getRandomItem";
 import DisplayUserContacts from "@/components/DisplayUserContacts";
+import CustomText from "@/components/CustomText";
 
 const UserContacts = () => {
   const { user } = useCurrentUserStore((state) => state);
@@ -68,15 +69,15 @@ const UserContacts = () => {
         <View className="flex-1 items-center justify-center">
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
           {error && (
-            <Text className="font-semibold text-center">
+            <CustomText className="font-semibold text-center">
               Error fetching contacts
-            </Text>
+            </CustomText>
           )}
           {permissionDenied && (
-            <Text className="font-semibold text-center">
+            <CustomText className="font-semibold text-center">
               Permission Denied. Goto Settings and allow ScrubHub to access your
               contacts.
-            </Text>
+            </CustomText>
           )}
         </View>
         {finalContacts.length > 0 && (

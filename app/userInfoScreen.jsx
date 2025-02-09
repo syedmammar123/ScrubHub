@@ -16,6 +16,8 @@ import {
   setDoc,
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "@/store/currentUserStore";
+import CustomText from "@/components/CustomText";
+import CustomTextInput from "@/components/CustomTextInput";
 
 export const avatars = {
   1: require("@/assets/avatar1.png"),
@@ -93,8 +95,8 @@ const userInfoScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Your Information</Text>
-      <Text style={styles.subtitle}>Select Your Avatar</Text>
+      <CustomText style={styles.title}>Your Information</CustomText>
+      <CustomText style={styles.subtitle}>Select Your Avatar</CustomText>
       <View style={styles.avatarContainer}>
         {Object.keys(avatars).map((id) => (
           <TouchableOpacity
@@ -109,15 +111,15 @@ const userInfoScreen = () => {
           </TouchableOpacity>
         ))}
       </View>
-      <Text style={styles.subtitle}>Enter Your Username</Text>
-      <TextInput
+      <CustomText style={styles.subtitle}>Enter Your Username</CustomText>
+      <CustomTextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
       />
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save</Text>
+        <CustomText style={styles.saveButtonText}>Save</CustomText>
       </TouchableOpacity>
     </View>
   );
