@@ -18,6 +18,7 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import useGetNotifications from "@/hooks/useGetNotifications";
 import { formatDateOnly, formatTimeOnly } from "@/util/getRandomItem";
 import { avatars } from "../userInfoScreen";
+import CustomText from "@/components/CustomText";
 
 const dummyNotifications = [
   {
@@ -86,7 +87,7 @@ const NotificationsScreen = () => {
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
           {error && userNotifications.length === 0 && (
-            <Text className="text-center text-red-500 mt-10">{error}</Text>
+            <CustomText className="text-center text-red-500 mt-10">{error}</CustomText>
           )}
           {loading && userNotifications.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
@@ -115,16 +116,16 @@ const NotificationsScreen = () => {
                     <View
                       className={`flex-1 flex-col w-full ${notification.avatars.length > 1 ? "ml-3" : "ml-10"}`}
                     >
-                      <Text className="text-sm text-gray-900">
+                      <CustomText className="text-sm text-gray-900">
                         {notification.text}
-                      </Text>
+                      </CustomText>
                       <View className="flex-row justify-between items-center mt-3">
-                        <Text className="text-xs text-gray-500">
+                        <CustomText className="text-xs text-gray-500">
                           {formatDateOnly(notification.timestamp)}
-                        </Text>
-                        <Text className="text-xs text-gray-500">
+                        </CustomText>
+                        <CustomText className="text-xs text-gray-500">
                           {formatTimeOnly(notification.timestamp)}
-                        </Text>
+                        </CustomText>
                       </View>
                     </View>
                   </View>

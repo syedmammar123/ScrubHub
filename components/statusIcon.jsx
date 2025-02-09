@@ -3,6 +3,7 @@ import React from "react";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { theme } from "@/theme";
+import CustomText from "./CustomText";
 
 export default function StatusIcon({ text, icon }) {
   console.log(icon === "none");
@@ -19,11 +20,11 @@ export default function StatusIcon({ text, icon }) {
       ) : (
         <MaterialIcons name="cancel" size={35} color="#EF5555" />
       )}
-      <Text
+      <CustomText
         style={{ fontFamily: "Poppins-Semi", fontSize: 18, marginLeft: 10 }}
       >
         {text}
-      </Text>
+      </CustomText>
     </View>
   );
 }

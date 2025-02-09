@@ -13,6 +13,7 @@ import Friend from "@/components/friend";
 import { theme } from "@/theme";
 import useGetScores from "@/hooks/useGetScores";
 import { avatars } from "./userInfoScreen";
+import CustomText from "@/components/CustomText";
 
 const scores1 = [
   {
@@ -69,7 +70,7 @@ export default function ChallengeLeaderboard() {
         <View style={styles.topRow}>
           <BackButton />
           <View style={{ flex: 1, alignSelf: "center" }}>
-            <Text style={styles.heading}>DAILY CHALLENGE LEADERBOARD</Text>
+            <CustomText style={styles.heading}>DAILY CHALLENGE LEADERBOARD</CustomText>
           </View>
         </View>
 
@@ -91,7 +92,7 @@ export default function ChallengeLeaderboard() {
           >
             <Image style={styles.circles} source={avatars[scores[1]?.avatar]} />
             <View style={styles.smallCircle}>
-              <Text style={styles.numberText}>02</Text>
+              <CustomText style={styles.numberText}>02</CustomText>
             </View>
           </View>
 
@@ -103,7 +104,7 @@ export default function ChallengeLeaderboard() {
               source={avatars[scores[0]?.avatar]}
             />
             <View style={styles.smallCircle2}>
-              <Text style={styles.numberText}>01</Text>
+              <CustomText style={styles.numberText}>01</CustomText>
             </View>
           </View>
 
@@ -116,7 +117,7 @@ export default function ChallengeLeaderboard() {
           >
             <Image style={styles.circles} source={avatars[scores[2]?.avatar]} />
             <View style={styles.smallCircle}>
-              <Text style={styles.numberText}>03</Text>
+              <CustomText style={styles.numberText}>03</CustomText>
             </View>
           </View>
         </View>

@@ -19,6 +19,7 @@ import { theme } from "@/theme";
 import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { useRouter } from "expo-router";
+import CustomText from "@/components/CustomText";
 
 const dummyData = [
   {
@@ -198,7 +199,7 @@ const DisplayChallenges = ({}) => {
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
           {error && userChallenges.length === 0 && (
-            <Text className="text-center text-red-500 mt-10">{error}</Text>
+            <CustomText className="text-center text-red-500 mt-10">{error}</CustomText>
           )}
           {loading && userChallenges.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
@@ -226,9 +227,9 @@ const DisplayChallenges = ({}) => {
                       </View>
                       <View className={`flex-1 flex-col w-full ml-3`}>
                         <View className="w-full flex flex-row justify-between">
-                          <Text className="text-sm text-gray-900">
+                          <CustomText className="text-sm text-gray-900">
                             {handleText(challenge)}
-                          </Text>
+                          </CustomText>
                           {challenge.status === "pending" &&
                             challenge.opponentId === user.uid && (
                               <TouchableOpacity
@@ -237,20 +238,20 @@ const DisplayChallenges = ({}) => {
                                   handleAttemptChallenge(challenge);
                                 }}
                               >
-                                <Text className="font-semibold text-center">
+                                <CustomText className="font-semibold text-center">
                                   Attempt
-                                </Text>
+                                </CustomText>
                               </TouchableOpacity>
                             )}
                         </View>
 
                         <View className="flex-row justify-between items-center mt-3">
-                          <Text className="text-xs text-gray-500">
+                          <CustomText className="text-xs text-gray-500">
                             {formatDateOnly(challenge.timestamp)}
-                          </Text>
-                          <Text className="text-xs text-gray-500">
+                          </CustomText>
+                          <CustomText className="text-xs text-gray-500">
                             {formatTimeOnly(challenge.timestamp)}
-                          </Text>
+                          </CustomText>
                         </View>
                       </View>
                     </View>

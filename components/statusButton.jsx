@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useQuesStore from "@/store/quesStore";
 import useChallengeFriend from "@/hooks/useChallengeFriend";
+import CustomText from "./CustomText";
 
 const checkAnswerArray = (selected) => {
   for (let i = 0; i < selected.length; i++) {
@@ -212,7 +213,7 @@ export default function StatusButton({
         }
         style={styles.btn}
       >
-        <Text style={styles.text}>{text}</Text>
+        <CustomText style={styles.text}>{text}</CustomText>
       </TouchableOpacity>
       <TouchableOpacity disabled style={styles.lowerbox}></TouchableOpacity>
     </View>

@@ -25,6 +25,7 @@ import {
 } from "react-native-reanimated";
 import { ScaledSheet } from "react-native-size-matters";
 import useQuesStore from "@/store/quesStore";
+import CustomText from "@/components/CustomText";
 
 let options = [
   "1. Vancomycin",
@@ -301,15 +302,15 @@ export default function Matching() {
                   {/* Guideline */}
                   {/* <View>
                     Instruction Remove 
-                    <Text style={styles.Text}>
+                    <CustomText style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
                       match the microbe to the first line treatment:
-                    </Text>
+                    </CustomText>
                   </View> */}
 
                   {/* Hint */}
                   <View>
-                    <Text style={styles.heading}>{question?.question}</Text>
+                    <CustomText style={styles.heading}>{question?.question}</CustomText>
                   </View>
 
                   {/* Input Of Word  */}
@@ -325,9 +326,9 @@ export default function Matching() {
                   >
                     {question.microbes?.map((val, index) => (
                       <View style={styles.row} key={val.id}>
-                        <Text style={styles.TextMatching}>
+                        <CustomText style={styles.TextMatching}>
                           {val.id + "." + val.name}
-                        </Text>
+                        </CustomText>
 
                         {/* Drop Box */}
                         <MatchingDropBox

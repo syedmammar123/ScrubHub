@@ -50,7 +50,7 @@ export default function FriendsLeaderboard() {
               />
             ))}
           {!loading && scores?.length === 0 && (
-            <Text style={{ textAlign: "center" }}>No records found</Text>
+            <CustomText style={{ textAlign: "center" }}>No records found</CustomText>
           )}
         </ScrollView>
       </BackgroundImage>

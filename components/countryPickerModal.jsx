@@ -9,6 +9,7 @@ import {
   Image,
 } from "react-native";
 import countries from "world-countries";
+import CustomText from "./CustomText";
 
 export default function CountryPickerModal({
   dropDownActive,
@@ -46,11 +47,11 @@ export default function CountryPickerModal({
                   }}
                   style={styles.flag}
                 />
-                <Text style={styles.dropdownOptionText}>
+                <CustomText style={styles.dropdownOptionText}>
                   {`${item.name.common} (${item.idd.root}${
                     item.idd.suffixes?.[0] || ""
                   })`}
-                </Text>
+                </CustomText>
               </TouchableOpacity>
             )}
           />

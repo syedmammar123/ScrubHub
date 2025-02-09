@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import Animated from "react-native-reanimated";
 import { ScaledSheet } from "react-native-size-matters";
+import CustomText from "./CustomText";
 
 export default function matchingButton({
   title,
@@ -22,14 +23,14 @@ export default function matchingButton({
       }}
       style={[styles.btn, AnimatedStyle(index), { backgroundColor: bgColor }]}
     >
-      <Text
+      <CustomText
         numberOfLines={2}
         adjustsFontSizeToFit
         minimumFontScale={0.5}
         style={styles.btnTitle}
       >
         {title}
-      </Text>
+      </CustomText>
     </Animated.View>
   );
 }

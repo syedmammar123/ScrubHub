@@ -1,3 +1,4 @@
+import CustomText from "@/components/CustomText";
 import { ScrubButton } from "@/components/scrubButton";
 import { ScrubImage } from "@/components/scrubImage";
 import useCurrentUserStore from "@/store/currentUserStore";
@@ -44,12 +45,12 @@ export default function OnBoarding() {
           color={theme.colorBlack}
           width={"100%"}
         />
-        <Text style={styles.termsText}>
+        <CustomText style={styles.termsText}>
           By signing up you agree to our{" "}
-          <Text style={styles.highlightedText}>Terms</Text> and{" "}
-          <Text style={styles.highlightedText}>Privacy Policy</Text>. We protect
+          <CustomText style={styles.highlightedText}>Terms</CustomText> and{" "}
+          <CustomText style={styles.highlightedText}>Privacy Policy</CustomText>. We protect
           your personal data.
-        </Text>
+        </CustomText>
       </View>
     </LinearGradient>
   );

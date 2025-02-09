@@ -19,6 +19,7 @@ import { router, Redirect } from "expo-router";
 import { doc, getDoc, getFirestore } from "@react-native-firebase/firestore";
 import { OtpInput } from "react-native-otp-entry";
 import useCurrentUserStore from "@/store/currentUserStore";
+import CustomText from "@/components/CustomText";
 
 export default function OtpScreen() {
   const [otp, setOtp] = useState("");
@@ -118,10 +119,10 @@ export default function OtpScreen() {
 
             {/* Title and Instructions */}
             <View style={styles.titleContainer}>
-              <Text style={styles.titleText}>Enter Verification Code</Text>
-              <Text style={styles.subtitleText}>
+              <CustomText style={styles.titleText}>Enter Verification Code</CustomText>
+              <CustomText style={styles.subtitleText}>
                 Enter the 6-digit code sent to {phoneNumber}.
-              </Text>
+              </CustomText>
             </View>
 
             {/* OTP Input Fields */}
@@ -142,18 +143,18 @@ export default function OtpScreen() {
               onPress={handleConfirm}
               disabled={loading}
             >
-              <Text style={styles.confirmButtonText}>
+              <CustomText style={styles.confirmButtonText}>
                 {loading ? "Sending Code...." : "Confirm"}
-              </Text>
+              </CustomText>
             </TouchableOpacity>
 
             {/* Resend OTP Text */}
-            <Text style={[styles.subtitleText, { color: "black" }]}>
+            <CustomText style={[styles.subtitleText, { color: "black" }]}>
               Didn’t receive the code?{" "}
-              <Text style={styles.resendText} onPress={resendOtp}>
+              <CustomText style={styles.resendText} onPress={resendOtp}>
                 Resend
-              </Text>
-            </Text>
+              </CustomText>
+            </CustomText>
           </View>
         </TouchableWithoutFeedback>
       </ScrollView>

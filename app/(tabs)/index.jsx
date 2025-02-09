@@ -21,6 +21,7 @@ import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
+import CustomText from "@/components/CustomText";
 
 export default function App() {
   const state = useGetSolvedQues();
@@ -130,7 +131,7 @@ export default function App() {
               <Entypo name="graduation-cap" size={24} color="white" />
             </View>
 
-            <Text
+            <CustomText
               style={[
                 styles.redButton,
                 styles.buttonStyle,
@@ -139,7 +140,7 @@ export default function App() {
               ]}
             >
               STUDY BY SYSTEM
-            </Text>
+            </CustomText>
           </TouchableOpacity>
           {/* </Link> */}
 
@@ -156,7 +157,7 @@ export default function App() {
               <MaterialIcons name="reviews" size={24} color="white" />
             </View>
 
-            <Text
+            <CustomText
               style={[
                 styles.yellowButton,
                 styles.buttonStyle,
@@ -165,7 +166,7 @@ export default function App() {
               ]}
             >
               REVIEW
-            </Text>
+            </CustomText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -185,7 +186,7 @@ export default function App() {
               />
             </View>
 
-            <Text
+            <CustomText
               style={[
                 styles.purpleButton,
                 styles.buttonStyle,
@@ -194,7 +195,7 @@ export default function App() {
               ]}
             >
               DAILY CHALLENGE
-            </Text>
+            </CustomText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -207,7 +208,7 @@ export default function App() {
               <FontAwesome5 name="user-friends" size={24} color="white" />
             </View>
 
-            <Text
+            <CustomText
               style={[
                 styles.blueButton,
                 styles.buttonStyle,
@@ -216,7 +217,7 @@ export default function App() {
               ]}
             >
               PLAY WITH YOUR FRIENDS
-            </Text>
+            </CustomText>
           </TouchableOpacity>
         </SafeAreaView>
       </BackgroundImage>

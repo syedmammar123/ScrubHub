@@ -16,6 +16,7 @@ import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import { useRouter } from "expo-router";
+import CustomText from "@/components/CustomText";
 
 const buttons = [
   { label: "CARDIOVASCULAR", icon: "graduation-cap", bgColor: "#EBA7A7" },
@@ -85,14 +86,14 @@ export default function App() {
                 <View
                   style={[styles.lowerBox, { backgroundColor: button.bgColor }]}
                 >
-                  <Text
+                  <CustomText
                     numberOfLines={1}
                     adjustsFontSizeToFit
                     minimumFontScale={0.5}
                     style={styles.buttonText}
                   >
                     {button.label}
-                  </Text>
+                  </CustomText>
                 </View>
               </TouchableOpacity>
             ))}

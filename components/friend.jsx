@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
+import CustomText from "./CustomText";
 
 export default function Friend({
   position,
@@ -18,18 +19,18 @@ export default function Friend({
     <>
       <View style={styles.container}>
         <View style={styles.imageName}>
-          {position && <Text style={styles.bluefont}>{position}</Text>}
+          {position && <CustomText style={styles.bluefont}>{position}</CustomText>}
           <Image style={styles.image} source={avatars[photoUrl]} />
-          <Text style={styles.friendName}>{Name}</Text>
+          <CustomText style={styles.friendName}>{Name}</CustomText>
         </View>
         {marks ? (
-          <Text style={styles.bluefont}>{marks === "null" ? 0 : marks}</Text>
+          <CustomText style={styles.bluefont}>{marks === "null" ? 0 : marks}</CustomText>
         ) : (
           <View style={styles.btns}>
             {acceptBtn ? (
               <>
                 <Pressable style={styles.greenBtn} onPress={() => onAccept(id)}>
-                  <Text style={styles.btnText}>Accept</Text>
+                  <CustomText style={styles.btnText}>Accept</CustomText>
                 </Pressable>
                 <Pressable style={styles.btn} onPress={() => onReject(id)}>
                   <Entypo name="cross" size={24} color="white" />
@@ -37,7 +38,7 @@ export default function Friend({
               </>
             ) : (
               <Pressable style={styles.btn} onPress={() => onRemove(id)}>
-                <Text style={styles.btnText}>Remove</Text>
+                <CustomText style={styles.btnText}>Remove</CustomText>
               </Pressable>
             )}
           </View>

@@ -24,6 +24,7 @@ import {
   withSpring,
 } from "react-native-reanimated";
 import useQuesStore from "@/store/quesStore";
+import CustomText from "@/components/CustomText";
 
 // Function to get a random letter
 const getRandomLetter = () => {
@@ -347,23 +348,23 @@ export default function WordScrambledChallenge() {
                   <View>
                     {/* Guideline */}
                     <View>
-                      <Text style={styles.guideline}>
+                      <CustomText style={styles.guideline}>
                         Given a hint with a series of empty spaces and{" "}
                         {question?.answer?.length} letter options, find out
                         which word/term is being hinted at
-                      </Text>
+                      </CustomText>
                     </View>
 
                     {/* Hint */}
                     <View>
-                      <Text style={styles.guideline}>{question?.hint}</Text>
+                      <CustomText style={styles.guideline}>{question?.hint}</CustomText>
                     </View>
 
                     {wordCount > 1 && (
                       <View>
-                        <Text style={[styles.guideline, { fontSize: 16 }]}>
+                        <CustomText style={[styles.guideline, { fontSize: 16 }]}>
                           "{wordCount} Words"
-                        </Text>
+                        </CustomText>
                       </View>
                     )}
 

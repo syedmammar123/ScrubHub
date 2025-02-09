@@ -16,6 +16,7 @@ import StatusButton from "@/components/statusButton";
 import useQuesStore from "@/store/quesStore";
 import UpperBar from "@/components/upperBar";
 import StatusIcon from "@/components/statusIcon";
+import CustomText from "@/components/CustomText";
 
 let bgColors = ["#0038FF", "#00C2FF", "#FFA500", "#9747FF"];
 
@@ -137,7 +138,7 @@ export default function fourOptQues() {
             <View style={styles.mainContainer}>
               {/* Question */}
               <View style={styles.questionContainer}>
-                <Text style={styles.question}>{question?.question}</Text>
+                <CustomText style={styles.question}>{question?.question}</CustomText>
               </View>
               {/* OPTIONS */}
               <View style={styles.optionsContainer}>

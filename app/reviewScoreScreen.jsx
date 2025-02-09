@@ -17,6 +17,7 @@ import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import { useRouter } from "expo-router";
 import StatusButton from "@/components/statusButton";
+import CustomText from "@/components/CustomText";
 
 export default function ReviewScoreScreen() {
   const { getReviewScore } = useQuesStore((state) => state);
@@ -34,7 +35,7 @@ export default function ReviewScoreScreen() {
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text
+            <CustomText
               style={{
                 color: "black",
                 fontSize: 25,
@@ -43,9 +44,9 @@ export default function ReviewScoreScreen() {
               }}
             >
               Your Score
-            </Text>
+            </CustomText>
             <View>
-              <Text
+              <CustomText
                 style={{
                   color: score < 5 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
@@ -53,7 +54,7 @@ export default function ReviewScoreScreen() {
                 }}
               >
                 {score}
-                <Text
+                <CustomText
                   style={{
                     fontFamily: "Poppins-Regular",
                     color: "#3d3d3d",
@@ -62,10 +63,10 @@ export default function ReviewScoreScreen() {
                 >
                   {" "}
                   / 15
-                </Text>
-              </Text>
+                </CustomText>
+              </CustomText>
             </View>
-            <Text
+            <CustomText
               style={{
                 width: "80%",
                 textAlign: "center",
@@ -77,7 +78,7 @@ export default function ReviewScoreScreen() {
             >
               You did a great job, Learn more by solving more questions of
               different topics.
-            </Text>
+            </CustomText>
             <StatusButton type="home" width={"70%"} text="Continue" />
           </View>
         </View>
