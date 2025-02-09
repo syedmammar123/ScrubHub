@@ -73,7 +73,8 @@ export default function Matching() {
   const [offsetValue, setOffsetValue] = useState(0);
   const translateValueX = options.map(() => useSharedValue(0));
   const translateValueY = options.map(() => useSharedValue(0));
-  const [dragging, setDragging] = useState(false);
+  const zIndices = options.map(() => useSharedValue(1));
+
   const box = useSharedValue(-1);
   const yValue = useSharedValue(0);
   console.log("answers", answers);
@@ -103,7 +104,7 @@ export default function Matching() {
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
-        // setDragging(true);
+        zIndices[index].value = 1000;
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
         // console.log(offsetValue);
@@ -203,7 +204,7 @@ export default function Matching() {
           translateValueX[index].value = withSpring(0);
           translateValueY[index].value = withSpring(0);
         }
-        // setDragging(false);
+        zIndices[index].value = 0;
       });
   };
   const panGestureHandler = options.map((_, index) => CreatePanGesture(index));
@@ -211,11 +212,11 @@ export default function Matching() {
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
       return {
+        zIndex: zIndices[index].value,
         transform: [
           { translateX: translateValueX[index].value },
           { translateY: translateValueY[index].value },
         ],
-        // zIndex: dragging ? 100 : 1,
       };
     });
 
@@ -297,12 +298,16 @@ export default function Matching() {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar style="auto" />
-        <View>
+        <View
+          style={{
+            marginTop: 100,
+          }}
+        >
           <BackgroundImage>
             <ScrubLogo />
             <View
               style={{
-                marginTop: 20,
+                marginTop: 150,
                 flex: 1,
                 alignItems: "center",
                 justifyContent: "center",
@@ -354,14 +359,14 @@ export default function Matching() {
               {/* UPPER CONTAINER */}
               <View style={{ flex: 1, justifyContent: "space-between" }}>
                 {/* Guideline */}
-                {/* <View>
+                <View>
+                  {/* 
                     Instruction Remove 
                     <CustomText style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
                       match the microbe to the first line treatment:
                     </CustomText>
                   </View> */}
-
 
                   {/* Hint */}
                   <View>
