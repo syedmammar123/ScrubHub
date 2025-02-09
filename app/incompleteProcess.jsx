@@ -18,38 +18,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import IncompleteWordButtons from "@/components/incompleteWordButtons";
 import useQuesStore from "@/store/quesStore";
 import { scale } from "react-native-size-matters";
+import ScrubLogo from "@/components/scrubLogo";
 
-// let processWords = [
-//   { val: "Glucose→", notknown: false },
-//   { val: "(Hexokinase)→", notknown: false },
-//   { val: "Glucose-6-Phosphate (G6P)→", notknown: false },
-//   { val: "", notknown: true },
-//   { val: "→Fructose-6-Phosphate (F6P)→", notknown: false },
-//   { val: "(Phosphofructokinase-1)→", notknown: false },
-//   { val: "Fructose-1,6-Bisphosphate (F1,6BP)→", notknown: false },
-//   { val: "(Aldolase)→", notknown: false },
-//   {
-//     val: "Dihydroxyacetone Phosphate (DHAP) + Glyceraldehyde-3-Phosphate (G3P)→",
-//     notknown: false,
-//   },
-//   { val: "", notknown: true },
-//   { val: "→1,3-Bisphosphoglycerate (1,3BPG) + NADH→", notknown: false },
-//   { val: "(Phosphoglycerate Kinase)→", notknown: false },
-//   { val: "3 - Phosphoglycerate (3PG) + ATP→", notknown: false },
-//   { val: "", notknown: true },
-//   { val: "→2 - Phosphoglycerate (2PG)→", notknown: false },
-//   { val: "(Enolase)→", notknown: false },
-//   { val: "Phosphoenolpyruvate (PEP)→", notknown: false },
-//   { val: "(Pyruvate Kinase)→", notknown: false },
-//   { val: "Pyruvate + ATP", notknown: false },
-// ];
-
-// let incompleteProcessWords = [
-//   { val: "Phosphoglycerate Mutase → C", opacity: 1 },
-//   { val: "Glyceraldehyde-3-PhosphateDehydrogenase → B", opacity: 1 },
-//   { val: "Phosphoglucose Isomerase → A", opacity: 1 },
-// ];
-
+const extractBeforeBrackets = (str) => {
+  const match = str.match(/^(.*?)\s*\{\{/); // Capture everything before '{{'
+  return match ? match[1].trim() : ""; // Trim and return the extracted part
+};
 export default function IncompleteProcess() {
   //Question Fetch
   const {
@@ -70,6 +44,7 @@ export default function IncompleteProcess() {
   const [process, setProcess] = useState([]);
   const [words, setWords] = useState([]);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
+  const [hints, setHints] = useState([]);
 
   // State for showing final Answer Colors on screen
   const [wrongMatches, setWrongMatches] = useState([]);
@@ -134,8 +109,32 @@ export default function IncompleteProcess() {
       }
       const splitProcess = question.diagram.split("→");
       console.log(splitProcess);
+      let h = [];
       const transformedArray = splitProcess.map((item, index) => {
         if (item.includes("{")) {
+          // console.log("LENGTHS", item.trim().length);
+
+          // console.log("LENGTH OF IT", item.length);
+          const trimmed = item.trim();
+
+          if (trimmed.length > 5) {
+            let position = "";
+            let text = "";
+
+            // console.log("PUSHING", extractedText);
+            if (trimmed[0] === "{") {
+              position = "before";
+
+              console.log("text===", trimmed.slice(5));
+            } else {
+              position = "after";
+              text = extractBeforeBrackets(item);
+              console.log("TEXT", text);
+            }
+            h.push({ text: text, position: position });
+          } else if (trimmed.length === 5) {
+            h.push({ text: "", position: "" });
+          }
           setAnswers((prevAnswers) => {
             const newObj = {
               val: "",
@@ -145,9 +144,13 @@ export default function IncompleteProcess() {
           });
           return { val: "", notknown: true };
         } else {
+          h.push({ text: "", position: "" });
           return { val: item.trim(), notknown: false };
         }
       });
+      // console.log("HINTS", h);
+
+      setHints(h);
       setProcess(transformedArray);
 
       const optionsArray = question.options.map((item) => {
@@ -210,11 +213,7 @@ export default function IncompleteProcess() {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar style="auto" />
-        <View
-          style={{
-            marginTop: 100,
-          }}
-        >
+        <View>
           <BackgroundImage>
             <ScrubLogo />
             <View
@@ -235,9 +234,12 @@ export default function IncompleteProcess() {
         </View>
       </View>
     );
+
+  console.log("HINTS", hints);
+
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
+      <StatusBar style="auto" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -296,11 +298,8 @@ export default function IncompleteProcess() {
 
                     {/* Hint */}
                     <View>
-                      <CustomText style={styles.hint}>
-                        {question?.question}
-                      </CustomText>
+                      <Text style={styles.hint}>{question?.question}</Text>
                     </View>
-                    {/* </View> */}
                   </View>
 
                   {/* Process */}
@@ -321,95 +320,70 @@ export default function IncompleteProcess() {
                         justifyContent: "center",
                       }}
                     >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          width: "100%",
-                          rowGap: 6,
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {(() => {
-                          let notknown = [];
-                          process.forEach((proc, index) => {
-                            if (proc.notknown) {
-                              notknown.push(index);
-                            }
-                          });
-                          return process.map((proc, index) => (
-                            <View style={{ flexDirection: "row" }} key={index}>
-                              {!proc.notknown ? (
-                                <CustomText style={styles.processText}>
-                                  {proc.val}
-                                </CustomText>
-                              ) : (
-                                <View>
-                                  <Pressable
-                                    disabled={isColorsSet}
-                                    onPress={() => {
-                                      handlePress(index);
+                      {(() => {
+                        let index = 0;
+                        let notknown = [];
+                        process.forEach((proc, index) => {
+                          if (proc.notknown) {
+                            notknown.push(index);
+                          }
+                        });
+                        return process.map((proc, index) => (
+                          <View style={{ flexDirection: "row" }} key={index}>
+                            {hints[index]?.text &&
+                              hints[index]?.position === "before" && (
+                                <Text style={styles.processHintBefore}>
+                                  {hints[index]?.text}
+                                </Text>
+                              )}
+                            {!proc.notknown ? (
+                              <Text style={styles.processText}>{proc.val}</Text>
+                            ) : (
+                              <View>
+                                <Pressable
+                                  disabled={isColorsSet}
+                                  onPress={() => {
+                                    handlePress(index);
+                                  }}
+                                  style={[
+                                    styles.Blank,
+                                    {
+                                      backgroundColor: !isColorsSet
+                                        ? selected === index
+                                          ? `${theme.barColor}`
+                                          : `${theme.barBgColor}`
+                                        : wrongMatches.includes(proc.val)
+                                          ? theme.barColor
+                                          : "#EF5555",
+                                    },
+                                  ]}
+                                >
+                                  <Text
+                                    style={{
+                                      fontWeight: "bold",
+                                      fontSize: proc.val === "" ? 15 : 9,
+                                      textAlign: "center",
                                     }}
                                   >
-                                    <CustomText
-                                      style={{
-                                        fontWeight: "bold",
-                                        fontSize: proc.val === "" ? 15 : 9,
-                                        textAlign: "center",
-                                      }}
-                                    >
-                                      {proc.val === ""
-                                        ? String.fromCharCode(
-                                            65 + notknown.indexOf(index)
-                                          )
-                                        : proc.val}
-                                    </CustomText>
-                                  </Pressable>
-                                </View>
+                                    {proc.val === ""
+                                      ? String.fromCharCode(
+                                          65 + notknown.indexOf(index)
+                                        )
+                                      : proc.val}
+                                  </Text>
+                                </Pressable>
+                              </View>
+                            )}
+                            {hints[index]?.text &&
+                              hints[index]?.position === "after" && (
+                                <Text style={styles.processHintAfter}>
+                                  {hints[index]?.text}
+                                </Text>
                               )}
-                              <CustomText>
-                                {" "}
-                                {index !== process.length - 1 && "→"}{" "}
-                              </CustomText>
-                            </View>
-                          ));
-                        })()}
-                      </View>
-                    </View>
-                    {/* Buttons */}
-                    <View style={styles.wordsCotainer}>
-                      {words.map((word, index) => (
-                        <IncompleteWordButtons
-                          bgColor={
-                            !isColorsSet
-                              ? "#ffffff"
-                              : correctMatches.some(
-                                    (item) => item.value === word.val
-                                  )
-                                ? theme.barColor
-                                : "#ffffff"
-                          }
-                          setAnswers={setAnswers}
-                          key={index}
-                          opacity={word.opacity}
-                          title={
-                            !isColorsSet
-                              ? word.val
-                              : correctMatches.some(
-                                    (item) => item.value === word.val
-                                  )
-                                ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
-                                : word.val
-                          }
-                          selected={selected}
-                          setProcess={setProcess}
-                          setSelected={setSelected}
-                          setWords={setWords}
-                          index={index}
-                          words={words}
-                        />
-                      ))}
+                            <Text> {index !== process.length - 1 && "→"} </Text>
+                          </View>
+                        ));
+                      })()}
                     </View>
                   </View>
                   {/* Buttons */}
@@ -530,6 +504,22 @@ const styles = StyleSheet.create({
   processText: {
     fontSize: 15,
     textAlign: "center",
+    // fontWeight: "bold",
+    lineHeight: 25,
+    fontFamily: "Poppins-Semi",
+  },
+  processHintBefore: {
+    fontSize: 12,
+    textAlign: "center",
+    // fontWeight: "bold",
+    lineHeight: 25,
+    marginRight: 10,
+    fontFamily: "Poppins-Semi",
+  },
+  processHintAfter: {
+    fontSize: 12,
+    textAlign: "center",
+    marginLeft: 10,
     // fontWeight: "bold",
     lineHeight: 25,
     fontFamily: "Poppins-Semi",
