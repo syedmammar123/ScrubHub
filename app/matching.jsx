@@ -359,8 +359,8 @@ export default function Matching() {
               {/* UPPER CONTAINER */}
               <View style={{ flex: 1, justifyContent: "space-between" }}>
                 {/* Guideline */}
-                <View>
-                  {/* 
+                {/* <View> */}
+                {/* 
                     Instruction Remove 
                     <CustomText style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
@@ -368,71 +368,75 @@ export default function Matching() {
                     </CustomText>
                   </View> */}
 
-                  {/* Hint */}
-                  <View>
-                    <CustomText style={styles.heading}>
-                      {question?.question}
-                    </CustomText>
-                  </View>
-
-                  {/* Input Of Word  */}
-                  <View
-                    onLayout={(e) => {
-                      console.log(
-                        "Starting of Matching Container",
-                        e.nativeEvent.layout.y
-                      );
-                      setMatchingContainerY(e.nativeEvent.layout.y);
-                    }}
-                    style={styles.matchablesContainer}
-                  >
-                    {question.microbes?.map((val, index) => (
-                      <View style={styles.row} key={val.id}>
-                        <CustomText style={styles.TextMatching}>
-                          {val.id + "." + val.name}
-                        </CustomText>
-
-                        {/* Drop Box */}
-                        <MatchingDropBox
-                          index={index}
-                          setMatchingDropLayout={setMatchingDropLayout}
-                        />
-                      </View>
-                    ))}
-                  </View>
-
-                  <View
-                    onLayout={(e) => {
-                      console.log(
-                        "Starting of Buttons Container",
-                        e.nativeEvent.layout.y
-                      );
-                      setAnswerContainerY(e.nativeEvent.layout.y);
-                    }}
-                    style={styles.answerBtnContainer}
-                  >
-                    {questionOptions?.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <MatchingButton
-                          bgColor={
-                            !checked
-                              ? "#ffffff"
-                              : answers[index] !== -1
-                                ? theme.barColor
-                                : "#EF5555"
-                          }
-                          title={val.name}
-                          AnimatedStyle={AnimatedStyle}
-                          index={index}
-                          setMatchingOptionsLayout={setMatchingOptionsLayout}
-                        />
-                      </GestureDetector>
-                    ))}
-                  </View>
+                {/* Hint */}
+                <View>
+                  <CustomText style={styles.heading}>
+                    {question?.question}
+                  </CustomText>
                 </View>
+
+                {/* Input Of Word  */}
+                <View
+                  onLayout={(e) => {
+                    console.log(
+                      "Starting of Matching Container",
+                      e.nativeEvent.layout.y
+                    );
+                    setMatchingContainerY(e.nativeEvent.layout.y);
+                  }}
+                  style={styles.matchablesContainer}
+                >
+                  {question.microbes?.map((val, index) => (
+                    <View style={styles.row} key={val.id}>
+                      <CustomText style={styles.TextMatching}>
+                        {val.id + "." + val.name}
+                      </CustomText>
+
+                      {/* Drop Box */}
+                      <MatchingDropBox
+                        index={index}
+                        setMatchingDropLayout={setMatchingDropLayout}
+                      />
+                    </View>
+                  ))}
+                </View>
+
+                <View
+                  onLayout={(e) => {
+                    console.log(
+                      "Starting of Buttons Container",
+                      e.nativeEvent.layout.y
+                    );
+                    setAnswerContainerY(e.nativeEvent.layout.y);
+                  }}
+                  style={styles.answerBtnContainer}
+                >
+                  {questionOptions?.map((val, index) => (
+                    <GestureDetector
+                      key={index}
+                      gesture={
+                        !checked
+                          ? panGestureHandler[index]
+                          : Gesture.Pan().enabled(false)
+                      }
+                    >
+                      <MatchingButton
+                        bgColor={
+                          !checked
+                            ? "#ffffff"
+                            : answers.includes(val.id)
+                              ? theme.barColor
+                              : "#EF5555"
+                        }
+                        title={val.name}
+                        AnimatedStyle={AnimatedStyle}
+                        index={index}
+                        setMatchingOptionsLayout={setMatchingOptionsLayout}
+                      />
+                    </GestureDetector>
+                  ))}
+                </View>
+                {/* </View> */}
               </View>
             </>
             {/* )} */}

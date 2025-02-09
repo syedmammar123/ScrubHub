@@ -73,7 +73,7 @@ export default function StatusButton({
     currentChallengerId,
     currentFriendChallengeScore,
     currentOpponentScore,
-    clearFields
+    clearFields,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
@@ -194,7 +194,7 @@ export default function StatusButton({
             currentFriendChallengeScore,
             currentOpponentScore
           );
-          clearFields()
+          clearFields();
           // router.navigate("challengeLeaderboard");
           router.navigate("scoreScreen");
         }

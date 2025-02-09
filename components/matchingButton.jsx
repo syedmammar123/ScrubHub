@@ -41,7 +41,8 @@ const styles = ScaledSheet.create({
 
     height: 37,
     width: "45%",
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
+
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
