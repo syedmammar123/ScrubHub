@@ -291,6 +291,32 @@ export default function Matching() {
       setOffsetValue(answerContainerY - matchingContainerY);
     }
   }, [matchingContainerY, answerContainerY]);
+
+  if (submitted)
+    return (
+      <View style={{ flex: 1 }}>
+        <StatusBar style="auto" />
+        <View>
+          <BackgroundImage>
+            <ScrubLogo />
+            <View
+              style={{
+                marginTop: 20,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator
+                style={styles.loadingIndicator}
+                size={"large"}
+                color={theme.barColor}
+              />
+            </View>
+          </BackgroundImage>
+        </View>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -308,7 +334,7 @@ export default function Matching() {
               alignSelf: "center",
             }}
           >
-            {submitted ? (
+            {/* {submitted ? (
               <View
                 style={{
                   flex: 1,
@@ -322,12 +348,12 @@ export default function Matching() {
                   color={theme.barColor}
                 />
               </View>
-            ) : (
-              <>
-                {/* UPPER CONTAINER */}
-                <View style={{ flex: 1, justifyContent: "space-between" }}>
-                  {/* Guideline */}
-                  {/* <View>
+            ) : ( */}
+            <>
+              {/* UPPER CONTAINER */}
+              <View style={{ flex: 1, justifyContent: "space-between" }}>
+                {/* Guideline */}
+                {/* <View>
                     Instruction Remove 
                     <Text style={styles.Text}>
                       Given a set of four mirobes and a set of four treatments,
@@ -335,71 +361,71 @@ export default function Matching() {
                     </Text>
                   </View> */}
 
-                  {/* Hint */}
-                  <View>
-                    <Text style={styles.heading}>{question?.question}</Text>
-                  </View>
-
-                  {/* Input Of Word  */}
-                  <View
-                    onLayout={(e) => {
-                      console.log(
-                        "Starting of Matching Container",
-                        e.nativeEvent.layout.y
-                      );
-                      setMatchingContainerY(e.nativeEvent.layout.y);
-                    }}
-                    style={styles.matchablesContainer}
-                  >
-                    {question.microbes?.map((val, index) => (
-                      <View style={styles.row} key={val.id}>
-                        <Text style={styles.TextMatching}>
-                          {val.id + "." + val.name}
-                        </Text>
-
-                        {/* Drop Box */}
-                        <MatchingDropBox
-                          index={index}
-                          setMatchingDropLayout={setMatchingDropLayout}
-                        />
-                      </View>
-                    ))}
-                  </View>
-
-                  <View
-                    onLayout={(e) => {
-                      console.log(
-                        "Starting of Buttons Container",
-                        e.nativeEvent.layout.y
-                      );
-                      setAnswerContainerY(e.nativeEvent.layout.y);
-                    }}
-                    style={styles.answerBtnContainer}
-                  >
-                    {questionOptions?.map((val, index) => (
-                      <GestureDetector
-                        key={index}
-                        gesture={panGestureHandler[index]}
-                      >
-                        <MatchingButton
-                          bgColor={
-                            !checked
-                              ? "#ffffff"
-                              : answers[index] !== -1
-                                ? theme.barColor
-                                : "#EF5555"
-                          }
-                          title={val.name}
-                          AnimatedStyle={AnimatedStyle}
-                          index={index}
-                          setMatchingOptionsLayout={setMatchingOptionsLayout}
-                        />
-                      </GestureDetector>
-                    ))}
-                  </View>
+                {/* Hint */}
+                <View>
+                  <Text style={styles.heading}>{question?.question}</Text>
                 </View>
-              </>
-            )}
+
+                {/* Input Of Word  */}
+                <View
+                  onLayout={(e) => {
+                    console.log(
+                      "Starting of Matching Container",
+                      e.nativeEvent.layout.y
+                    );
+                    setMatchingContainerY(e.nativeEvent.layout.y);
+                  }}
+                  style={styles.matchablesContainer}
+                >
+                  {question.microbes?.map((val, index) => (
+                    <View style={styles.row} key={val.id}>
+                      <Text style={styles.TextMatching}>
+                        {val.id + "." + val.name}
+                      </Text>
+
+                      {/* Drop Box */}
+                      <MatchingDropBox
+                        index={index}
+                        setMatchingDropLayout={setMatchingDropLayout}
+                      />
+                    </View>
+                  ))}
+                </View>
+
+                <View
+                  onLayout={(e) => {
+                    console.log(
+                      "Starting of Buttons Container",
+                      e.nativeEvent.layout.y
+                    );
+                    setAnswerContainerY(e.nativeEvent.layout.y);
+                  }}
+                  style={styles.answerBtnContainer}
+                >
+                  {questionOptions?.map((val, index) => (
+                    <GestureDetector
+                      key={index}
+                      gesture={panGestureHandler[index]}
+                    >
+                      <MatchingButton
+                        bgColor={
+                          !checked
+                            ? "#ffffff"
+                            : answers[index] !== -1
+                              ? theme.barColor
+                              : "#EF5555"
+                        }
+                        title={val.name}
+                        AnimatedStyle={AnimatedStyle}
+                        index={index}
+                        setMatchingOptionsLayout={setMatchingOptionsLayout}
+                      />
+                    </GestureDetector>
+                  ))}
+                </View>
+              </View>
+            </>
+            {/* )} */}
 
             {/* LOWER CONTAINER */}
             <View>
