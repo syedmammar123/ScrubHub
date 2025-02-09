@@ -37,7 +37,7 @@ export default function ScoreScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Curvy Lines Background */}
       <BackgroundImage>
@@ -83,7 +83,9 @@ export default function ScoreScreen() {
                   className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`}
                   onPress={() => router.navigate("ChallengeFriend")}
                 >
-                  <CustomText className="font-semibold">Challenge a friend</CustomText>
+                  <CustomText className="font-semibold">
+                    Challenge a friend
+                  </CustomText>
                 </TouchableOpacity>
               )}
               <View className="mb-5 px-5">
@@ -91,7 +93,9 @@ export default function ScoreScreen() {
                   friendChallengeScore > currentOpponentScore && (
                     <CustomText className="text-center text-lg font-semibold">
                       Hooray you{" "}
-                      <CustomText className="font-bold text-green-700">won</CustomText>{" "}
+                      <CustomText className="font-bold text-green-700">
+                        won
+                      </CustomText>{" "}
                       against {challengerUsername}. {challengerUsername} scored{" "}
                       <CustomText className="font-semibold">
                         {currentOpponentScore}
@@ -102,7 +106,10 @@ export default function ScoreScreen() {
                 {type === "friendchallenge" &&
                   friendChallengeScore < currentOpponentScore && (
                     <CustomText className="text-center text-lg font-semibold">
-                      You <CustomText className="font-bold text-red-500">lost</CustomText>{" "}
+                      You{" "}
+                      <CustomText className="font-bold text-red-500">
+                        lost
+                      </CustomText>{" "}
                       against {challengerUsername}. {challengerUsername} scored{" "}
                       <CustomText className="font-semibold">
                         {currentOpponentScore}
@@ -113,8 +120,8 @@ export default function ScoreScreen() {
                 {type === "friendchallenge" &&
                   friendChallengeScore === currentOpponentScore && (
                     <CustomText className="text-center text-lg font-semibold">
-                      It's a <CustomText className="font-bold">draw</CustomText> against{" "}
-                      {challengerUsername}. {challengerUsername} scored{" "}
+                      It's a <CustomText className="font-bold">draw</CustomText>{" "}
+                      against {challengerUsername}. {challengerUsername} scored{" "}
                       <CustomText className="font-semibold">
                         {currentOpponentScore}
                       </CustomText>{" "}

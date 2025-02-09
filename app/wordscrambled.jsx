@@ -357,7 +357,7 @@ export default function WordScrambled() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -395,12 +395,16 @@ export default function WordScrambled() {
 
                     {/* Hint */}
                     <View>
-                      <CustomText style={styles.guideline}>{question?.hint}</CustomText>
+                      <CustomText style={styles.guideline}>
+                        {question?.hint}
+                      </CustomText>
                     </View>
 
                     {wordCount > 1 && (
                       <View>
-                        <CustomText style={[styles.guideline, { fontSize: 16 }]}>
+                        <CustomText
+                          style={[styles.guideline, { fontSize: 16 }]}
+                        >
                           "{wordCount} Words"
                         </CustomText>
                       </View>

@@ -82,7 +82,7 @@ export default function Topics() {
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic,
+            topic
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
@@ -133,7 +133,7 @@ export default function Topics() {
     const topicsCollectionRef = doc(
       db,
       "Topics",
-      system.toLowerCase().replace(/\s+/g, ""),
+      system.toLowerCase().replace(/\s+/g, "")
     );
     try {
       const topics = await getDoc(topicsCollectionRef);
@@ -208,10 +208,9 @@ export default function Topics() {
     getTopics();
   }, []);
 
-
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
 
       <BackButton />
 
@@ -253,7 +252,9 @@ export default function Topics() {
                 }}
               >
                 <View>
-                  <CustomText style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}>
+                  <CustomText
+                    style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}
+                  >
                     {topics && "Choose From Topics..."}
                   </CustomText>
                 </View>
@@ -330,7 +331,9 @@ export default function Topics() {
                 </View>
 
                 {/* Title */}
-                <CustomText style={styles.title}>No Question Fetched!</CustomText>
+                <CustomText style={styles.title}>
+                  No Question Fetched!
+                </CustomText>
 
                 {/* Description */}
                 <CustomText style={styles.description}>

@@ -67,7 +67,7 @@ export default function Friends() {
   const { addFriendRequestNotification, acceptFriendRequestNotification } =
     useAddNotification();
 
-    const { openFriendRequests } = useLocalSearchParams();
+  const { openFriendRequests } = useLocalSearchParams();
 
   const router = useRouter();
 
@@ -410,7 +410,7 @@ export default function Friends() {
           onReject={handleRejectRequest}
         />
       )}
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <BackButton />
         <View
@@ -512,7 +512,9 @@ export default function Friends() {
                       <TouchableOpacity
                         onPress={() => router.navigate("UserContacts")}
                       >
-                        <CustomText style={styles.contactBtn}>Search Contacts</CustomText>
+                        <CustomText style={styles.contactBtn}>
+                          Search Contacts
+                        </CustomText>
                       </TouchableOpacity>
                       <CustomText style={{ fontWeight: "bold", marginTop: 15 }}>
                         OR

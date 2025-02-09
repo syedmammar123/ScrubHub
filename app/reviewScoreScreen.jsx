@@ -24,7 +24,7 @@ export default function ReviewScoreScreen() {
   const [score, setScore] = useState(getReviewScore());
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Curvy Lines Background */}
       <BackgroundImage>

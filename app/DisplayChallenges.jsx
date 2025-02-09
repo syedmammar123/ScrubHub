@@ -146,8 +146,6 @@ const DisplayChallenges = ({}) => {
       ? opponentScore
       : challengerScore;
 
-    
-
     if (myScore > otherPlayerScoreValue) {
       return `You won against ${otherPlayerName}. You scored ${myScore}, and ${otherPlayerName} scored ${otherPlayerScoreValue}`;
     } else if (myScore < otherPlayerScoreValue) {
@@ -189,17 +187,19 @@ const DisplayChallenges = ({}) => {
     }
   };
 
-  console.log("userChallenges", userChallenges)
+  console.log("userChallenges", userChallenges);
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
           {error && userChallenges.length === 0 && (
-            <CustomText className="text-center text-red-500 mt-10">{error}</CustomText>
+            <CustomText className="text-center text-red-500 mt-10">
+              {error}
+            </CustomText>
           )}
           {loading && userChallenges.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />

@@ -58,7 +58,7 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.inviteFriendContainer}
@@ -72,7 +72,9 @@ export default function Register() {
               color="black"
             />
             <View style={styles.titleinviteFriend}>
-              <CustomText style={styles.titleText}>Enter mobile number</CustomText>
+              <CustomText style={styles.titleText}>
+                Enter mobile number
+              </CustomText>
               <CustomText style={styles.subtitleText}>
                 Add your phone number. We'll send you a verification code so we
                 know you're real.

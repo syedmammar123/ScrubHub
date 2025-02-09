@@ -105,7 +105,7 @@ export default function OtpScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.contentContainer}>
@@ -119,7 +119,9 @@ export default function OtpScreen() {
 
             {/* Title and Instructions */}
             <View style={styles.titleContainer}>
-              <CustomText style={styles.titleText}>Enter Verification Code</CustomText>
+              <CustomText style={styles.titleText}>
+                Enter Verification Code
+              </CustomText>
               <CustomText style={styles.subtitleText}>
                 Enter the 6-digit code sent to {phoneNumber}.
               </CustomText>

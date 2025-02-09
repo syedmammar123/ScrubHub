@@ -208,7 +208,7 @@ export default function IncompleteProcess() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -267,7 +267,9 @@ export default function IncompleteProcess() {
 
                       {/* Hint */}
                       <View>
-                        <CustomText style={styles.hint}>{question?.question}</CustomText>
+                        <CustomText style={styles.hint}>
+                          {question?.question}
+                        </CustomText>
                       </View>
                     </View>
 

@@ -9,7 +9,7 @@ import { theme } from "@/theme";
 export default function casemystery() {
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>

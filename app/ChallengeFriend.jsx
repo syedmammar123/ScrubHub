@@ -23,7 +23,7 @@ const ChallengeFriend = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackgroundImage>
         <View contentContainerStyle={styles.scrollContainer} className="pt-14">
           <ScrubLogo />
@@ -31,7 +31,9 @@ const ChallengeFriend = () => {
             Challenge a friend
           </CustomText>
           {error && (
-            <CustomText className="text-center text-red-500 mt-10">{error}</CustomText>
+            <CustomText className="text-center text-red-500 mt-10">
+              {error}
+            </CustomText>
           )}
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
@@ -51,7 +53,9 @@ const ChallengeFriend = () => {
               className="bg-[#93D334] py-2 px-4 rounded mt-10 "
               onPress={() => router.navigate("/")}
             >
-              <CustomText className="text-white text-center">Goto Home</CustomText>
+              <CustomText className="text-white text-center">
+                Goto Home
+              </CustomText>
             </TouchableOpacity>
           </View>
         </View>

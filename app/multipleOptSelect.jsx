@@ -87,7 +87,7 @@ export default function MultipleOptSelect() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <UpperBar />
       <View style={{ flex: 1 }}>
@@ -112,7 +112,9 @@ export default function MultipleOptSelect() {
               <View style={styles.mainContainer}>
                 {/* Question */}
                 <View style={styles.questionContainer}>
-                  <CustomText style={styles.question}>{question?.description}</CustomText>
+                  <CustomText style={styles.question}>
+                    {question?.description}
+                  </CustomText>
                   <CustomText style={[styles.question, { fontSize: 20 }]}>
                     "{question?.name}"
                   </CustomText>

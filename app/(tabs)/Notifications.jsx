@@ -63,31 +63,30 @@ const NotificationsScreen = () => {
   const { loading, error } = useGetNotifications();
   const router = useRouter();
 
-
   const handlePress = (notificationType) => {
-    if(notificationType === "friendRequestRecieved") {
+    if (notificationType === "friendRequestRecieved") {
       router.push({
         pathname: "/friends",
         params: { openFriendRequests: true },
       });
-    }
-    else if(notificationType === "challenge") {
+    } else if (notificationType === "challenge") {
       router.push("DisplayChallenges");
     }
-  }
+  };
 
   console.log("userNotifications", userNotifications);
- 
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
           <ScrubLogo />
           {error && userNotifications.length === 0 && (
-            <CustomText className="text-center text-red-500 mt-10">{error}</CustomText>
+            <CustomText className="text-center text-red-500 mt-10">
+              {error}
+            </CustomText>
           )}
           {loading && userNotifications.length === 0 && (
             <ActivityIndicator size="large" color="#0000ff" className="mt-10" />
@@ -100,35 +99,35 @@ const NotificationsScreen = () => {
                     key={notification.timestamp.nanoseconds}
                     onPress={() => handlePress(notification.type)}
                   >
-                  <View
-                    key={notification.timestamp.nanoseconds}
-                    className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
-                  >
-                    <View className="flex-row">
-                      {notification.avatars.map((avatar, index) => (
-                        <Image
-                          key={index}
-                          source={avatars[avatar]}
-                          className={`w-10 h-10 rounded-full ${index !== 0 ? "-ml-3" : ""}`}
-                        />
-                      ))}
-                    </View>
                     <View
-                      className={`flex-1 flex-col w-full ${notification.avatars.length > 1 ? "ml-3" : "ml-10"}`}
+                      key={notification.timestamp.nanoseconds}
+                      className="flex-row items-center p-3 rounded-lg border-b border-gray-300"
                     >
-                      <CustomText className="text-sm text-gray-900">
-                        {notification.text}
-                      </CustomText>
-                      <View className="flex-row justify-between items-center mt-3">
-                        <CustomText className="text-xs text-gray-500">
-                          {formatDateOnly(notification.timestamp)}
+                      <View className="flex-row">
+                        {notification.avatars.map((avatar, index) => (
+                          <Image
+                            key={index}
+                            source={avatars[avatar]}
+                            className={`w-10 h-10 rounded-full ${index !== 0 ? "-ml-3" : ""}`}
+                          />
+                        ))}
+                      </View>
+                      <View
+                        className={`flex-1 flex-col w-full ${notification.avatars.length > 1 ? "ml-3" : "ml-10"}`}
+                      >
+                        <CustomText className="text-sm text-gray-900">
+                          {notification.text}
                         </CustomText>
-                        <CustomText className="text-xs text-gray-500">
-                          {formatTimeOnly(notification.timestamp)}
-                        </CustomText>
+                        <View className="flex-row justify-between items-center mt-3">
+                          <CustomText className="text-xs text-gray-500">
+                            {formatDateOnly(notification.timestamp)}
+                          </CustomText>
+                          <CustomText className="text-xs text-gray-500">
+                            {formatTimeOnly(notification.timestamp)}
+                          </CustomText>
+                        </View>
                       </View>
                     </View>
-                  </View>
                   </TouchableOpacity>
                 ))}
               </ScrollView>

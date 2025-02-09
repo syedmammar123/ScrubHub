@@ -89,7 +89,7 @@ export default function fourOptQues() {
   if (submitted)
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
         <View>
           <BackgroundImage>
             <ScrubLogo />
@@ -113,7 +113,7 @@ export default function fourOptQues() {
     );
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       <UpperBar />
       <View style={{ flex: 1 }}>
@@ -138,7 +138,9 @@ export default function fourOptQues() {
             <View style={styles.mainContainer}>
               {/* Question */}
               <View style={styles.questionContainer}>
-                <CustomText style={styles.question}>{question?.question}</CustomText>
+                <CustomText style={styles.question}>
+                  {question?.question}
+                </CustomText>
               </View>
               {/* OPTIONS */}
               <View style={styles.optionsContainer}>

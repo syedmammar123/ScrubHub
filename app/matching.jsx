@@ -266,7 +266,7 @@ export default function Matching() {
   }, [matchingContainerY, answerContainerY]);
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <BackButton />
       {/* Status Of Questions BAR */}
       <UpperBar />
@@ -310,7 +310,9 @@ export default function Matching() {
 
                   {/* Hint */}
                   <View>
-                    <CustomText style={styles.heading}>{question?.question}</CustomText>
+                    <CustomText style={styles.heading}>
+                      {question?.question}
+                    </CustomText>
                   </View>
 
                   {/* Input Of Word  */}
