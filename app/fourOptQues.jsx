@@ -150,7 +150,7 @@ export default function fourOptQues() {
       <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo />
+          <ScrubLogo type={"happy"} />
           {/* {submitted ? (
             <View
               style={{

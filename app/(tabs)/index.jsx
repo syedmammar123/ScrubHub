@@ -1,5 +1,5 @@
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import React from "react";
+import LottieView from "lottie-react-native";
 import {
   StyleSheet,
   Text,
@@ -22,6 +22,7 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
+import LottieView from "lottie-react-native";
 
 export default function App() {
   const state = useGetSolvedQues();
@@ -117,7 +118,14 @@ export default function App() {
             >
               Testing
             </Text>
+            
           </TouchableOpacity> */}
+          <LottieView
+            source={require("@/assets/BloodCell_Happy.json")}
+            autoPlay
+            loop
+            style={{ width: 200, height: 200 }}
+          />
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {

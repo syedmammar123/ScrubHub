@@ -1,14 +1,26 @@
 import { View, StyleSheet, Image } from "react-native";
-import React from "react";
-
-export default function scrubLogo() {
+// import LottieView from "lottie-react-native";
+import React, { useRef } from "react";
+export default function scrubLogo({ type }) {
+  const animation = useRef(null);
   return (
     <View style={styles.logoContainer}>
+      {/* {type ? ( */}
+      {/* <LottieView
+        ref={animation}
+        source={require("@/assets/BloodCell_Happy.json")}
+        autoPlay
+        loop
+        style={{ width: 200, height: 200 }}
+      /> */}
       <Image
         source={require("@/assets/scrubLogo.png")}
         style={styles.logoImage}
         resizeMode="contain"
       />
+      {/* // ) : (
+       
+      // )} */}
     </View>
   );
 }
