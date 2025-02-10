@@ -35,7 +35,9 @@ import leaderBoardImg from "@/assets/leaderboard.png";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import useAddNotification from "@/hooks/useAddNotification";
 import CustomText from "@/components/CustomText";
-
+import useQuesStore from "@/store/quesStore";
+import { q } from "@/store/quesData";
+import { getQuestionType } from "@/util/utilQuesFunc";
 /* TODO:
 Mechanism to remove friend, see requests.
 Design friend reqest sent  modal properly! setInviteSent(true)
@@ -71,6 +73,13 @@ export default function Friends() {
 
   const router = useRouter();
 
+  const {
+    fetchChallengeFriendQuestions,
+    getFriendChallengeQuestion,
+    getFetchedFriendChallengeID,
+    setType,
+    clearFields,
+  } = useQuesStore((state) => state);
   const sendInvite = async () => {
     if (phoneNumber.length !== 10) {
       Alert.alert("Error", "Please enter a valid phone number.");
@@ -398,6 +407,41 @@ export default function Friends() {
     ]);
   };
 
+  const handleChallengeFriend = (itemId) => {
+    console.log(itemId);
+    clearFields();
+    setType("friendchallenge");
+
+    const currentChallenge = getFetchedFriendChallengeID();
+
+    if (currentChallenge === "") {
+      console.log("FETCHING");
+      // let questions = 9;
+      let challenge = q;
+      console.log("CHALLENGE", challenge);
+      let questions = fetchChallengeFriendQuestions(challenge, "friend");
+      if (questions === 0) {
+        setErr(true);
+        // console.log("YES");
+      } else {
+        console.log("FETCH COMPLERE");
+
+        const nextScreen = getQuestionType(getFriendChallengeQuestion());
+
+        console.log("NEXT SCREEN", nextScreen);
+        router.navigate(nextScreen);
+      }
+    } else {
+      // Already Fetched Questions
+      const nextScreen = getQuestionType(getFriendChallengeQuestion());
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledfriendchallenge");
+      } else {
+        router.replace(nextScreen);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       {showInvitation && (
@@ -483,6 +527,7 @@ export default function Friends() {
               ) : friends.length > 0 ? (
                 friends.map((friend, index) => (
                   <Friend
+                    onChallenge={handleChallengeFriend}
                     key={friend.uid}
                     Name={friend.username || "Unknown"}
                     photoUrl={friend.avatarId}

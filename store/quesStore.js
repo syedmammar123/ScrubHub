@@ -140,18 +140,18 @@ const useQuesStore = create((set, get) => ({
   currentFriendChallengeIndex: 0,
   currentFriendChallengeScore: null,
   currentOpponentScore: 0,
-  currentChallengerId : '',
+  currentChallengerId: "",
   challengerUsername: "",
-  
+
   clearFields: () => {
     set({ currentFriendChallengeScore: null });
     set({ currentFriendChallengeIndex: 0 });
     set({ currentFriendChallengeId: "" });
     set({ currentOpponentScore: 0 });
-    set({ currentChallengerId: '' });
+    set({ currentChallengerId: "" });
     set({ friendChallengeQuestions: [] });
     set({ type: "" });
-    set({challengerUsername: ""})
+    set({ challengerUsername: "" });
   },
   increaseFriendChallengeScore: () =>
     set((state) => ({
@@ -169,7 +169,7 @@ const useQuesStore = create((set, get) => ({
     const { currentOpponentScore } = get();
     return currentOpponentScore;
   },
-  getChallengerUsername: () => {  
+  getChallengerUsername: () => {
     const { challengerUsername } = get();
     return challengerUsername;
   },
@@ -181,19 +181,36 @@ const useQuesStore = create((set, get) => ({
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
   },
-  fetchChallengeFriendQuestions: async (challenge) => {
-
-    if (challenge.questions.length > 0) {
-      set({ currentFriendChallengeIndex: 0 });
-      set({ friendChallengeQuestions: challenge.questions });
-      set({ currentFriendChallengeScore: 0 });
-      set({ currentOpponentScore: challenge.challengerScore });
-      set({ currentFriendChallengeId: challenge.id });
-      set({ currentChallengerId: challenge.challengerId });
-      set({challengerUsername: challengerUsername})
-      return challenge.questions.length;
+  fetchChallengeFriendQuestions: (challenge, type) => {
+    console.log("CHALLENGEIN STORE", challenge);
+    if (type === "friend") {
+      console.log("CALLED FROM friend Screen");
+      if (challenge.questions.length > 0) {
+        set({ currentFriendChallengeIndex: 0 });
+        set({ friendChallengeQuestions: challenge.questions.slice(0, 16) });
+        set({ currentFriendChallengeScore: 0 });
+        // set({ currentOpponentScore: challenge.challengerScore });
+        set({ currentFriendChallengeId: "" });
+        // set({ currentFriendChallengeId: challenge.id });
+        // set({ currentChallengerId: challenge.challengerId });
+        // set({ challengerUsername: challengerUsername });
+        return challenge.questions.length;
+      } else {
+        return 0;
+      }
     } else {
-      return 0;
+      if (challenge.questions.length > 0) {
+        set({ currentFriendChallengeIndex: 0 });
+        set({ friendChallengeQuestions: challenge.questions });
+        set({ currentFriendChallengeScore: 0 });
+        set({ currentOpponentScore: challenge.challengerScore });
+        set({ currentFriendChallengeId: challenge.id });
+        set({ currentChallengerId: challenge.challengerId });
+        set({ challengerUsername: challengerUsername });
+        return challenge.questions.length;
+      } else {
+        return 0;
+      }
     }
   },
   submitFriendChallenge: async () => {
