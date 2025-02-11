@@ -12,6 +12,7 @@ import { theme } from "@/theme";
 import useGetScores from "@/hooks/useGetScores";
 import BackButton from "@/components/backButton";
 import auth from "@react-native-firebase/auth";
+import CustomText from "@/components/CustomText";
 
 export default function FriendsLeaderboard() {
   const { scores, loading } = useGetScores({ scoreField: "totalScore" });
@@ -50,7 +51,9 @@ export default function FriendsLeaderboard() {
               />
             ))}
           {!loading && scores?.length === 0 && (
-            <CustomText style={{ textAlign: "center" }}>No records found</CustomText>
+            <CustomText style={{ textAlign: "center" }}>
+              No records found
+            </CustomText>
           )}
         </ScrollView>
       </BackgroundImage>

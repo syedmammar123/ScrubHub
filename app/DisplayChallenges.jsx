@@ -20,6 +20,7 @@ import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { useRouter } from "expo-router";
 import CustomText from "@/components/CustomText";
+import { useState } from "react";
 
 const dummyData = [
   {
@@ -115,7 +116,7 @@ const dummyData = [
 const DisplayChallenges = ({}) => {
   const { userChallenges, user } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetChallenges();
-
+  const [err, setErr] = useState();
   const {
     fetchChallengeFriendQuestions,
     getFriendChallengeQuestion,
@@ -167,7 +168,8 @@ const DisplayChallenges = ({}) => {
 
       let questions = fetchChallengeFriendQuestions(challenge);
       if (questions === 0) {
-        console.log("YES");
+        setErr(true);
+        // console.log("YES");
       } else {
         console.log("FETCH COMPLERE");
 
