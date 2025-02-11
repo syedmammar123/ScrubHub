@@ -3,7 +3,7 @@ import { StyleSheet, Text, Pressable, Platform } from "react-native";
 import * as Haptics from "expo-haptics";
 import CustomText from "./CustomText";
 
-export function ScrubButton({ title, onPress, color, width,className }) {
+export function ScrubButton({ title, onPress, color, width, className }) {
   const handlePress = () => {
     if (Platform.OS !== "web") {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

@@ -70,7 +70,9 @@ export default function ChallengeLeaderboard() {
         <View style={styles.topRow}>
           <BackButton />
           <View style={{ flex: 1, alignSelf: "center" }}>
-            <CustomText style={styles.heading}>DAILY CHALLENGE LEADERBOARD</CustomText>
+            <CustomText style={styles.heading}>
+              DAILY CHALLENGE LEADERBOARD
+            </CustomText>
           </View>
         </View>
 

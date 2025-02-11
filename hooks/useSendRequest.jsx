@@ -6,7 +6,7 @@ import useAddNotification from "./useAddNotification";
 const useSendRequest = () => {
   const [loading, setLoading] = useState(false);
   const { user, updateUser } = useCurrentUserStore((state) => state);
-  const {addFriendRequestNotification} = useAddNotification();
+  const { addFriendRequestNotification } = useAddNotification();
 
   const handleSendRequest = async (itemId) => {
     setLoading(true);

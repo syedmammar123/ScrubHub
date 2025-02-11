@@ -27,7 +27,7 @@ const useAddNotification = () => {
       username,
       avatarId,
       friendList,
-    }
+    },
   ) => {
     const notificationsRef = firestore().collection("Notifications");
 
@@ -72,7 +72,7 @@ const useAddNotification = () => {
             type: notificationsType.friendRequestRecieved,
           }),
         },
-        { merge: true }
+        { merge: true },
       );
     } catch (error) {
       console.error("Error in addFriendRequestNotification:", error);
@@ -95,7 +95,7 @@ const useAddNotification = () => {
             type: notificationsType.friendRequestAccepted,
           }),
         },
-        { merge: true }
+        { merge: true },
       );
     } catch (error) {
       console.error("Error in acceptFriendRequestNotification:", error);
@@ -112,7 +112,7 @@ const useAddNotification = () => {
     userFriendList,
     challengerFriendList,
     myScore,
-    myName
+    myName,
   ) => {
     try {
       const firestoreRef = firestore().collection("Notifications");
@@ -135,7 +135,7 @@ const useAddNotification = () => {
             documentId: challengeId,
           }),
         },
-        { merge: true }
+        { merge: true },
       );
 
       // Merge both user and challenger friend lists and remove duplicates
@@ -163,7 +163,7 @@ const useAddNotification = () => {
               documentId: challengeId,
             }),
           },
-          { merge: true }
+          { merge: true },
         );
       }
     } catch (error) {

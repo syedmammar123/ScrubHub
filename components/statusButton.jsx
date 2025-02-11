@@ -192,7 +192,7 @@ export default function StatusButton({
             currentFriendChallengeId,
             currentChallengerId,
             currentFriendChallengeScore,
-            currentOpponentScore
+            currentOpponentScore,
           );
           clearFields();
           // router.navigate("challengeLeaderboard");

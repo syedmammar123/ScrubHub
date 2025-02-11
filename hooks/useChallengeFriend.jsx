@@ -74,7 +74,7 @@ const useChallengeFriend = () => {
     challengeId,
     challengerId,
     myScore,
-    challengerScore
+    challengerScore,
   ) => {
     if (!user?.uid) {
       console.error("User not authenticated");
@@ -96,8 +96,11 @@ const useChallengeFriend = () => {
       if (!challengerDoc.exists) throw new Error("Friend data not found");
       if (!challengeDoc.exists) throw new Error("Challenge document not found");
 
-      const userFriendList = userDoc.data()?.friendList.filter((id) => id !== challengerId) || [];
-      const challengerFriendList = challengerDoc.data()?.friendList.filter((id) => id !== currentUserId) || [];
+      const userFriendList =
+        userDoc.data()?.friendList.filter((id) => id !== challengerId) || [];
+      const challengerFriendList =
+        challengerDoc.data()?.friendList.filter((id) => id !== currentUserId) ||
+        [];
       const { username: challengerUsername, avatarId: challengerAvatarId } =
         challengerDoc.data();
 
@@ -111,7 +114,7 @@ const useChallengeFriend = () => {
           status: "completed",
           timestamp: firestore.Timestamp.now(),
         },
-        { merge: true }
+        { merge: true },
       );
 
       // Add challenge notification
@@ -125,7 +128,7 @@ const useChallengeFriend = () => {
         userFriendList,
         challengerFriendList,
         myScore,
-        username
+        username,
       );
 
       // Commit batch only if there are changes
