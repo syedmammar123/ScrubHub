@@ -33,7 +33,7 @@ const useGetNotifications = () => {
     } catch (error) {
       console.error("Error fetching notifications:", error);
       setError(
-        error.message || "An error occurred while fetching notifications."
+        error.message || "An error occurred while fetching notifications.",
       );
     } finally {
       setLoading(false);
@@ -42,7 +42,7 @@ const useGetNotifications = () => {
 
   useEffect(() => {
     getNotifications();
-  }, []); 
+  }, []);
 
   return { loading, error };
 };

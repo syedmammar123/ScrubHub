@@ -64,6 +64,7 @@ export default function Friend({
                 <Pressable
                   style={styles.btn}
                   onPress={() => handleChallangeFriend(id)}
+                  // onPress={() => onChallenge(id)}
                   disabled={loading}
                 >
                   {loading ? (
@@ -71,12 +72,6 @@ export default function Friend({
                   ) : (
                     <CustomText style={styles.btnText}>Chalun</CustomText>
                   )}
-
-                  className=" rounded-full py-2 w-29 px-2 bg-[#93D334]"
-                  // style={[styles.greenBtn, { backgroundColor: theme.barColor }]}
-                  onPress={() => onChallenge(id)}
-                >
-                  <CustomText style={styles.btnText}>Challenge</CustomText>
                 </Pressable>
                 <Pressable style={styles.btn} onPress={() => onRemove(id)}>
                   <CustomText style={styles.btnText}>Remove</CustomText>

@@ -37,7 +37,7 @@ const useDeleteUser = () => {
       // Delete notification document
       await notificationsRef.delete();
       console.log(
-        `Notification ${userUid} deleted from Notifications collection`
+        `Notification ${userUid} deleted from Notifications collection`,
       );
 
       // Fetch all challenge docs where challengerId or opponentId matches userUid
@@ -59,7 +59,7 @@ const useDeleteUser = () => {
       const deletePromises = challengeDocs.map((doc) => doc.ref.delete());
       await Promise.all(deletePromises);
       console.log(
-        `Deleted ${challengeDocs.length} challenges involving user ${userUid}`
+        `Deleted ${challengeDocs.length} challenges involving user ${userUid}`,
       );
       const auth = getAuth();
       await signOut(auth);

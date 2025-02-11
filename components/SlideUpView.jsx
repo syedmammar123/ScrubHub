@@ -77,7 +77,9 @@ const SlideUpView = ({
             />
           ))
         ) : (
-          <CustomText style={styles.noFriendsText}>No invitations found</CustomText>
+          <CustomText style={styles.noFriendsText}>
+            No invitations found
+          </CustomText>
         )}
       </SafeAreaView>
     </Animated.View>

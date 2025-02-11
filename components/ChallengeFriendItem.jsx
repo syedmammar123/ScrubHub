@@ -1,20 +1,27 @@
-import { View, Text, Image, Pressable, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import { avatars } from "@/app/userInfoScreen";
 import useChallengeFriend from "@/hooks/useChallengeFriend";
 import useQuesStore from "@/store/quesStore";
 import CustomText from "./CustomText";
 
-const ChallengeFriendItem = ({ friend,friends }) => {
+const ChallengeFriendItem = ({ friend, friends }) => {
   const { challengeFriend, loading } = useChallengeFriend();
-  const { questions,getScore } = useQuesStore((state) => state);
+  const { questions, getScore } = useQuesStore((state) => state);
 
   const handleChallengeFriend = (friendId) => {
     let score = getScore();
     const isChallengeFriendSuccessfull = challengeFriend(
       friendId,
       score,
-      questions
+      questions,
     );
     if (isChallengeFriendSuccessfull) {
       friends.map((friend) => {
@@ -47,11 +54,12 @@ const ChallengeFriendItem = ({ friend,friends }) => {
           onPress={() => {
             handleChallengeFriend(friend.id);
           }}
-        >{
-            loading ? (
-                <ActivityIndicator size="small" color="#FFFFFF" />
-            ) : ( <CustomText className="text-white">Challenge</CustomText> )
-        }
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <CustomText className="text-white">Challenge</CustomText>
+          )}
         </TouchableOpacity>
       )}
     </View>
