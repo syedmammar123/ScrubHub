@@ -11,6 +11,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomAlert from "@/components/CustomAlert";
 import useChallengeFriend from "@/hooks/useChallengeFriend";
 import CustomText from "@/components/CustomText";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Feather from "react-native-vector-icons/Feather";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 const data = [
   {
@@ -166,25 +169,38 @@ export default function ProfileScreen() {
         <CustomText style={styles.userText}>Hello, {user.username}</CustomText>
       </View>
 
-      <View style={styles.profileOptions}>
-        <CustomText>
-          Questions Solved: <CustomText>40</CustomText>/60
-        </CustomText>
-        <ScrubButton title="logout" onPress={handleLogout} />
+      <View className={`flex w-full px-5 gap-5`}>
+        <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
+          <Feather name="check-circle" size={35} color="gray" />
+          <CustomText className={`text-xl`}>
+            Questions Solved:{" "}
+            <CustomText className={`font-bold`}>40</CustomText>
+            /60
+          </CustomText>
+        </View>
+
+        <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
+          <Feather name="info" size={35} color="gray" />
+          <CustomText className={`text-xl `}>
+            App Version: <CustomText className={`font-bold`}>1.0.0</CustomText>
+          </CustomText>
+        </View>
+
         <TouchableOpacity
-          style={styles.deleteButton}
+          className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
+          onPress={handleLogout}
+        >
+          <MaterialIcons name="logout" size={35} color="red" />
+          <CustomText className={`text-red-500 text-xl`}>Log out </CustomText>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
           onPress={() => deleteAccountAlert(user.uid)}
         >
-          <CustomText style={styles.deleteButtonText}>
+          <AntDesign name="deleteuser" size={35} color="red" />
+          <CustomText className={`text-red-500 text-xl`}>
             Delete Account
-          </CustomText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => router.navigate("scoreScreen")}
-        >
-          <CustomText style={styles.deleteButtonText}>
-            Score Screen
           </CustomText>
         </TouchableOpacity>
       </View>
@@ -205,15 +221,8 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 40,
     width: "100%",
-    borderBottomColor: "#D3D3D3",
-    borderBottomWidth: 1,
-  },
-  profileOptions: {
-    width: "100%",
-    paddingHorizontal: 20,
-    gap: 15,
   },
   deleteButton: {
     backgroundColor: "red",
