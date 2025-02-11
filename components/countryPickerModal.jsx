@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import countries from "world-countries";
+import countries from "../assets/countries.json"; 
+
 import CustomText from "./CustomText";
 
 export default function CountryPickerModal({
