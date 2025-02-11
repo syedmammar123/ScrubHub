@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useState } from "react";
 import { getRandomArray, getRandomItem } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
@@ -6,9 +5,11 @@ import firestore from "@react-native-firebase/firestore";
 const useGetRandomQues = () => {
   const [randomQues, setRandomQues] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const fetchRandomQues = async () => {
+  const fetchRandomQues = async (questionLength) => {
     setLoading(true);
+    setError(null);
     try {
       // Get all document IDs from the Questions collection
       const topicRef = firestore().collection("Topics");
@@ -19,49 +20,58 @@ const useGetRandomQues = () => {
       //   return [];
       // }
       // const randomMainTopics = getRandomArray(documentNames);
-      const randomMainTopics = getRandomArray([
-        "cardiovascular",
-        "gastrointestinal",
-      ]);
+      const randomMainTopics = getRandomArray(
+        ["cardiovascular", "gastrointestinal"],
+        questionLength
+      );
 
-      // Get random topics from each main topic
-      for (let i = 0; i < randomMainTopics.length; i++) {
-        const subTopicDoc = await topicRef.doc(randomMainTopics[i].topic).get();
+      // Get random subTopics from each main topic
+      const subTopicPromises = randomMainTopics.map(async (topicObj) => {
+        const subTopicDoc = await topicRef.doc(topicObj.topic).get();
         const subTopicData = subTopicDoc.data();
-        if (subTopicData.topics !== undefined) {
-          const randomTopic = getRandomItem(subTopicData.topics);
-          randomMainTopics[i].subTopic = randomTopic;
-        }
-      }
+        return {
+          ...topicObj, // Spread existing properties (topic, type)
+          subTopic: subTopicData?.topics
+            ? getRandomItem(subTopicData.topics)
+            : null,
+        };
+      });
+
+      const selectedTopics = await Promise.all(subTopicPromises);
+  
 
       // Get random questions from each subtopic
-      const randomQuestions = [];
-      for (let i = 0; i < randomMainTopics.length; i++) {
-        if (randomMainTopics[i].subTopic !== null) {
+      const questionPromises = selectedTopics.map(
+        async ({ topic, subTopic, type }) => {
+          if (!subTopic) return null;
+
           const questionsRef = firestore()
             .collection("Questions")
-            .doc(randomMainTopics[i].topic)
-            .collection(randomMainTopics[i].subTopic)
-            .where("questionStyle", "==", randomMainTopics[i].type)
+            .doc(topic)
+            .collection(subTopic)
+            .where("questionStyle", "==", type)
             .limit(1);
+
           const querySnapshot = await questionsRef.get();
-          const questionDocs = querySnapshot.docs;
-          randomQuestions.push(questionDocs[0].data());
+          return querySnapshot.docs.length > 0
+            ? querySnapshot.docs[0].data()
+            : null;
         }
-      }
+      );
+
+      const randomQuestions = (await Promise.all(questionPromises)).filter(
+        Boolean
+      );
       setRandomQues(randomQuestions);
     } catch (error) {
       console.log("Error fetching random questions:", error);
+      setError(error || "Error fetching random questions");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchRandomQues();
-  }, []);
-
-  return { randomQues, loading };
+  return { fetchRandomQues, randomQues, loading, error };
 };
 
 export default useGetRandomQues;

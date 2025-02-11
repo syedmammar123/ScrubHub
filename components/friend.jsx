@@ -1,8 +1,17 @@
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
 import CustomText from "./CustomText";
+import { getRandomArray } from "@/util/getRandomItem";
+import useGetRandomQues from "@/hooks/useGetRandomQues";
 
 export default function Friend({
   position,
@@ -15,16 +24,28 @@ export default function Friend({
   onRemove,
   id,
 }) {
+  const { randomQues, loading, error, fetchRandomQues } = useGetRandomQues();
+
+  const handleChallangeFriend = async (friendId) => {
+    await fetchRandomQues(15);
+  };
+
+  console.log("length: ", randomQues.length);
+  console.log("randomQues: ", randomQues);
   return (
     <>
       <View style={styles.container}>
         <View style={styles.imageName}>
-          {position && <CustomText style={styles.bluefont}>{position}</CustomText>}
+          {position && (
+            <CustomText style={styles.bluefont}>{position}</CustomText>
+          )}
           <Image style={styles.image} source={avatars[photoUrl]} />
           <CustomText style={styles.friendName}>{Name}</CustomText>
         </View>
         {marks ? (
-          <CustomText style={styles.bluefont}>{marks === "null" ? 0 : marks}</CustomText>
+          <CustomText style={styles.bluefont}>
+            {marks === "null" ? 0 : marks}
+          </CustomText>
         ) : (
           <View style={styles.btns}>
             {acceptBtn ? (
@@ -37,9 +58,22 @@ export default function Friend({
                 </Pressable>
               </>
             ) : (
-              <Pressable style={styles.btn} onPress={() => onRemove(id)}>
-                <CustomText style={styles.btnText}>Remove</CustomText>
-              </Pressable>
+              <>
+                <Pressable
+                  style={styles.btn}
+                  onPress={() => handleChallangeFriend(id)}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <CustomText style={styles.btnText}>Chalun</CustomText>
+                  )}
+                </Pressable>
+                <Pressable style={styles.btn} onPress={() => onRemove(id)}>
+                  <CustomText style={styles.btnText}>Remove</CustomText>
+                </Pressable>
+              </>
             )}
           </View>
         )}

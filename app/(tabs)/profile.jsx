@@ -159,7 +159,6 @@ export default function ProfileScreen() {
     return <Redirect href="onboarding" />;
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
@@ -176,7 +175,17 @@ export default function ProfileScreen() {
           style={styles.deleteButton}
           onPress={() => deleteAccountAlert(user.uid)}
         >
-          <CustomText style={styles.deleteButtonText}>Delete Account</CustomText>
+          <CustomText style={styles.deleteButtonText}>
+            Delete Account
+          </CustomText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => router.navigate("scoreScreen")}
+        >
+          <CustomText style={styles.deleteButtonText}>
+            Score Screen
+          </CustomText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

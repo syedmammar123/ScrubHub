@@ -18,16 +18,12 @@ export const types = [
   "testToOrder",
 ];
 
-export const getRandomArray = (array) => {
-  let arr = [];
-  for (let i = 0; i < types.length; i++) {
-    arr.push({
-      topic: array[Math.floor(Math.random() * array.length)],
-      type: types[i],
-      subTopic: null,
-    });
-  }
-  return arr;
+export const getRandomArray = (array, length) => {
+  return Array.from({ length }, () => ({
+    topic: array[Math.floor(Math.random() * array.length)],
+    type: types[Math.floor(Math.random() * types.length)],
+    subTopic: null,
+  }));
 };
 
 export const getRandomItem = (array) => {
@@ -58,7 +54,8 @@ export const getCountryFromPhoneNumber = (phoneNumber) => {
 };
 
 export const formatDateOnly = (timestamp) => {
-  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Date";
+  if (!timestamp || typeof timestamp.seconds !== "number")
+    return "Invalid Date";
 
   // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
   const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
@@ -81,9 +78,9 @@ export const formatDateOnly = (timestamp) => {
   }
 };
 
-
 export const formatTimeOnly = (timestamp) => {
-  if (!timestamp || typeof timestamp.seconds !== "number") return "Invalid Time";
+  if (!timestamp || typeof timestamp.seconds !== "number")
+    return "Invalid Time";
 
   // Convert Firestore timestamp (seconds + nanoseconds) into a JavaScript Date object
   const dateObj = new Date(timestamp.seconds * 1000); // Convert seconds to milliseconds
@@ -96,4 +93,3 @@ export const formatTimeOnly = (timestamp) => {
     hour12: true,
   });
 };
-

@@ -18,6 +18,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import IncompleteWordButtons from "@/components/incompleteWordButtons";
 import useQuesStore from "@/store/quesStore";
 import { scale } from "react-native-size-matters";
+import CustomText from "@/components/CustomText";
 
 // let processWords = [
 //   { val: "Glucose→", notknown: false },
