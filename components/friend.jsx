@@ -12,6 +12,7 @@ import { avatars } from "@/app/userInfoScreen";
 import CustomText from "./CustomText";
 import { getRandomArray } from "@/util/getRandomItem";
 import useGetRandomQues from "@/hooks/useGetRandomQues";
+import { theme } from "@/theme";
 
 export default function Friend({
   position,
@@ -22,6 +23,7 @@ export default function Friend({
   onAccept,
   onReject,
   onRemove,
+  onChallenge,
   id,
 }) {
   const { randomQues, loading, error, fetchRandomQues } = useGetRandomQues();
@@ -69,6 +71,12 @@ export default function Friend({
                   ) : (
                     <CustomText style={styles.btnText}>Chalun</CustomText>
                   )}
+
+                  className=" rounded-full py-2 w-29 px-2 bg-[#93D334]"
+                  // style={[styles.greenBtn, { backgroundColor: theme.barColor }]}
+                  onPress={() => onChallenge(id)}
+                >
+                  <CustomText style={styles.btnText}>Challenge</CustomText>
                 </Pressable>
                 <Pressable style={styles.btn} onPress={() => onRemove(id)}>
                   <CustomText style={styles.btnText}>Remove</CustomText>
