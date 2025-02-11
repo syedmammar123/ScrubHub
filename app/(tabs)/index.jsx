@@ -1,5 +1,5 @@
 import React from "react";
-import LottieView from "lottie-react-native";
+
 import {
   StyleSheet,
   Text,
@@ -22,8 +22,12 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
-import LottieView from "lottie-react-native";
 
+// import { LottieView } from "lottie-react-native";
+
+import BloodCell from "@/assets/BloodCell_Happy.json";
+import LottieView from "lottie-react-native";
+// import LottieView from "lottie-react-native";
 export default function App() {
   const state = useGetSolvedQues();
   const {
@@ -121,7 +125,7 @@ export default function App() {
             
           </TouchableOpacity> */}
           <LottieView
-            source={require("@/assets/BloodCell_Happy.json")}
+            source={require("@/assets/BloodCell_Sad.json")}
             autoPlay
             loop
             style={{ width: 200, height: 200 }}
