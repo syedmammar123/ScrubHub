@@ -1,8 +1,17 @@
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
 import CustomText from "./CustomText";
+import { getRandomArray } from "@/util/getRandomItem";
+import useGetRandomQues from "@/hooks/useGetRandomQues";
 import { theme } from "@/theme";
 
 export default function Friend({
@@ -17,6 +26,14 @@ export default function Friend({
   onChallenge,
   id,
 }) {
+  const { randomQues, loading, error, fetchRandomQues } = useGetRandomQues();
+
+  const handleChallangeFriend = async (friendId) => {
+    await fetchRandomQues(15);
+  };
+
+  console.log("length: ", randomQues.length);
+  console.log("randomQues: ", randomQues);
   return (
     <>
       <View style={styles.container}>
@@ -45,6 +62,16 @@ export default function Friend({
             ) : (
               <>
                 <Pressable
+                  style={styles.btn}
+                  onPress={() => handleChallangeFriend(id)}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <CustomText style={styles.btnText}>Chalun</CustomText>
+                  )}
+
                   className=" rounded-full py-2 w-29 px-2 bg-[#93D334]"
                   // style={[styles.greenBtn, { backgroundColor: theme.barColor }]}
                   onPress={() => onChallenge(id)}
