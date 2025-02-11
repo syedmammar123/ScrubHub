@@ -171,7 +171,7 @@ export default function ProfileScreen() {
 
       <View className={`flex w-full px-5 gap-5`}>
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
-          <Feather name="check-circle" size={35} color="gray" />
+          <Feather name="check-circle" size={30} color="gray" />
           <CustomText className={`text-xl`}>
             Questions Solved:{" "}
             <CustomText className={`font-bold`}>40</CustomText>
@@ -180,7 +180,7 @@ export default function ProfileScreen() {
         </View>
 
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
-          <Feather name="info" size={35} color="gray" />
+          <Feather name="info" size={30} color="gray" />
           <CustomText className={`text-xl `}>
             App Version: <CustomText className={`font-bold`}>1.0.0</CustomText>
           </CustomText>
@@ -190,15 +190,15 @@ export default function ProfileScreen() {
           className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
           onPress={handleLogout}
         >
-          <MaterialIcons name="logout" size={35} color="red" />
-          <CustomText className={`text-red-500 text-xl`}>Log out </CustomText>
+          <MaterialIcons name="logout" size={30} color="red" />
+          <CustomText className={`text-red-500 text-xl`}>Log out</CustomText>
         </TouchableOpacity>
 
         <TouchableOpacity
           className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
           onPress={() => deleteAccountAlert(user.uid)}
         >
-          <AntDesign name="deleteuser" size={35} color="red" />
+          <AntDesign name="deleteuser" size={30} color="red" />
           <CustomText className={`text-red-500 text-xl`}>
             Delete Account
           </CustomText>
