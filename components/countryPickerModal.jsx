@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import countries from "../assets/countries.json"; 
+import countries from "../assets/countries.json";
 
 import CustomText from "./CustomText";
 

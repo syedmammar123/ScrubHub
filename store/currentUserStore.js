@@ -25,15 +25,15 @@ const useCurrentUserStore = create(
       setUserNotifications: (notifications) => {
         set({ userNotifications: notifications });
       },
-      setUserChallenges : (challenges) => {
+      setUserChallenges: (challenges) => {
         set({ userChallenges: challenges });
-      }
+      },
     }),
     {
       name: "currentUserStore", // Key for localStorage or AsyncStorage
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
+    },
+  ),
 );
 
 export default useCurrentUserStore;

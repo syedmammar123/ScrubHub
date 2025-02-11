@@ -15,37 +15,37 @@ const useGetUserContacts = ({ userContacts }) => {
     try {
       const currentUserId = user?.uid;
       if (!currentUserId) throw new Error("User not authenticated");
-  
+
       console.log(user);
-  
+
       const myDocRef = firestore().collection("Users").doc(currentUserId);
       const doc = await myDocRef.get();
       if (!doc.exists) throw new Error("User not found");
-  
+
       const friendList = doc.data().friendList ?? [];
       const friendRequestsReceived = doc.data().friendRequestsReceived ?? [];
       const friendRequestsSent = doc.data().friendRequestsSent ?? [];
-  
+
       let userContactsCopy = [...userContacts];
-  
+
       // Store promises for parallel execution
       const phoneNumbersPromises = [];
-  
+
       if (friendList.length > 0) {
         phoneNumbersPromises.push(
           firestore()
             .collection("Users")
             .where("uid", "in", friendList)
             .get()
-            .then((friendListUsers) => 
-              friendListUsers.docs.map((doc) => doc.data().phoneNumber)
+            .then((friendListUsers) =>
+              friendListUsers.docs.map((doc) => doc.data().phoneNumber),
             )
-            .catch(() => []) // Handle empty result
+            .catch(() => []), // Handle empty result
         );
       } else {
         phoneNumbersPromises.push(Promise.resolve([]));
       }
-  
+
       if (friendRequestsReceived.length > 0) {
         phoneNumbersPromises.push(
           firestore()
@@ -56,14 +56,14 @@ const useGetUserContacts = ({ userContacts }) => {
               receivedUsers.docs.map((doc) => ({
                 phoneNumber: doc.data().phoneNumber,
                 uid: doc.id,
-              }))
+              })),
             )
-            .catch(() => [])
+            .catch(() => []),
         );
       } else {
         phoneNumbersPromises.push(Promise.resolve([]));
       }
-  
+
       if (friendRequestsSent.length > 0) {
         phoneNumbersPromises.push(
           firestore()
@@ -74,14 +74,14 @@ const useGetUserContacts = ({ userContacts }) => {
               sentUsers.docs.map((doc) => ({
                 phoneNumber: doc.data().phoneNumber,
                 uid: doc.id,
-              }))
+              })),
             )
-            .catch(() => [])
+            .catch(() => []),
         );
       } else {
         phoneNumbersPromises.push(Promise.resolve([]));
       }
-  
+
       phoneNumbersPromises.push(
         firestore()
           .collection("Users")
@@ -90,11 +90,11 @@ const useGetUserContacts = ({ userContacts }) => {
             allUsers.docs.map((doc) => ({
               phoneNumber: doc.data().phoneNumber,
               uid: doc.id,
-            }))
+            })),
           )
-          .catch(() => [])
+          .catch(() => []),
       );
-  
+
       // Wait for all promises to resolve
       const [
         friendListPhoneNumbers = [],
@@ -102,15 +102,21 @@ const useGetUserContacts = ({ userContacts }) => {
         sentPhoneNumbers = [],
         allUserPhoneNumbers = [],
       ] = await Promise.all(phoneNumbersPromises);
-  
+
       // Create sets for fast lookups
-      const receivedSet = new Set(receivedPhoneNumbers.map((user) => user.phoneNumber));
+      const receivedSet = new Set(
+        receivedPhoneNumbers.map((user) => user.phoneNumber),
+      );
       const sentSet = new Set(sentPhoneNumbers.map((user) => user.phoneNumber));
-      const allUserSet = new Set(allUserPhoneNumbers.map((user) => user.phoneNumber));
-  
+      const allUserSet = new Set(
+        allUserPhoneNumbers.map((user) => user.phoneNumber),
+      );
+
       // Filter out contacts already in the friend list and assign status
       userContactsCopy = userContactsCopy
-        .filter((contact) => !friendListPhoneNumbers.includes(contact.phoneNumber))
+        .filter(
+          (contact) => !friendListPhoneNumbers.includes(contact.phoneNumber),
+        )
         .map((contact) => {
           let status = "invite";
           if (receivedSet.has(contact.phoneNumber)) {
@@ -120,12 +126,12 @@ const useGetUserContacts = ({ userContacts }) => {
           } else if (allUserSet.has(contact.phoneNumber)) {
             status = "add";
           }
-  
+
           // Find the UUID for the phone number
           const userUuid = allUserPhoneNumbers.find(
-            (user) => user.phoneNumber === contact.phoneNumber
+            (user) => user.phoneNumber === contact.phoneNumber,
           )?.uid;
-  
+
           return {
             phoneNumber: contact.phoneNumber,
             uuid: userUuid, // add uuid
@@ -134,7 +140,7 @@ const useGetUserContacts = ({ userContacts }) => {
             status: status,
           };
         });
-  
+
       setContacts(userContactsCopy);
     } catch (error) {
       console.error("Error fetching Contacts: ", error);
@@ -143,7 +149,7 @@ const useGetUserContacts = ({ userContacts }) => {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     if (userContacts.length === 0) return; // No need to fetch contacts if there are none
     getUserContacts();

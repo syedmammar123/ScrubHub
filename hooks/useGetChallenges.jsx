@@ -49,7 +49,7 @@ const useGetChallenges = () => {
       if (userIds.size === 0) {
         console.log("No additional users to fetch.");
         setUserChallenges(
-          allChallenges.map((doc) => ({ id: doc.id, ...doc.data() }))
+          allChallenges.map((doc) => ({ id: doc.id, ...doc.data() })),
         );
         return;
       }
@@ -90,7 +90,7 @@ const useGetChallenges = () => {
     } catch (error) {
       console.error("Error fetching challenges:", error);
       setError(
-        error.message || "An error occurred while fetching notifications."
+        error.message || "An error occurred while fetching notifications.",
       );
     } finally {
       setLoading(false);

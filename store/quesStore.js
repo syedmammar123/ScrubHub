@@ -71,7 +71,7 @@ const prevSolvedQuestions = async (system, topic) => {
       curUser.id,
       "solved",
       system,
-      topic
+      topic,
     );
     const prevQues = await getDocs(getPrevQuesRef);
     prevQues.forEach((doc) => {
@@ -91,7 +91,7 @@ const pickQues = async (system, topic, docs) => {
   console.log("Solved Questions: ", solvedQuestions);
 
   const unsolvedQuestions = docs.filter(
-    (doc) => !solvedQuestions.includes(doc.id)
+    (doc) => !solvedQuestions.includes(doc.id),
   );
 
   if (unsolvedQuestions.length === 15) {
@@ -268,12 +268,12 @@ const useQuesStore = create((set, get) => ({
 
         const queryPromises = topic.map(async (t) => {
           const querySnapshot = await getDocs(
-            collection(db, `Questions/${system}/${t}`)
+            collection(db, `Questions/${system}/${t}`),
           );
           console.log(
             `Topic ${t} returned`,
             querySnapshot.docs.length,
-            "questions"
+            "questions",
           );
           return querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -297,7 +297,7 @@ const useQuesStore = create((set, get) => ({
     } else {
       try {
         const querySnapshot = await getDocs(
-          collection(db, `Questions/${system}/${topic}`)
+          collection(db, `Questions/${system}/${topic}`),
         );
 
         let documents = [];
@@ -334,7 +334,7 @@ const useQuesStore = create((set, get) => ({
         curUser.id,
         "solved",
         system,
-        topic
+        topic,
       );
       const docs = await getDocs(getPrevQuesRef);
 
@@ -375,7 +375,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id
+          q.id,
         );
         const data = { ...q, submittedOn: serverTimestamp() };
         batch.set(docRef, data); // Add to batch
@@ -472,7 +472,7 @@ const useQuesStore = create((set, get) => ({
             "solved",
             system,
             topic,
-            q.id
+            q.id,
           );
 
           batch.update(docRef, {
@@ -512,7 +512,7 @@ const useQuesStore = create((set, get) => ({
 
       console.log(
         "Current User Challenge ID Current",
-        curUser.lastDailyChallengeID
+        curUser.lastDailyChallengeID,
       );
 
       if (challengeID === userChallengeId) {

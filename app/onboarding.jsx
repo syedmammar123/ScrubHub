@@ -48,8 +48,8 @@ export default function OnBoarding() {
         <CustomText style={styles.termsText}>
           By signing up you agree to our{" "}
           <CustomText style={styles.highlightedText}>Terms</CustomText> and{" "}
-          <CustomText style={styles.highlightedText}>Privacy Policy</CustomText>. We protect
-          your personal data.
+          <CustomText style={styles.highlightedText}>Privacy Policy</CustomText>
+          . We protect your personal data.
         </CustomText>
       </View>
     </LinearGradient>

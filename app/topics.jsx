@@ -82,7 +82,7 @@ export default function Topics() {
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic
+            topic,
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
@@ -133,7 +133,7 @@ export default function Topics() {
     const topicsCollectionRef = doc(
       db,
       "Topics",
-      system.toLowerCase().replace(/\s+/g, "")
+      system.toLowerCase().replace(/\s+/g, ""),
     );
     try {
       const topics = await getDoc(topicsCollectionRef);

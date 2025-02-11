@@ -73,7 +73,9 @@ const ProfilePic = () => {
       >
         <Pressable onPress={closeModal} style={[styles.modalOverlay]}>
           <View style={styles.modalContent}>
-            <CustomText style={styles.modalText}>Edit Profile Picture</CustomText>
+            <CustomText style={styles.modalText}>
+              Edit Profile Picture
+            </CustomText>
             <View style={styles.newProfileContainer}>
               {newAvatars.map((id) => (
                 <TouchableOpacity
