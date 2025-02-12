@@ -62,7 +62,7 @@ export default function Friend({
             ) : (
               <>
                 <Pressable
-                  style={styles.btn}
+                  className="rounded-full bg-green-500 px-2 py-1 text-white"
                   onPress={() => handleChallangeFriend(id)}
                   // onPress={() => onChallenge(id)}
                   disabled={loading}
@@ -70,10 +70,10 @@ export default function Friend({
                   {loading ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
-                    <CustomText style={styles.btnText}>Chalun</CustomText>
+                    <CustomText style={styles.btnText}>Challenge</CustomText>
                   )}
                 </Pressable>
-                <Pressable style={styles.btn} onPress={() => onRemove(id)}>
+                <Pressable className="rounded-full bg-red-500 px-2 py-1 text-white" onPress={() => onRemove(id)}>
                   <CustomText style={styles.btnText}>Remove</CustomText>
                 </Pressable>
               </>

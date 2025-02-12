@@ -66,10 +66,12 @@ export default function Topics() {
   const { system } = useGlobalSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
 
   const handlePress = async (topic) => {
     console.log(system);
+    setIsQuestionFetching(true);
     if (getCurrentType() === "review") {
       if (currentIndexReview < 15) {
         if (getfetchedReviewTopic() === topic) {
@@ -77,25 +79,28 @@ export default function Topics() {
 
           const nextScreen = getQuestionType(getReviewQuestion());
           console.log("NEXT SCREEN", nextScreen);
-
+          setIsQuestionFetching(false);
           router.navigate(nextScreen);
         } else {
           const lengthOfQuestions = await fetchReviewQuestions(
             system.toLowerCase(),
-            topic,
+            topic
           );
           console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
           if (lengthOfQuestions > 0) {
             const nextScreen = getQuestionType(getReviewQuestion());
-
+            setIsQuestionFetching(false);
+            setIsQuestionFetching(false);
             router.navigate(nextScreen);
           } else {
             console.log("NO QUESTIONS FETCHED");
             setError(true);
+            setIsQuestionFetching(false);
           }
         }
       } else {
+        setIsQuestionFetching(false);
         router.navigate("/");
       }
     } else {
@@ -107,7 +112,7 @@ export default function Topics() {
 
           const nextScreen = getQuestionType(getCurrentQuestion());
           console.log(nextScreen);
-
+          setIsQuestionFetching(false);
           router.navigate(nextScreen);
         } else {
           const questions = await fetchQuestions(system.toLowerCase(), topic);
@@ -116,11 +121,12 @@ export default function Topics() {
             return;
           }
           const nextScreen = getQuestionType(getCurrentQuestion());
-
+          setIsQuestionFetching(false);
           router.navigate(nextScreen);
         }
       } else {
         // 9 Questions solved already
+        setIsQuestionFetching(false);
         router.navigate("/");
       }
     }
@@ -133,7 +139,7 @@ export default function Topics() {
     const topicsCollectionRef = doc(
       db,
       "Topics",
-      system.toLowerCase().replace(/\s+/g, ""),
+      system.toLowerCase().replace(/\s+/g, "")
     );
     try {
       const topics = await getDoc(topicsCollectionRef);
@@ -300,6 +306,7 @@ export default function Topics() {
                     onPress={() => handlePress(button)}
                     key={index}
                     style={[styles.button]}
+                    disabled={isQuestionFetching}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
                     <AntDesign
