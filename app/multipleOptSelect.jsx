@@ -100,7 +100,7 @@ export default function MultipleOptSelect() {
           }}
         >
           <BackgroundImage>
-            <ScrubLogo />
+            <ScrubLogo type={null} />
             <View
               style={{
                 marginTop: 150,
@@ -126,7 +126,7 @@ export default function MultipleOptSelect() {
       <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo />
+          <ScrubLogo type={!checked ? null : isMatchesCorrect} />
           {/* {submitted ? (
             <View
               style={{
