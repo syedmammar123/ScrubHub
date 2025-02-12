@@ -6,13 +6,13 @@ export default function scrubLogo({ type }) {
   return (
     <View style={styles.logoContainer}>
       {/* {type ? ( */}
-      {/* <LottieView
+      <LottieView
         ref={animation}
         source={require("@/assets/BloodCell_Happy.json")}
         autoPlay
         loop
         style={{ width: 200, height: 200 }}
-      /> */}
+      />
       <Image
         source={require("@/assets/scrubLogo.png")}
         style={styles.logoImage}
