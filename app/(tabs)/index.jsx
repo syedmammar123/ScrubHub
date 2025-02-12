@@ -22,13 +22,9 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
-
-// import { LottieView } from "lottie-react-native";
-
 import BloodCell from "@/assets/BloodCell_Happy.json";
 import LottieView from "lottie-react-native";
-// import LottieView from "lottie-react-native";
-// import LottieView from "lottie-react-native";
+
 export default function App() {
   const state = useGetSolvedQues();
   const {
@@ -126,11 +122,12 @@ export default function App() {
             
           </TouchableOpacity> */}
           <LottieView
-            source={require("../../assets/tst.json")}
+            source={require("../../assets/BloodCell_Happy.json")}
             autoPlay
-            loop
-            style={{ width: 100, height: 100 }}
+            loopr
+            style={{ width: 100, height: 150 }}
           />
+        
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {

@@ -6,7 +6,7 @@ export default function NumberInput({
   value,
   onChangeText,
   placeholderTextColor,
-  bgColor,
+bgColor,
   color,
 }) {
   return (
