@@ -129,6 +129,8 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
 
+  const TotalSolved = user.TotalSolved || null;
+
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",
     message:
@@ -173,11 +175,19 @@ export default function ProfileScreen() {
       <View className={`flex w-full px-5 gap-5`}>
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
           <Feather name="check-circle" size={30} color="gray" />
-          <CustomText className={`text-xl`}>
-            Questions Solved:{" "}
-            <CustomText className={`font-bold`}>40</CustomText>
-            /60
-          </CustomText>
+          {TotalSolved ? (
+            <CustomText className={`text-xl`}>
+              Questions Solved:{" "}
+              <CustomText className={`font-bold`}>40</CustomText>
+              /60
+            </CustomText>
+          ) : (
+            <CustomText className={`text-xl`}>
+              Questions Solved:{" "}
+              <CustomText className={`font-bold`}>0</CustomText>
+              /60
+            </CustomText>
+          )}
         </View>
 
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
@@ -205,16 +215,18 @@ export default function ProfileScreen() {
           </CustomText>
         </TouchableOpacity>
         <View>
-          {<LottieView
-            autoPlay
-            renderMode='SOFTWARE'
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "#eee",
-            }}
-            source={require("../../assets/lottieA.json")}
-          />}
+          {
+            <LottieView
+              autoPlay
+              renderMode="SOFTWARE"
+              style={{
+                width: 200,
+                height: 200,
+                backgroundColor: "#eee",
+              }}
+              source={require("../../assets/lottieA.json")}
+            />
+          }
         </View>
       </View>
     </SafeAreaView>
