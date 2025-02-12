@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -95,7 +90,7 @@ export default function App() {
         {/* Content Container */}
         <SafeAreaView style={styles.contentContainer}>
           {/* Logo */}
-          <ScrubLogo />
+          <ScrubLogo type={null} />
           {/* Buttons */}
 
           {/* <TouchableOpacity style={[styles.button]} onPress={handleSave}>
@@ -117,13 +112,7 @@ export default function App() {
             </Text>
             
           </TouchableOpacity> */}
-          <LottieView
-            source={require("../../assets/tst.json")}
-            autoPlay
-            loopr
-            style={{ width: 100, height: 150 }}
-          />
-        
+
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {

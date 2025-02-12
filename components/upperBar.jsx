@@ -10,6 +10,7 @@ export default function UpperBar() {
     currentIndexReview,
     currentChallengeIndex,
     currentFriendChallengeIndex,
+    challengingFriendsIndex,
   } = useQuesStore((state) => state);
   return (
     <View style={styles.bar}>
@@ -17,7 +18,7 @@ export default function UpperBar() {
         style={[
           styles.innerBar,
           {
-            width: `${((getCurrentType() === "review" ? currentIndexReview : getCurrentType() === "study" ? currentIndex : getCurrentType() === "challenge" ? currentChallengeIndex : currentFriendChallengeIndex) + 1) * 6.66}%`,
+            width: `${((getCurrentType() === "review" ? currentIndexReview : getCurrentType() === "study" ? currentIndex : getCurrentType() === "challenge" ? currentChallengeIndex : getCurrentType() === "ChallengingFriends" ? challengingFriendsIndex : currentFriendChallengeIndex) + 1) * 6.66}%`,
           },
         ]}
       ></View>

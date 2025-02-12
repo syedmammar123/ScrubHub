@@ -8,6 +8,7 @@ import {
   updateDoc,
   serverTimestamp,
   getDoc,
+  addDoc,
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
@@ -71,7 +72,7 @@ const prevSolvedQuestions = async (system, topic) => {
       curUser.id,
       "solved",
       system,
-      topic,
+      topic
     );
     const prevQues = await getDocs(getPrevQuesRef);
     prevQues.forEach((doc) => {
@@ -91,7 +92,7 @@ const pickQues = async (system, topic, docs) => {
   console.log("Solved Questions: ", solvedQuestions);
 
   const unsolvedQuestions = docs.filter(
-    (doc) => !solvedQuestions.includes(doc.id),
+    (doc) => !solvedQuestions.includes(doc.id)
   );
 
   if (unsolvedQuestions.length === 15) {
@@ -228,6 +229,86 @@ const useQuesStore = create((set, get) => ({
     }
   },
 
+  // type (ChallengingFriends)
+  challengingFriendsQuestions: [],
+  challengingFriendsIndex: 0,
+  challengingScore: 0,
+  opponentId: "",
+
+  clearFields2: () => {
+    set({ challengingScore: 0 });
+    set({ challengingFriendsQuestions: [] });
+    set({ challengingFriendsIndex: 0 });
+    set({ opponentId: "" });
+
+    set({ type: "" });
+  },
+
+  increaseChallengingFriendsScore: () =>
+    set((state) => ({
+      challengingScore: state.challengingScore + 1,
+    })),
+
+  increaseChallengingFriendsIndex: () =>
+    set((state) => ({
+      challengingFriendsIndex: state.challengingFriendsIndex + 1,
+    })),
+
+  getChallengingScore: () => {
+    // Your Current Challenging Score
+    const { challengingScore } = get();
+    return challengingScore;
+  },
+
+  getChallengingFriendsQuestion: () => {
+    const { challengingFriendsQuestions, challengingFriendsIndex } = get();
+    return challengingFriendsQuestions[challengingFriendsIndex];
+  },
+
+  getOpponentID: () => {
+    const { opponentId } = get();
+    return opponentId;
+  },
+  fetchChallengingFriendsQuestions: (challenge, friendId) => {
+    console.log("CHALLENGEIN STORE", challenge);
+
+    if (challenge.length > 0) {
+      set({ challengingFriendsIndex: 0 });
+      set({ challengingFriendsQuestions: challenge });
+      set({ challengingScore: 0 });
+
+      set({ opponentId: friendId }); //Track to not fetch questions again
+
+      return challenge.length;
+    } else {
+      return 0;
+    }
+  },
+  submitChallengingFriend: async () => {
+    const q = get().challengingFriendsQuestions;
+    const oppId = get().opponentId;
+    const user = useCurrentUserStore.getState().getUser();
+    const userId = user.id;
+    try {
+      const challengeRef = collection(db, "Challenges"); // Reference to the collection
+
+      const docRef = await addDoc(challengeRef, {
+        questions: q,
+        opponentId: oppId,
+        challengerId: userId,
+        opponentScore: 0,
+        challengerScore: get().challengingScore,
+        status: "pending",
+        timestamp: serverTimestamp(), // Add timestamp if needed
+      });
+
+      console.log("Document successfully added with ID: ", docRef.id);
+      return docRef.id;
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  },
+
   increaseScore: () => set((state) => ({ score: state.score + 1 })),
   increaseChallengeScore: () =>
     set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
@@ -268,12 +349,12 @@ const useQuesStore = create((set, get) => ({
 
         const queryPromises = topic.map(async (t) => {
           const querySnapshot = await getDocs(
-            collection(db, `Questions/${system}/${t}`),
+            collection(db, `Questions/${system}/${t}`)
           );
           console.log(
             `Topic ${t} returned`,
             querySnapshot.docs.length,
-            "questions",
+            "questions"
           );
           return querySnapshot.docs.map((doc) => ({
             id: doc.id,
@@ -297,7 +378,7 @@ const useQuesStore = create((set, get) => ({
     } else {
       try {
         const querySnapshot = await getDocs(
-          collection(db, `Questions/${system}/${topic}`),
+          collection(db, `Questions/${system}/${topic}`)
         );
 
         let documents = [];
@@ -334,7 +415,7 @@ const useQuesStore = create((set, get) => ({
         curUser.id,
         "solved",
         system,
-        topic,
+        topic
       );
       const docs = await getDocs(getPrevQuesRef);
 
@@ -375,7 +456,7 @@ const useQuesStore = create((set, get) => ({
           "solved",
           system,
           topic,
-          q.id,
+          q.id
         );
         const data = { ...q, submittedOn: serverTimestamp() };
         batch.set(docRef, data); // Add to batch
@@ -472,7 +553,7 @@ const useQuesStore = create((set, get) => ({
             "solved",
             system,
             topic,
-            q.id,
+            q.id
           );
 
           batch.update(docRef, {
@@ -512,7 +593,7 @@ const useQuesStore = create((set, get) => ({
 
       console.log(
         "Current User Challenge ID Current",
-        curUser.lastDailyChallengeID,
+        curUser.lastDailyChallengeID
       );
 
       if (challengeID === userChallengeId) {
