@@ -14,7 +14,6 @@ import CustomText from "@/components/CustomText";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import LottieView from "lottie-react-native";
 
 const data = [
   {
@@ -214,20 +213,6 @@ export default function ProfileScreen() {
             Delete Account
           </CustomText>
         </TouchableOpacity>
-        <View>
-          {
-            <LottieView
-              autoPlay
-              renderMode="SOFTWARE"
-              style={{
-                width: 200,
-                height: 200,
-                backgroundColor: "#eee",
-              }}
-              source={require("../../assets/lottieA.json")}
-            />
-          }
-        </View>
       </View>
     </SafeAreaView>
   );
