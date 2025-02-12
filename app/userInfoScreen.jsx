@@ -65,6 +65,7 @@ const userInfoScreen = () => {
       uid,
       totalScore: null,
       lastDailyChallengeID: null,
+      totalSolved: null,
     };
 
     try {
