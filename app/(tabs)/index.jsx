@@ -1,8 +1,6 @@
 import React from "react";
-
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   SafeAreaView,
@@ -17,12 +15,10 @@ import { Redirect, useRouter } from "expo-router";
 import ScrubLogo from "@/components/scrubLogo";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
-import review from "../review";
 import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
-import BloodCell from "@/assets/BloodCell_Happy.json";
 import LottieView from "lottie-react-native";
 
 export default function App() {
@@ -122,7 +118,7 @@ export default function App() {
             
           </TouchableOpacity> */}
           <LottieView
-            source={require("../../assets/BloodCell_Happy.json")}
+            source={require("../../assets/tst.json")}
             autoPlay
             loopr
             style={{ width: 100, height: 150 }}
