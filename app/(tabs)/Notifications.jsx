@@ -82,7 +82,13 @@ const NotificationsScreen = () => {
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
-          <ScrubLogo />
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("@/assets/scrubLogo.png")}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
+          </View>
           {error && userNotifications.length === 0 && (
             <CustomText className="text-center text-red-500 mt-10">
               {error}
@@ -148,5 +154,16 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+  },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  logoImage: {
+    width: "79%",
+    height: 150,
+    marginBottom: 10,
   },
 });

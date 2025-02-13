@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import BackButton from "@/components/backButton";
@@ -63,7 +63,14 @@ export default function ScoreScreen() {
         {/* Content Container */}
         <View contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
-          <ScrubLogo />
+          {/* <ScrubLogo /> */}
+          <View style={styles.logoContainer}>
+              <Image
+                source={require("@/assets/scrubLogo.png")}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
+          </View>
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -192,5 +199,16 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flex: 1,
+  },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  logoImage: {
+    width: "79%",
+    height: 150,
+    marginBottom: 10,
   },
 });
