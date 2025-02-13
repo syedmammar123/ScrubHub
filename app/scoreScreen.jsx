@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -9,6 +9,7 @@ import useQuesStore from "@/store/quesStore";
 import StatusButton from "@/components/statusButton";
 import { useRouter } from "expo-router";
 import CustomText from "@/components/CustomText";
+import useChallengeFriend from "@/hooks/useChallengeFriend";
 
 export default function ScoreScreen() {
   const {
@@ -17,7 +18,10 @@ export default function ScoreScreen() {
     getOpponentScore,
     getCurrentType,
     getChallengerUsername,
+    getChallengingScore,
+    getOpponentID,
   } = useQuesStore((state) => state);
+
   const [score, setScore] = useState(getScore());
 
   const friendChallengeScore = getFriendChallengeScore();
@@ -25,14 +29,29 @@ export default function ScoreScreen() {
   const type = getCurrentType();
   const challengerUsername = getChallengerUsername();
 
+  const { challengeFriend, loading } = useChallengeFriend();
+
   // const friendChallengeScore = 10;
-  // const type = "friendchallenge";
+  // const type = "ChallengingFriends";
   // const currentOpponentScore = 15;
   // const challengerUsername = "Ammar3";
 
   console.log("friendChallengeScore: ", friendChallengeScore);
   console.log("currentOpponentScore: ", currentOpponentScore);
   console.log("type: ", type);
+
+  const challengingScore = getChallengingScore();
+  const friendId = getOpponentID();
+  
+  useEffect(() => {
+    if (type === "ChallengingFriends") {
+      const isChallengeFriendSuccessfull = challengeFriend(
+        friendId,
+        challengingScore,
+        questions
+      );
+    }
+  }, []);
 
   const router = useRouter();
   return (
@@ -78,7 +97,7 @@ export default function ScoreScreen() {
                   / 15
                 </CustomText>
               </CustomText>
-              {type !== "friendchallenge" && (
+              {type !== "friendchallenge" && type !== "ChallengingFriends" && (
                 <TouchableOpacity
                   className={`items-center font-bold py-3 px-4 rounded bg-[#93D334] shadow-md mb-10`}
                   onPress={() => router.navigate("ChallengeFriend")}

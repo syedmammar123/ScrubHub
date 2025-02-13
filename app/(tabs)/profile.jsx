@@ -213,6 +213,15 @@ export default function ProfileScreen() {
             Delete Account
           </CustomText>
         </TouchableOpacity>
+        <TouchableOpacity
+          className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
+          onPress={() => router.navigate("scoreScreen")}
+        >
+          <AntDesign name="deleteuser" size={30} color="red" />
+          <CustomText className={`text-red-500 text-xl`}>
+            Score
+          </CustomText>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
