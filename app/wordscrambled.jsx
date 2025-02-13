@@ -82,6 +82,7 @@ export default function WordScrambled() {
   // const translateValueY = getCurrentQuestion().letterChoices.map(() =>
   //   useSharedValue(0),
   // );
+
   const translateValueX = Array.from(
     { length: answerLength < 10 ? answerLength + 4 : answerLength },
     () => useSharedValue(0)
@@ -107,10 +108,14 @@ export default function WordScrambled() {
       return updated;
     });
   };
-
+  const zIndices = Array.from(
+    { length: answerLength < 10 ? answerLength + 4 : answerLength },
+    () => useSharedValue(1)
+  );
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
+        zIndices[index].value = 100;
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
         if (translateValueY[index].value > 0) {
@@ -235,6 +240,7 @@ export default function WordScrambled() {
           translateValueX[index].value = withSpring(0);
           translateValueY[index].value = withSpring(0);
         }
+        zIndices[index].value = 1;
       });
   };
 
@@ -245,6 +251,7 @@ export default function WordScrambled() {
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
       return {
+        zIndex: zIndices[index].value,
         transform: [
           { translateX: translateValueX[index].value },
           { translateY: translateValueY[index].value },
