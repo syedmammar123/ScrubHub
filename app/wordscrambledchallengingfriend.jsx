@@ -204,7 +204,7 @@ export default function WordScrambledChallengingFriend() {
       });
   };
 
-  const panGestureHandler = question.letterChoices?.map((_, index) =>
+  const panGestureHandler = letterChoices.map((_, index) =>
     CreatePanGesture(index)
   );
 
