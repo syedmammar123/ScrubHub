@@ -223,7 +223,7 @@ export default function IncompleteProcess() {
         <StatusBar style="auto" />
         <View>
           <BackgroundImage>
-            <ScrubLogo />
+            <ScrubLogo type={null} />
             <View
               style={{
                 marginTop: 150,

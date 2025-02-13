@@ -52,7 +52,7 @@ export default function WordScrambleReview() {
 
   const [question, setQuestion] = useState({ letterChoices: [] });
   const [answerLength, setAnswerLength] = useState(
-    getReviewQuestion()?.answer?.replace(/\s/g, "").length,
+    getReviewQuestion()?.answer?.replace(/\s/g, "").length
   );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
@@ -66,7 +66,7 @@ export default function WordScrambleReview() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 }),
+    Array(answerLength).fill({ value: -1, realIndex: -1 })
   );
 
   console.log("Selected", selected);
@@ -76,17 +76,17 @@ export default function WordScrambleReview() {
   // Drag drop functions/ Values
   const translateValueX = Array.from(
     { length: answerLength < 10 ? answerLength + 4 : answerLength },
-    () => useSharedValue(0),
+    () => useSharedValue(0)
   );
 
   const translateValueY = Array.from(
     { length: answerLength < 10 ? answerLength + 4 : answerLength },
-    () => useSharedValue(0),
+    () => useSharedValue(0)
   );
   const [letterLayout, setLetterLayout] = useState([]);
 
   const [blankInputLayout, setBlankInputLayout] = useState(
-    Array(answerLength).fill(null),
+    Array(answerLength).fill(null)
   );
 
   const line = useSharedValue(-1);
@@ -175,7 +175,7 @@ export default function WordScrambleReview() {
               const val = 5 + off * 65;
 
               translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10,
+                val - letterLayout[index]?.x + 10
               );
 
               break;
@@ -206,7 +206,7 @@ export default function WordScrambleReview() {
   };
 
   const panGestureHandler = letterChoices.map((_, index) =>
-    CreatePanGesture(index),
+    CreatePanGesture(index)
   );
 
   const AnimatedStyle = (index) =>
@@ -304,7 +304,7 @@ export default function WordScrambleReview() {
       console.log("MISSINGARRAY", missingArray);
       console.log([...selectedString, ...missingArray]);
       const sortedArray = [...selectedString, ...missingArray].sort(
-        (a, b) => a.realIndex - b.realIndex,
+        (a, b) => a.realIndex - b.realIndex
       );
       console.log("Sorted Array", sortedArray);
 
@@ -329,7 +329,7 @@ export default function WordScrambleReview() {
           }}
         >
           <BackgroundImage>
-            <ScrubLogo />
+            <ScrubLogo type={null} />
             <View
               style={{
                 marginTop: 150,

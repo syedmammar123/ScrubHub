@@ -309,7 +309,7 @@ export default function Matching() {
           }}
         >
           <BackgroundImage>
-            <ScrubLogo />
+            <ScrubLogo type={null} />
             <View
               style={{
                 marginTop: 150,
