@@ -33,6 +33,7 @@ export default function IncompleteProcess() {
     getCurrentType,
     getChallengeQuestion,
     getFriendChallengeQuestion,
+    getChallengingFriendsQuestion,
   } = useQuesStore((state) => state);
   const [question, setQuestion] = useState({});
 
@@ -64,7 +65,7 @@ export default function IncompleteProcess() {
     if (process[index].val !== "") {
       console.log("DROP BACK");
       const wordIndex = words.findIndex(
-        (word) => word.val === process[index].val,
+        (word) => word.val === process[index].val
       );
       setWords((prev) => {
         const updatedWord = [...prev];
@@ -93,7 +94,8 @@ export default function IncompleteProcess() {
       getReviewQuestion()?.questionStyle === "flowChart" ||
       getCurrentQuestion()?.questionStyle === "flowChart" ||
       getChallengeQuestion()?.questionStyle === "flowChart" ||
-      getFriendChallengeQuestion()?.questionStyle === "flowChart"
+      getFriendChallengeQuestion()?.questionStyle === "flowChart" ||
+      getChallengingFriendsQuestion()?.questionStyle === "flowChart"
     ) {
       if (getCurrentType() === "review") {
         question = getReviewQuestion();
@@ -106,6 +108,9 @@ export default function IncompleteProcess() {
         setQuestion(question);
       } else if (getCurrentType() === "friendchallenge") {
         question = getFriendChallengeQuestion();
+        setQuestion(question);
+      } else if (getCurrentType() === "ChallengingFriends") {
+        question = getChallengingFriendsQuestion();
         setQuestion(question);
       }
       const splitProcess = question.diagram.split("→");
@@ -199,7 +204,7 @@ export default function IncompleteProcess() {
         const updatedWords = prev.map((word) =>
           correctAnswers.some((item) => item.value === word.val)
             ? { ...word, opacity: 1 }
-            : { ...word, opacity: 0.5 },
+            : { ...word, opacity: 0.5 }
         );
         return updatedWords;
       });
@@ -369,7 +374,7 @@ export default function IncompleteProcess() {
                                   >
                                     {proc.val === ""
                                       ? String.fromCharCode(
-                                          65 + notknown.indexOf(index),
+                                          65 + notknown.indexOf(index)
                                         )
                                       : proc.val}
                                   </Text>
@@ -396,7 +401,7 @@ export default function IncompleteProcess() {
                           !isColorsSet
                             ? "#ffffff"
                             : correctMatches.some(
-                                  (item) => item.value === word.val,
+                                  (item) => item.value === word.val
                                 )
                               ? theme.barColor
                               : "#ffffff"
@@ -408,7 +413,7 @@ export default function IncompleteProcess() {
                           !isColorsSet
                             ? word.val
                             : correctMatches.some(
-                                  (item) => item.value === word.val,
+                                  (item) => item.value === word.val
                                 )
                               ? `${word.val + "→ " + correctMatches[correctMatches.findIndex((item) => item.value === word.val)].option}`
                               : word.val

@@ -128,6 +128,19 @@ export default function ScoreScreen() {
                       points.
                     </CustomText>
                   )}
+                {type === "ChallengingFriends" && (
+                  // <CustomText className="text-center text-lg font-semibold">
+                  //   Challenge is <CustomText className="font-bold">sent</CustomText>{" "}
+                  //   to your  {challengerUsername}. {challengerUsername} scored{" "}
+                  //   <CustomText className="font-semibold">
+                  //     {currentOpponentScore}
+                  //   </CustomText>{" "}
+                  //   points.
+                  // </CustomText>
+                  <CustomText className="text-center text-lg font-semibold">
+                    Challenge is sent to your friend
+                  </CustomText>
+                )}
               </View>
             </View>
 

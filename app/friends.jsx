@@ -73,11 +73,12 @@ export default function Friends() {
   const router = useRouter();
 
   const {
-    fetchChallengeFriendQuestions,
+    fetchChallengingFriendsQuestions,
     getFriendChallengeQuestion,
     getFetchedFriendChallengeID,
     setType,
     clearFields,
+    clearFields2,
   } = useQuesStore((state) => state);
 
   const sendInvite = async () => {
@@ -409,8 +410,8 @@ export default function Friends() {
 
   const handleChallengeFriend = (itemId) => {
     console.log(itemId);
-    clearFields();
-    setType("friendchallenge");
+    clearFields2();
+    setType("ChallengingFriends");
 
     const currentChallenge = getFetchedFriendChallengeID();
 
@@ -419,7 +420,7 @@ export default function Friends() {
       // let questions = 9;
       let challenge = q;
       console.log("CHALLENGE", challenge);
-      let questions = fetchChallengeFriendQuestions(challenge, "friend");
+      let questions = fetchChallengingFriendsQuestions(challenge);
       if (questions === 0) {
         setErr(true);
         // console.log("YES");
@@ -518,14 +519,23 @@ export default function Friends() {
           </View>
 
           {/* Tabs Content */}
-          
-            {active === "friends" ? (
-              <ScrollView style={styles.friendContainer}>
-                {loadingFriends ? (
-                  <ActivityIndicator
-                    style={styles.loadingIndicator}
-                    size={"large"}
-                    color={"blue"}
+ {active === "friends" ? (
+            <ScrollView style={styles.friendContainer}>
+              {loadingFriends ? (
+                <ActivityIndicator
+                  style={styles.loadingIndicator}
+                  size={"large"}
+                  color={"blue"}
+                />
+              ) : friends.length > 0 ? (
+                friends.map((friend, index) => (
+                  <Friend
+                    // onChallenge={handleChallengeFriend}
+                    key={friend.uid}
+                    Name={friend.username || "Unknown"}
+                    photoUrl={friend.avatarId}
+                    id={friend.uid}
+                    onRemove={handleRemoveFriend}
                   />
                 ) : friends.length > 0 ? (
                   friends.map((friend, index) => (

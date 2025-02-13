@@ -22,7 +22,7 @@ const useGetRandomQues = () => {
       // const randomMainTopics = getRandomArray(documentNames);
       const randomMainTopics = getRandomArray(
         ["cardiovascular", "gastrointestinal"],
-        questionLength,
+        questionLength
       );
 
       // Get random subTopics from each main topic
@@ -55,13 +55,15 @@ const useGetRandomQues = () => {
           return querySnapshot.docs.length > 0
             ? querySnapshot.docs[0].data()
             : null;
-        },
+        }
       );
 
       const randomQuestions = (await Promise.all(questionPromises)).filter(
-        Boolean,
+        Boolean
       );
-      setRandomQues(randomQuestions);
+
+      return randomQuestions;
+      // setRandomQues(randomQuestions);
     } catch (error) {
       console.log("Error fetching random questions:", error);
       setError(error || "Error fetching random questions");

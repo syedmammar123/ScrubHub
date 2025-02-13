@@ -230,7 +230,7 @@ export default function Topics() {
 
           {loading ? (
             <>
-              <ScrubLogo />
+              <ScrubLogo type={null} />
               <View style={{ flex: 1 }}>
                 <View
                   style={{
