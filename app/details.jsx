@@ -65,7 +65,7 @@ export default function App() {
         {/* Content Container */}
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
-          <ScrubLogo />
+          <ScrubLogo type={null} />
 
           <View style={styles.buttonContainer}>
             {/* Buttons */}

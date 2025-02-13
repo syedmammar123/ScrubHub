@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,6 +30,7 @@ import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
 import CustomText from "@/components/CustomText";
+
 
 const buttons = [
   { label: "Topic 1" },
@@ -68,6 +69,7 @@ export default function Topics() {
   const [loading, setLoading] = useState(false);
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
+ 
 
   const handlePress = async (topic) => {
     console.log(system);
@@ -228,7 +230,7 @@ export default function Topics() {
 
           {loading ? (
             <>
-              <ScrubLogo />
+              <ScrubLogo type={null} />
               <View style={{ flex: 1 }}>
                 <View
                   style={{
