@@ -73,11 +73,12 @@ export default function Friends() {
   const router = useRouter();
 
   const {
-    fetchChallengeFriendQuestions,
+    fetchChallengingFriendsQuestions,
     getFriendChallengeQuestion,
     getFetchedFriendChallengeID,
     setType,
     clearFields,
+    clearFields2,
   } = useQuesStore((state) => state);
   const sendInvite = async () => {
     if (phoneNumber.length !== 10) {
@@ -210,7 +211,7 @@ export default function Friends() {
               .doc(friendId)
               .get();
             return { id: friendId, ...friendDoc.data() };
-          }),
+          })
         );
 
         setFriends(friendsDetails);
@@ -219,7 +220,7 @@ export default function Friends() {
         setFriends([]); // Optional: Reset friends if fetching details fails
         Alert.alert(
           "Error",
-          "Unable to fetch some friends' details. Please try again later.",
+          "Unable to fetch some friends' details. Please try again later."
         );
       } finally {
         setLoadingFriends(false); // Ensure loading state is updated after all async calls
@@ -303,14 +304,14 @@ export default function Friends() {
 
       Alert.alert("Success", "Friend request accepted successfully!");
       setInvitations(
-        invitations.filter((invitation) => invitation.uid !== itemId),
+        invitations.filter((invitation) => invitation.uid !== itemId)
       );
       fetchFriends();
     } catch (error) {
       console.error("Error accepting friend request:", error);
       Alert.alert(
         "Error",
-        "An error occurred while accepting the friend request.",
+        "An error occurred while accepting the friend request."
       );
     }
   };
@@ -349,18 +350,18 @@ export default function Friends() {
 
               Alert.alert("Success", "Friend request rejected successfully!");
               setInvitations(
-                invitations.filter((invitation) => invitation.uid !== itemId),
+                invitations.filter((invitation) => invitation.uid !== itemId)
               );
             } catch (error) {
               console.error("Error rejecting friend request:", error);
               Alert.alert(
                 "Error",
-                "An error occurred while rejecting the friend request.",
+                "An error occurred while rejecting the friend request."
               );
             }
           },
         },
-      ],
+      ]
     );
   };
 
@@ -398,7 +399,7 @@ export default function Friends() {
             console.error("Error removing friend:", error);
             Alert.alert(
               "Error",
-              "An error occurred while removing the friend.",
+              "An error occurred while removing the friend."
             );
           }
         },
@@ -408,8 +409,8 @@ export default function Friends() {
 
   const handleChallengeFriend = (itemId) => {
     console.log(itemId);
-    clearFields();
-    setType("friendchallenge");
+    clearFields2();
+    setType("ChallengingFriends");
 
     const currentChallenge = getFetchedFriendChallengeID();
 
@@ -418,7 +419,7 @@ export default function Friends() {
       // let questions = 9;
       let challenge = q;
       console.log("CHALLENGE", challenge);
-      let questions = fetchChallengeFriendQuestions(challenge, "friend");
+      let questions = fetchChallengingFriendsQuestions(challenge);
       if (questions === 0) {
         setErr(true);
         // console.log("YES");
@@ -526,7 +527,7 @@ export default function Friends() {
               ) : friends.length > 0 ? (
                 friends.map((friend, index) => (
                   <Friend
-                    onChallenge={handleChallengeFriend}
+                    // onChallenge={handleChallengeFriend}
                     key={friend.uid}
                     Name={friend.username || "Unknown"}
                     photoUrl={friend.avatarId}

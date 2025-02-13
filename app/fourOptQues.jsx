@@ -43,6 +43,7 @@ export default function fourOptQues() {
     getCurrentType,
     getChallengeQuestion,
     getFriendChallengeQuestion,
+    getChallengingFriendsQuestion,
   } = useQuesStore((state) => state);
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -75,7 +76,12 @@ export default function fourOptQues() {
       getReviewQuestion()?.questionStyle === types[9] ||
       getChallengeQuestion()?.questionStyle === types[9] ||
       getCurrentQuestion()?.questionStyle === types[9] ||
-      getFriendChallengeQuestion()?.questionStyle === types[9]
+      getFriendChallengeQuestion()?.questionStyle === types[9] ||
+      getChallengingFriendsQuestion()?.questionStyle === types[9] ||
+      getChallengingFriendsQuestion()?.questionStyle === types[1] ||
+      getChallengingFriendsQuestion()?.questionStyle === types[4] ||
+      getChallengingFriendsQuestion()?.questionStyle === types[7] ||
+      getChallengingFriendsQuestion()?.questionStyle === types[8]
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
@@ -109,6 +115,14 @@ export default function fourOptQues() {
 
         setQuestion(q);
         setQuestion(q);
+      } else if (getCurrentType() === "ChallengingFriends") {
+        q = getChallengingFriendsQuestion();
+        if (q?.options) {
+          q.options = shuffleArray(q.options);
+        }
+
+        setQuestion(q);
+        setQuestion(q);
       }
     }
   }, []);
@@ -124,7 +138,7 @@ export default function fourOptQues() {
           }}
         >
           <BackgroundImage>
-            <ScrubLogo />
+            <ScrubLogo type={null} />
             <View
               style={{
                 marginTop: 150,
@@ -150,7 +164,7 @@ export default function fourOptQues() {
       <UpperBar />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo type={"happy"} />
+          <ScrubLogo type={!checked ? null : selected === question.answer} />
           {/* {submitted ? (
             <View
               style={{

@@ -52,6 +52,7 @@ export default function Matching() {
     getCurrentType,
     getChallengeQuestion,
     getFriendChallengeQuestion,
+    getChallengingFriendsQuestion,
   } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({});
@@ -168,7 +169,7 @@ export default function Matching() {
             console.log("VALUE PRESENT at ", box.value);
             console.log(
               "UPDATING X,Y at index",
-              questionOptions.findIndex((option) => option.id === presentBox),
+              questionOptions.findIndex((option) => option.id === presentBox)
             );
 
             translateValueX[
@@ -181,7 +182,7 @@ export default function Matching() {
           runOnJS(updateAnswers)(index, box.value);
 
           translateValueX[index].value = withSpring(
-            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x,
+            matchingDropLayout[0]?.x - matchingOptionsLayout[index]?.x
           );
           translateValueY[index].value = withSpring(yValue.value);
         } else {
@@ -252,7 +253,8 @@ export default function Matching() {
       getReviewQuestion()?.questionStyle === "matchTheMicrobe" ||
       getCurrentQuestion()?.questionStyle === "matchTheMicrobe" ||
       getChallengeQuestion()?.questionStyle === "matchTheMicrobe" ||
-      getFriendChallengeQuestion()?.questionStyle === "matchTheMicrobe"
+      getFriendChallengeQuestion()?.questionStyle === "matchTheMicrobe" ||
+      getChallengingFriendsQuestion()?.questionStyle === "matchTheMicrobe"
     ) {
       if (getCurrentType() === "review") {
         q = getReviewQuestion();
@@ -266,13 +268,16 @@ export default function Matching() {
       } else if (getCurrentType() === "friendchallenge") {
         q = getFriendChallengeQuestion();
         setQuestion(q);
+      } else if (getCurrentType() === "ChallengingFriends") {
+        q = getChallengingFriendsQuestion();
+        setQuestion(q);
       }
       if (q.treatments.length < 4) {
         const matches = Object.values(q.correctMatches);
         let arr = [];
         for (let i = 0; i < q.treatments.length; i++) {
           const count = matches.filter(
-            (id) => id === q.treatments[i].id,
+            (id) => id === q.treatments[i].id
           ).length;
           console.log("Count of ", q.treatments[i].id, count);
 
@@ -380,7 +385,7 @@ export default function Matching() {
                   onLayout={(e) => {
                     console.log(
                       "Starting of Matching Container",
-                      e.nativeEvent.layout.y,
+                      e.nativeEvent.layout.y
                     );
                     setMatchingContainerY(e.nativeEvent.layout.y);
                   }}
@@ -405,7 +410,7 @@ export default function Matching() {
                   onLayout={(e) => {
                     console.log(
                       "Starting of Buttons Container",
-                      e.nativeEvent.layout.y,
+                      e.nativeEvent.layout.y
                     );
                     setAnswerContainerY(e.nativeEvent.layout.y);
                   }}

@@ -13,6 +13,10 @@ import CustomText from "./CustomText";
 import { getRandomArray } from "@/util/getRandomItem";
 import useGetRandomQues from "@/hooks/useGetRandomQues";
 import { theme } from "@/theme";
+import useQuesStore from "@/store/quesStore";
+import { getQuestionType } from "@/util/utilQuesFunc";
+import { useEffect } from "react";
+import { useRouter } from "expo-router";
 
 export default function Friend({
   position,
@@ -26,14 +30,57 @@ export default function Friend({
   onChallenge,
   id,
 }) {
+  const router = useRouter("");
   const { randomQues, loading, error, fetchRandomQues } = useGetRandomQues();
-
+  const {
+    getChallengingFriendsQuestion,
+    fetchChallengingFriendsQuestions,
+    getOpponentID,
+    clearFields2,
+    setType,
+  } = useQuesStore((state) => state);
   const handleChallangeFriend = async (friendId) => {
-    await fetchRandomQues(15);
+    // This Checks if User you are challenging is same as before
+    const currentChallenge = getOpponentID();
+    if (currentChallenge === "" || currentChallenge !== friendId) {
+      // if it is not equal so we fetch again
+      console.log("FETCHING");
+      const questions = await fetchRandomQues(15);
+      if (!loading) {
+        console.log("RANDOM QUESRIONS", randomQues);
+        console.log(friendId);
+        clearFields2();
+        setType("ChallengingFriends");
+        let questionsLength = fetchChallengingFriendsQuestions(
+          questions,
+          friendId
+        );
+        if (questionsLength === 0) {
+          setErr(true);
+          // console.log("YES");
+        } else {
+          console.log("FETCH COMPLERE");
+
+          const nextScreen = getQuestionType(getChallengingFriendsQuestion());
+          console.log("NEXT SCREEN", nextScreen);
+          if (nextScreen === "wordscrambled") {
+            router.replace("wordscrambledchallengingfriend");
+          } else {
+            router.replace(nextScreen);
+          }
+        }
+      }
+    } else {
+      // Already Fetched Questions
+      const nextScreen = getQuestionType(getChallengingFriendsQuestion());
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledchallengingfriend");
+      } else {
+        router.replace(nextScreen);
+      }
+    }
   };
 
-  console.log("length: ", randomQues.length);
-  console.log("randomQues: ", randomQues);
   return (
     <>
       <View style={styles.container}>
@@ -73,7 +120,10 @@ export default function Friend({
                     <CustomText style={styles.btnText}>Challenge</CustomText>
                   )}
                 </Pressable>
-                <Pressable className="rounded-full bg-red-500 px-2 py-1 text-white" onPress={() => onRemove(id)}>
+                <Pressable
+                  className="rounded-full bg-red-500 px-2 py-1 text-white"
+                  onPress={() => onRemove(id)}
+                >
                   <CustomText style={styles.btnText}>Remove</CustomText>
                 </Pressable>
               </>
