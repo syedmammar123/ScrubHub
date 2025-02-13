@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, View, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import Entypo from "@expo/vector-icons/Entypo";
@@ -29,27 +35,35 @@ export default function App() {
     submitReviews,
   } = useQuesStore((state) => state);
   // const { getUser } = useCurrentUserStore((state) => state);
+  const [isDailyChallengeFetching, setIsDailyChallengeFetching] =
+    useState(false);
+
   const router = useRouter();
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
   const handleChallengePress = async () => {
+    setIsDailyChallengeFetching(true);
     if (getFetchedChallengeID() === "") {
       const questions = await fetchChallengeQuestions();
       console.log(questions);
       if (questions === 0) {
         router.navigate("challengeLeaderboard");
+        setIsDailyChallengeFetching(false);
       } else {
         const nextScreen = getQuestionType(getChallengeQuestion());
 
         console.log("NEXT SCREEN", nextScreen);
+        setIsDailyChallengeFetching(false);
         router.navigate(nextScreen);
       }
     } else {
       const nextScreen = getQuestionType(getChallengeQuestion());
       if (nextScreen === "wordscrambled") {
+        setIsDailyChallengeFetching(false);
         router.replace("wordscrambledchallenge");
       } else {
+        setIsDailyChallengeFetching(false);
         router.replace(nextScreen);
       }
     }
@@ -119,7 +133,7 @@ export default function App() {
             loop
             style={{ width: 100, height: 150 }}
           /> */}
-        
+
           <TouchableOpacity
             style={[styles.button]}
             onPress={() => {
@@ -196,7 +210,11 @@ export default function App() {
                 styles.buttonSP,
               ]}
             >
-              DAILY CHALLENGE
+              {isDailyChallengeFetching ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                "DAILY CHALLENGE"
+              )}
             </CustomText>
           </TouchableOpacity>
 

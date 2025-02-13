@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -30,7 +30,6 @@ import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
 import CustomText from "@/components/CustomText";
-
 
 const buttons = [
   { label: "Topic 1" },
@@ -69,10 +68,10 @@ export default function Topics() {
   const [loading, setLoading] = useState(false);
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
- 
+  const [selectedTopic, setSelectedTopic] = useState(null);
 
   const handlePress = async (topic) => {
-    console.log(system);
+    setSelectedTopic(topic);
     setIsQuestionFetching(true);
     if (getCurrentType() === "review") {
       if (currentIndexReview < 15) {
@@ -190,6 +189,8 @@ export default function Topics() {
   };
 
   const getRandom = async () => {
+    setIsQuestionFetching(true);
+    setSelectedTopic("Random");
     if (currentIndex < 8) {
       if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
         console.log("HIT");
@@ -197,17 +198,22 @@ export default function Topics() {
         console.log("CALL", getQuestionType(getCurrentQuestion()));
 
         const nextScreen = getQuestionType(getCurrentQuestion());
-        console.log(nextScreen);
 
+        console.log(nextScreen);
+        setIsQuestionFetching(false);
+        setSelectedTopic(null);
         router.navigate(nextScreen);
       } else {
         await fetchQuestions(system.toLowerCase(), topics);
         const nextScreen = getQuestionType(getCurrentQuestion());
-
+        setSelectedTopic(null);
+        setIsQuestionFetching(false);
         router.navigate(nextScreen);
       }
     } else {
       // 9 Questions solved already
+      setSelectedTopic(null);
+      setIsQuestionFetching(false);
       router.navigate("/");
     }
   };
@@ -270,6 +276,7 @@ export default function Topics() {
                   {topics && (
                     <Pressable
                       onPress={getRandom}
+                      disabled={isQuestionFetching}
                       style={{
                         backgroundColor: theme.barColor,
                         paddingHorizontal: 40,
@@ -287,16 +294,24 @@ export default function Topics() {
                         elevation: 20, // Adds shadow on Android
                       }}
                     >
-                      <CustomText
-                        style={{
-                          // fontWeight: "bold",
-                          fontSize: 14,
-                          color: "white",
-                          fontFamily: "Poppins-Semi",
-                        }}
-                      >
-                        Random
-                      </CustomText>
+                      {isQuestionFetching && selectedTopic === "Random" ? (
+                        <ActivityIndicator
+                          style={styles.loadingIndicator}
+                          size={"small"}
+                          color="white"
+                        />
+                      ) : (
+                        <CustomText
+                          style={{
+                            // fontWeight: "bold",
+                            fontSize: 14,
+                            color: "white",
+                            fontFamily: "Poppins-Semi",
+                          }}
+                        >
+                          Random
+                        </CustomText>
+                      )}
                     </Pressable>
                   )}
                 </View>
@@ -311,11 +326,24 @@ export default function Topics() {
                     disabled={isQuestionFetching}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
-                    <AntDesign
-                      name="rightcircle"
-                      size={24}
-                      color={theme.barColor}
-                    />
+                    {isQuestionFetching && selectedTopic === button ? (
+                      <View
+                        className="flex items-center rounded-full p-2 "
+                        style={{ backgroundColor: theme.barColor }}
+                      >
+                        <ActivityIndicator
+                          style={styles.loadingIndicator}
+                          size={"small"}
+                          color="white"
+                        />
+                      </View>
+                    ) : (
+                      <AntDesign
+                        name="rightcircle"
+                        size={24}
+                        color={theme.barColor}
+                      />
+                    )}
                   </TouchableOpacity>
                 ))}
               </View>

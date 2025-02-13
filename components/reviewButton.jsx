@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  ActivityIndicator,
+} from "react-native";
 import React, { useState } from "react";
 import { theme } from "@/theme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -19,13 +26,18 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   } = useQuesStore((state) => state);
   const state = useGetSolvedQues();
   const [error, setError] = useState(false);
+  const [isFetchingReview, setIsFetchingReview] = useState(false);
+
   const handlePress = async () => {
+    setIsFetchingReview(true);
     if (getCurrentType() === "review") {
       if (getfetchedReviewTopic() === "reviewall") {
         const nextScreen = getQuestionType(getReviewQuestion());
         if (nextScreen === "wordscrambled") {
+          setIsFetchingReview(false);
           router.navigate("wordscramblereview");
         } else {
+          setIsFetchingReview(false);
           router.navigate(nextScreen);
         }
         console.log("NEXT SCREEN", nextScreen);
@@ -34,11 +46,13 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
         const questions = await state.fetchRandomQues();
         if (questions.length === 0) {
           setError(true);
+          setIsFetchingReview(false);
           return;
         }
         setReviewAllQuestions(questions);
         const nextScreen = getQuestionType(questions[0]);
 
+        setIsFetchingReview(false);
         router.navigate(nextScreen);
         console.log("NEXT SCREEN", nextScreen);
       }
@@ -61,7 +75,11 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
           <MaterialIcons name="reviews" size={40} color="black" />
         </View>
         <View style={[styles.lowerBox, { backgroundColor: bgColor }]}>
-          <CustomText style={styles.buttonText}>{btnTitle}</CustomText>
+          {btnTitle === "REVIEW ALL" && isFetchingReview ? (
+            <ActivityIndicator size="large" color="black" />
+          ) : (
+            <CustomText style={styles.buttonText}>{btnTitle}</CustomText>
+          )}
         </View>
       </TouchableOpacity>
       {/* Error Modal */}
