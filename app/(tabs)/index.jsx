@@ -117,12 +117,12 @@ export default function App() {
             </Text>
             
           </TouchableOpacity> */}
-          <LottieView
+          {/* <LottieView
             source={require("../../assets/tst.json")}
             autoPlay
             loopr
             style={{ width: 100, height: 150 }}
-          />
+          /> */}
         
           <TouchableOpacity
             style={[styles.button]}
