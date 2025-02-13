@@ -42,7 +42,7 @@ export default function ScoreScreen() {
 
   const challengingScore = getChallengingScore();
   const friendId = getOpponentID();
-  
+
   useEffect(() => {
     if (type === "ChallengingFriends") {
       const isChallengeFriendSuccessfull = challengeFriend(
@@ -63,7 +63,7 @@ export default function ScoreScreen() {
         {/* Content Container */}
         <View contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
-          <ScrubLogo />
+          <ScrubLogo type={null} />
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>

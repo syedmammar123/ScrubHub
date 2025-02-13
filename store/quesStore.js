@@ -396,9 +396,11 @@ const useQuesStore = create((set, get) => ({
         const pickedQuestions = await pickQues(system, topic, documents);
         console.log("PICKED QUESTIONS:", pickedQuestions.length);
 
-        set({ questions: pickedQuestions });
-        set({ fetchedQuestionSystem: system });
-        set({ fetchedQuestionTopic: topic });
+        if (pickedQuestions.length > 0) {
+          set({ questions: pickedQuestions });
+          set({ fetchedQuestionSystem: system });
+          set({ fetchedQuestionTopic: topic });
+        }
 
         return pickedQuestions.length;
       } catch (error) {
