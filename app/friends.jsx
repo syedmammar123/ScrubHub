@@ -418,6 +418,7 @@ export default function Friends() {
       // let questions = 9;
       let challenge = q;
       console.log("CHALLENGE", challenge);
+      // let questions = fetchChallengeFriendQuestions(challenge, "friend");
       let questions = fetchChallengeFriendQuestions(challenge, "friend");
       if (questions === 0) {
         setErr(true);

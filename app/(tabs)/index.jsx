@@ -118,9 +118,9 @@ export default function App() {
             
           </TouchableOpacity> */}
           <LottieView
-            source={require("../../assets/tst.json")}
+            source={require("../../assets/animations/xrays unscreen.json")}
             autoPlay
-            loopr
+            loop
             style={{ width: 100, height: 150 }}
           />
         
