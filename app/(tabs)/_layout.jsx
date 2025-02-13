@@ -13,7 +13,7 @@ export default function Layout() {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ size, color }) => (
-            <Entypo name="leaf" size={size} color={color} />
+            <Feather name="home" size={size} color={color} />
           ),
         }}
       />

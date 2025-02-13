@@ -15,6 +15,7 @@ import UpperBar from "@/components/upperBar";
 import InputBox from "@/components/inputBox";
 import BlankInput from "@/components/blankInput";
 import StatusButton from "@/components/statusButton";
+import ScrubLogo from "@/components/scrubLogo";
 import StatusIcon from "@/components/statusIcon";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import {
