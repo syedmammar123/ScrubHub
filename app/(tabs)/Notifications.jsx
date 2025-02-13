@@ -82,7 +82,7 @@ const NotificationsScreen = () => {
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
-          <ScrubLogo />
+          <ScrubLogo type={null} />
           {error && userNotifications.length === 0 && (
             <CustomText className="text-center text-red-500 mt-10">
               {error}
