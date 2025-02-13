@@ -480,7 +480,15 @@ export default function Friends() {
 
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo />
+          {/* <ScrubLogo /> */}
+          <View style={styles.logoContainer}>
+                
+                  <Image
+                    source={require("@/assets/scrubLogo.png")}
+                    style={styles.logoImage}
+                    resizeMode="contain"
+                  />
+              </View>
           {/* Tabs */}
           <View style={styles.tabs}>
             <Pressable onPress={() => setActive("friends")}>
@@ -796,5 +804,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 10,
+  },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  logoImage: {
+    width: "79%",
+    height: 150,
+    marginBottom: 10,
   },
 });
