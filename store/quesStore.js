@@ -321,6 +321,13 @@ const useQuesStore = create((set, get) => ({
         timestamp: serverTimestamp(), // Add timestamp if needed
       });
 
+      // Apply Send Notifications here
+
+      // Clearing Fields
+      set({ challengingFriendsQuestions: [] });
+      set({ challengingFriendsIndex: 0 });
+      set({ opponentId: "" });
+
       console.log("Document successfully added with ID: ", docRef.id);
       return docRef.id;
     } catch (error) {

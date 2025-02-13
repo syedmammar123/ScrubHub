@@ -226,7 +226,7 @@ export default function StatusButton({
 
           // SUBMIT FUNCTION CALL HERE
           await submitChallengingFriend();
-          clearFields2();
+
           router.navigate("scoreScreen");
         }
       }
