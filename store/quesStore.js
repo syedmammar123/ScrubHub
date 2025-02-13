@@ -207,7 +207,7 @@ const useQuesStore = create((set, get) => ({
         set({ currentOpponentScore: challenge.challengerScore });
         set({ currentFriendChallengeId: challenge.id });
         set({ currentChallengerId: challenge.challengerId });
-        set({ challengerUsername: challengerUsername });
+        set({ challengerUsername: challenge.challengerUsername });
         return challenge.questions.length;
       } else {
         return 0;
