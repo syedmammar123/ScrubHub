@@ -48,6 +48,7 @@ function calcLines(totalBoxes) {
 export default function WordScrambledFriendChallenge() {
   //Question Fetch
   const { getFriendChallengeQuestion } = useQuesStore((state) => state);
+  console.log("FRIEND CHALLENGE SCREEN", getFriendChallengeQuestion);
 
   const [question, setQuestion] = useState({ letterChoices: [], answer: "" });
   const [answerLength, setAnswerLength] = useState(

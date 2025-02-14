@@ -128,7 +128,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
 
-  const TotalSolved = user.totalSolved || null;
+  const TotalSolved = user?.totalSolved || null;
 
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",
@@ -218,9 +218,7 @@ export default function ProfileScreen() {
           onPress={() => router.navigate("scoreScreen")}
         >
           <AntDesign name="deleteuser" size={30} color="red" />
-          <CustomText className={`text-red-500 text-xl`}>
-            Score
-          </CustomText>
+          <CustomText className={`text-red-500 text-xl`}>Score</CustomText>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
