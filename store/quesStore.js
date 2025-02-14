@@ -531,6 +531,8 @@ const useQuesStore = create((set, get) => ({
       });
       // Update User
       const userSolvedTopics = user.solvedTopics;
+      console.log(user);
+      
 
       console.log("User solved Topics", userSolvedTopics);
 
