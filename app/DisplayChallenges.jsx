@@ -20,7 +20,6 @@ import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { useRouter } from "expo-router";
 import CustomText from "@/components/CustomText";
-import { useState } from "react";
 
 const dummyData = [
   {
@@ -116,7 +115,7 @@ const dummyData = [
 const DisplayChallenges = ({}) => {
   const { userChallenges, user } = useCurrentUserStore((state) => state);
   const { loading, error } = useGetChallenges();
-  const [err, setErr] = useState();
+
   const {
     fetchChallengeFriendQuestions,
     getFriendChallengeQuestion,
@@ -168,15 +167,18 @@ const DisplayChallenges = ({}) => {
 
       let questions = fetchChallengeFriendQuestions(challenge);
       if (questions === 0) {
-        setErr(true);
-        // console.log("YES");
+        console.log("YES");
       } else {
         console.log("FETCH COMPLERE");
 
         const nextScreen = getQuestionType(getFriendChallengeQuestion());
 
         console.log("NEXT SCREEN", nextScreen);
-        router.navigate(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          router.replace("wordscrambledfriendchallenge");
+        } else {
+          router.replace(nextScreen);
+        }
       }
     } else {
       // Already Fetched Questions
@@ -189,7 +191,7 @@ const DisplayChallenges = ({}) => {
     }
   };
 
-  console.log("userChallenges", userChallenges);
+  // console.log("userChallenges", userChallenges);
 
   return (
     <View style={styles.container}>

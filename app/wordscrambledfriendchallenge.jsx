@@ -49,6 +49,7 @@ function calcLines(totalBoxes) {
 export default function WordScrambledFriendChallenge() {
   //Question Fetch
   const { getFriendChallengeQuestion } = useQuesStore((state) => state);
+  console.log("FRIEND CHALLENGE SCREEN", getFriendChallengeQuestion);
 
   const [question, setQuestion] = useState({ letterChoices: [], answer: "" });
   const [answerLength, setAnswerLength] = useState(
@@ -382,21 +383,7 @@ export default function WordScrambledFriendChallenge() {
           <ScrollView style={{ paddingBottom: 20 }}>
             <View style={{ flex: 1, justifyContent: "space-between" }}>
               {/* UPPER CONTAINER */}
-              {/* {submitted ? (
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ActivityIndicator
-                    style={styles.loadingIndicator}
-                    size={"large"}
-                    color={theme.barColor}
-                  />
-                </View>
-              ) : ( */}
+
               <>
                 {/* UPPER CONTAINER */}
                 <View>

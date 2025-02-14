@@ -127,22 +127,7 @@ export default function MultipleOptSelect() {
       <View style={{ flex: 1 }}>
         <BackgroundImage>
           <ScrubLogo type={!checked ? null : isMatchesCorrect} />
-          {/* {submitted ? (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator
-                style={styles.loadingIndicator}
-                size={"large"}
-                color={theme.barColor}
-              />
-            </View>
 
-          ) : ( */}
           <ScrollView style={{ paddingBottom: 40 }}>
             <View style={styles.mainContainer}>
               {/* Question */}

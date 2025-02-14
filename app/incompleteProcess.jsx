@@ -18,7 +18,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import IncompleteWordButtons from "@/components/incompleteWordButtons";
 import useQuesStore from "@/store/quesStore";
 import { scale } from "react-native-size-matters";
-import CustomText from "@/components/CustomText";
 import ScrubLogo from "@/components/scrubLogo";
 
 const extractBeforeBrackets = (str) => {
@@ -426,6 +425,20 @@ export default function IncompleteProcess() {
                         words={words}
                       />
                     ))}
+                    {isColorsSet && checked && (
+                      <View
+                        style={{
+                          position: "absolute",
+                          zIndex: 10,
+                          elevation: 10,
+                          top: 50,
+                          left: 0,
+                          right: 0,
+                        }}
+                      >
+                        <ScrubLogo type={isMatchesCorrect} />
+                      </View>
+                    )}
                   </View>
                 </View>
                 {/* LOWER CONTAINER */}
@@ -544,6 +557,7 @@ const styles = StyleSheet.create({
     rowGap: 10,
     columnGap: 2,
     marginTop: 10,
+    position: "relative",
   },
   btncontainer: {
     paddingBottom: 40,
