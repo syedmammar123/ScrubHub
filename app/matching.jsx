@@ -26,7 +26,7 @@ import {
 import { ScaledSheet } from "react-native-size-matters";
 import useQuesStore from "@/store/quesStore";
 import CustomText from "@/components/CustomText";
-
+import ScrubLogo from "@/components/scrubLogo";
 let options = [
   "1. Vancomycin",
   "2. Penicillin",
@@ -59,7 +59,7 @@ export default function Matching() {
   const [questionOptions, setQuestionOptions] = useState([]);
   // Answer States
   const [answers, setAnswers] = useState(Array(4).fill(-1));
-  const [indicesDropped, setIndicesDropped] = useState(Array(4).fill(-1));
+
   //Component Submission States
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -71,6 +71,7 @@ export default function Matching() {
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
   const [matchingContainerY, setMatchingContainerY] = useState(null);
   const [answerContainerY, setAnswerContainerY] = useState(null);
+
   const [offsetValue, setOffsetValue] = useState(0);
   const translateValueX = options.map(() => useSharedValue(0));
   const translateValueY = options.map(() => useSharedValue(0));
@@ -372,24 +373,19 @@ export default function Matching() {
               alignSelf: "center",
             }}
           >
-            {/* {submitted ? (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <ActivityIndicator
-                  style={styles.loadingIndicator}
-                  size={"large"}
-                  color={theme.barColor}
-                />
-              </View>
-            ) : ( */}
             <>
               {/* UPPER CONTAINER */}
-              <View style={{ flex: 1, justifyContent: "space-between" }}>
+              <View
+                onLayout={(e) => {
+                  const layout = e.nativeEvent.layout;
+                  console.log("Starting of Upper Container", layout);
+                  // setAnswerContainerY(e.nativeEvent.layout.y);
+                }}
+                style={{
+                  flex: 1,
+                  justifyContent: "space-between",
+                }}
+              >
                 {/* Guideline */}
                 {/* <View> */}
                 {/* 
@@ -467,13 +463,27 @@ export default function Matching() {
                       />
                     </GestureDetector>
                   ))}
+                  {checked && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        zIndex: 10,
+                        elevation: 10,
+                        top: -50,
+                        left: 0,
+                        right: 0,
+                      }}
+                    >
+                      <ScrubLogo type={isMatchesCorrect} />
+                    </View>
+                  )}
                 </View>
-                {/* </View> */}
               </View>
             </>
             {/* )} */}
 
             {/* LOWER CONTAINER */}
+
             <View>
               {/* Button */}
               <View style={[styles.btncontainer, { rowGap: 15 }]}>
@@ -577,6 +587,7 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     gap: 10,
     marginVertical: 15,
+    position: "relative",
   },
   inputContainer: {
     width: "95%",

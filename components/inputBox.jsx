@@ -26,7 +26,11 @@ export default function InputBox({
       style={[
         styles.box,
         AnimatedStyle(index),
-        { backgroundColor: bgColor, borderWidth: answerCalculated ? 0 : 1 },
+        {
+          backgroundColor: bgColor,
+          opacity: answerCalculated && bgColor === "white" ? 0 : 1,
+          borderWidth: answerCalculated ? 0 : 1,
+        },
       ]}
     >
       <CustomText
