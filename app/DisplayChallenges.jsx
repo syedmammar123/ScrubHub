@@ -197,7 +197,7 @@ const DisplayChallenges = ({}) => {
       <BackgroundImage>
         <BackButton />
         <View contentContainerStyle={styles.scrollContainer}>
-          <ScrubLogo />
+          <ScrubLogo type={null} />
           {error && userChallenges.length === 0 && (
             <CustomText className="text-center text-red-500 mt-10">
               {error}
@@ -235,12 +235,12 @@ const DisplayChallenges = ({}) => {
                           {challenge.status === "pending" &&
                             challenge.opponentId === user.uid && (
                               <TouchableOpacity
-                                className=" rounded-full py-2 w-24 bg-[#93D334] animate-pulse "
+                                className=" rounded-full py-1 w-24 bg-[#93D334] animate-pulse "
                                 onPress={() => {
                                   handleAttemptChallenge(challenge);
                                 }}
                               >
-                                <CustomText className="font-semibold text-center">
+                                <CustomText className="text-sm font-semibold text-center">
                                   Attempt
                                 </CustomText>
                               </TouchableOpacity>

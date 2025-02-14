@@ -2,12 +2,17 @@ import { useState } from "react";
 import useCurrentUserStore from "@/store/currentUserStore";
 import firestore from "@react-native-firebase/firestore";
 import useAddNotification from "./useAddNotification";
+import useQuesStore from "@/store/quesStore";
 
 const useChallengeFriend = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useCurrentUserStore((state) => state);
   const { addChallengeNotification, addChallengeCompletedNotification } =
     useAddNotification();
+
+  const {
+    clearFieldsAfterChallengeFriend
+  } = useQuesStore((state) => state);
 
   const challengeFriend = async (friendId, myScore, questions) => {
     if (!user?.uid) {
@@ -37,6 +42,7 @@ const useChallengeFriend = () => {
       const batch = firestore().batch();
       const challengeRef = firestore().collection("Challenges").doc();
 
+      
       const challengeData = {
         challengerId: currentUserId,
         opponentId: friendId,
@@ -60,6 +66,8 @@ const useChallengeFriend = () => {
       });
 
       await batch.commit();
+
+      clearFieldsAfterChallengeFriend()
       console.log("Challenge and notifications added!");
       return true;
     } catch (error) {

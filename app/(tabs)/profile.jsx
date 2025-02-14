@@ -128,7 +128,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
 
-  const TotalSolved = user.totalSolved || null;
+  const TotalSolved = user?.totalSolved || null;
 
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",

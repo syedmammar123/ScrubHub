@@ -480,15 +480,7 @@ export default function Friends() {
 
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          {/* <ScrubLogo /> */}
-          <View style={styles.logoContainer}>
-                
-                  <Image
-                    source={require("@/assets/scrubLogo.png")}
-                    style={styles.logoImage}
-                    resizeMode="contain"
-                  />
-              </View>
+          <ScrubLogo type={null} />
           {/* Tabs */}
           <View style={styles.tabs}>
             <Pressable onPress={() => setActive("friends")}>

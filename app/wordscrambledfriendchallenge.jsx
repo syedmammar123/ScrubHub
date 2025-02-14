@@ -25,6 +25,7 @@ import {
 } from "react-native-reanimated";
 import useQuesStore from "@/store/quesStore";
 import CustomText from "@/components/CustomText";
+import ScrubLogo from "@/components/scrubLogo";
 
 // Function to get a random letter
 const getRandomLetter = () => {
