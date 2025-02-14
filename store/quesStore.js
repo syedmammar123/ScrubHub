@@ -182,24 +182,43 @@ const useQuesStore = create((set, get) => ({
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
   },
-  fetchChallengeFriendQuestions: (challenge, type) => {
+  // fetchChallengeFriendQuestions: (challenge, type) => {
+  //   console.log("CHALLENGEIN STORE", challenge);
+  //   if (type === "friend") {
+  //     console.log("CALLED FROM friend Screen");
+  //     if (challenge.questions.length > 0) {
+  //       set({ currentFriendChallengeIndex: 0 });
+  //       set({ friendChallengeQuestions: challenge.questions.slice(0, 16) });
+  //       set({ currentFriendChallengeScore: 0 });
+  //       // set({ currentOpponentScore: challenge.challengerScore });
+  //       set({ currentFriendChallengeId: "" });
+  //       // set({ currentFriendChallengeId: challenge.id });
+  //       // set({ currentChallengerId: challenge.challengerId });
+  //       // set({ challengerUsername: challengerUsername });
+  //       return challenge.questions.length;
+  //     } else {
+  //       return 0;
+  //     }
+  //   } else {
+  //     if (challenge.questions.length > 0) {
+  //       set({ currentFriendChallengeIndex: 0 });
+  //       set({ friendChallengeQuestions: challenge.questions });
+  //       set({ currentFriendChallengeScore: 0 });
+  //       set({ currentOpponentScore: challenge.challengerScore });
+  //       set({ currentFriendChallengeId: challenge.id });
+  //       set({ currentChallengerId: challenge.challengerId });
+  //       set({ challengerUsername: challengerUsername });
+  //       return challenge.questions.length;
+  //     } else {
+  //       return 0;
+  //     }
+  //   }
+  // },
+  fetchChallengeFriendQuestions: (challenge) => {
     console.log("CHALLENGEIN STORE", challenge);
-    if (type === "friend") {
+
       console.log("CALLED FROM friend Screen");
-      if (challenge.questions.length > 0) {
-        set({ currentFriendChallengeIndex: 0 });
-        set({ friendChallengeQuestions: challenge.questions.slice(0, 16) });
-        set({ currentFriendChallengeScore: 0 });
-        // set({ currentOpponentScore: challenge.challengerScore });
-        set({ currentFriendChallengeId: "" });
-        // set({ currentFriendChallengeId: challenge.id });
-        // set({ currentChallengerId: challenge.challengerId });
-        // set({ challengerUsername: challengerUsername });
-        return challenge.questions.length;
-      } else {
-        return 0;
-      }
-    } else {
+
       if (challenge.questions.length > 0) {
         set({ currentFriendChallengeIndex: 0 });
         set({ friendChallengeQuestions: challenge.questions });
@@ -212,7 +231,7 @@ const useQuesStore = create((set, get) => ({
       } else {
         return 0;
       }
-    }
+    
   },
   submitFriendChallenge: async () => {
     try {
@@ -296,7 +315,7 @@ const useQuesStore = create((set, get) => ({
         questions: q,
         opponentId: oppId,
         challengerId: userId,
-        opponentScore: 0,
+        opponentScore: 99,
         challengerScore: get().challengingScore,
         status: "pending",
         timestamp: serverTimestamp(), // Add timestamp if needed

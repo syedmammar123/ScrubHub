@@ -149,4 +149,15 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
   },
+  logoContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
+  },
+  logoImage: {
+    width: "79%",
+    height: 150,
+    marginBottom: 10,
+  },
 });
