@@ -59,7 +59,7 @@ export default function Matching() {
   const [questionOptions, setQuestionOptions] = useState([]);
   // Answer States
   const [answers, setAnswers] = useState(Array(4).fill(-1));
-
+  const [indicesDropped, setIndicesDropped] = useState(Array(4).fill(-1));
   //Component Submission States
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
@@ -79,6 +79,7 @@ export default function Matching() {
   const box = useSharedValue(-1);
   const yValue = useSharedValue(0);
   console.log("answers", answers);
+  // console.log("INDICES", indicesDropped);
 
   const updateAnswers = (index, boxValue) => {
     console.log("INDEX AT", index);
@@ -91,11 +92,24 @@ export default function Matching() {
         updatedAns[boxValue] = -1;
         console.log("New UPDATED Ans", updatedAns);
       } else {
-        updatedAns[boxValue] = questionOptions[index].id;
+        updatedAns[boxValue] = questionOptions[index].realIndex;
       }
 
       return updatedAns;
     });
+    // setIndicesDropped((prev) => {
+    //   const updatedInd = [...prev];
+    //   if (index === -1) {
+    //     console.log("Updated at ", updatedInd);
+
+    //     updatedInd[boxValue] = -1;
+    //     console.log("New UPDATED Ans", updatedInd);
+    //   } else {
+    //     updatedInd[boxValue] = questionOptions[index].realIndex;
+    //   }
+
+    //   return updatedInd;
+    // });
   };
   // console.log("0", matchingDropLayout[0]);
   // console.log("1", matchingDropLayout[1]);
@@ -169,15 +183,16 @@ export default function Matching() {
             console.log("VALUE PRESENT at ", box.value);
             console.log(
               "UPDATING X,Y at index",
-              questionOptions.findIndex((option) => option.id === presentBox)
+              questionOptions.findIndex(
+                (option) => option.realIndex === presentBox
+              )
             );
-
-            translateValueX[
-              questionOptions.findIndex((option) => option.id === presentBox)
-            ].value = withSpring(0);
-            translateValueY[
-              questionOptions.findIndex((option) => option.id === presentBox)
-            ].value = withSpring(0);
+            // The box which will be sent back to initial
+            const toInitialIndex = questionOptions.findIndex(
+              (option) => option.realIndex === presentBox
+            );
+            translateValueX[toInitialIndex].value = withSpring(0);
+            translateValueY[toInitialIndex].value = withSpring(0);
           }
           runOnJS(updateAnswers)(index, box.value);
 
@@ -192,7 +207,7 @@ export default function Matching() {
           for (i = 0; i < 4; i++) {
             console.log("Option", questionOptions[index].id);
 
-            if (questionOptions[index].id === answers[i]) {
+            if (questionOptions[index].realIndex === answers[i]) {
               console.log("YES");
 
               flag = true;
@@ -234,8 +249,8 @@ export default function Matching() {
       console.log(answers);
 
       const updatedAnswers = answers.map((val, index) => {
-        if (val === correctAnswers[index]) {
-          return val;
+        if (questionOptions[val].id === correctAnswers[index]) {
+          return questionOptions[val].realIndex;
         } else {
           setIsMatchesCorrect(false);
           return -1;
@@ -272,25 +287,37 @@ export default function Matching() {
         q = getChallengingFriendsQuestion();
         setQuestion(q);
       }
-      if (q.treatments.length < 4) {
-        const matches = Object.values(q.correctMatches);
+      if (q.treatments.length === 4) {
         let arr = [];
         for (let i = 0; i < q.treatments.length; i++) {
-          const count = matches.filter(
-            (id) => id === q.treatments[i].id
-          ).length;
-          console.log("Count of ", q.treatments[i].id, count);
-
-          for (let j = 0; j < count; j++) {
-            arr.push({ id: q.treatments[i].id, name: q.treatments[i].name });
-          }
+          arr.push({
+            id: q.treatments[i].id,
+            name: q.treatments[i].name,
+            realIndex: i,
+          });
         }
-        console.log("New Options", arr);
-
         setQuestionOptions(arr);
-      } else {
-        setQuestionOptions(q.treatments);
+        return;
       }
+      let realInd = 0;
+      const matches = Object.values(q.correctMatches);
+      let arr = [];
+      for (let i = 0; i < q.treatments.length; i++) {
+        const count = matches.filter((id) => id === q.treatments[i].id).length;
+        console.log("Count of ", q.treatments[i].id, count);
+
+        for (let j = 0; j < count; j++) {
+          arr.push({
+            id: q.treatments[i].id,
+            name: q.treatments[i].name,
+            realIndex: realInd,
+          });
+          realInd++;
+        }
+      }
+      console.log("New Options", arr);
+
+      setQuestionOptions(arr);
     }
   }, []);
   useEffect(() => {
@@ -429,7 +456,7 @@ export default function Matching() {
                         bgColor={
                           !checked
                             ? "#ffffff"
-                            : answers.includes(val.id)
+                            : answers.includes(val.realIndex)
                               ? theme.barColor
                               : "#EF5555"
                         }

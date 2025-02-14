@@ -106,9 +106,15 @@ export default function Topics() {
       }
     } else {
       if (currentIndex < 15) {
-        if (getfetchedQuestionTopic() === topic) {
+        console.log("FETCHED TOPICS", getfetchedQuestionTopic());
+        console.log("TOPIC", topic);
+
+        if (
+          getfetchedQuestionTopic() === topic &&
+          getfetchedReviewTopic() !== topic
+        ) {
           console.log("HIT");
-          console.log(getCurrentQuestion().questionStyle);
+          console.log(getCurrentQuestion()?.questionStyle);
           console.log("CALL", getQuestionType(getCurrentQuestion()));
 
           const nextScreen = getQuestionType(getCurrentQuestion());
@@ -118,11 +124,12 @@ export default function Topics() {
         } else {
           const questions = await fetchQuestions(system.toLowerCase(), topic);
           if (questions === 0) {
+            setIsQuestionFetching(false);
             setError(true);
             return;
           }
           const nextScreen = getQuestionType(getCurrentQuestion());
-          setIsQuestionFetching(false);
+
           router.navigate(nextScreen);
         }
       } else {

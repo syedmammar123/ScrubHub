@@ -91,6 +91,10 @@ export default function WordScrambleReview() {
 
   const line = useSharedValue(-1);
   const ytranslated = useSharedValue(-1);
+  const zIndices = Array.from(
+    { length: answerLength < 10 ? answerLength + 4 : answerLength },
+    () => useSharedValue(1)
+  );
 
   const updatedAnswers = (index, realindex, value) => {
     setSelected((prev) => {
@@ -103,6 +107,7 @@ export default function WordScrambleReview() {
   const CreatePanGesture = (index) => {
     return Gesture.Pan()
       .onUpdate((event) => {
+        zIndices[index].value = 100;
         translateValueX[index].value = event.translationX;
         translateValueY[index].value = event.translationY;
         if (translateValueY[index].value > 0) {
@@ -227,6 +232,7 @@ export default function WordScrambleReview() {
           translateValueX[index].value = withSpring(0);
           translateValueY[index].value = withSpring(0);
         }
+        zIndices[index].value = 1;
       });
   };
 
@@ -237,6 +243,7 @@ export default function WordScrambleReview() {
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
       return {
+        zIndex: zIndices[index].value,
         transform: [
           { translateX: translateValueX[index].value },
           { translateY: translateValueY[index].value },
