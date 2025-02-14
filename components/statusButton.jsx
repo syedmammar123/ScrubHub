@@ -74,16 +74,22 @@ export default function StatusButton({
     currentFriendChallengeScore,
     currentOpponentScore,
     clearFields,
+    clearFieldsTest,
     clearFields2,
+    clearFieldsAfterChallengeFriend,
     increaseChallengingFriendsIndex,
     increaseChallengingFriendsScore,
     getChallengingFriendsQuestion,
     challengingFriendsIndex,
     submitChallengingFriend,
+    challengingFriendsQuestions,
+    getChallengingScore,
+    getOpponentID,
+    getChallengingFriendsAllQuestion,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
-  const { challengeCompleted } = useChallengeFriend();
+  const { challengeFriend,challengeCompleted } = useChallengeFriend();
 
   const handlePress = async () => {
     console.log("Type", questionType);
@@ -131,7 +137,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
-        if (currentIndex + 1 < 15) {
+        if (currentIndex + 1 < 2) {
           if (scoreIncrease) {
             increaseScore();
           }
@@ -177,7 +183,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "friendchallenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentFriendChallengeIndex + 1 < 15) {
+        if (currentFriendChallengeIndex + 1 < 5) {
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
@@ -200,13 +206,13 @@ export default function StatusButton({
             currentFriendChallengeScore,
             currentOpponentScore
           );
-          clearFields();
           // router.navigate("challengeLeaderboard");
           router.navigate("scoreScreen");
+          clearFieldsTest();
         }
       } else if (getCurrentType() === "ChallengingFriends") {
         console.log("After Pressing Cont", challengingFriendsIndex);
-        if (challengingFriendsIndex + 1 < 15) {
+        if (challengingFriendsIndex + 1 < 5) {
           if (scoreIncrease) {
             increaseChallengingFriendsScore();
           }
@@ -225,9 +231,16 @@ export default function StatusButton({
           }
 
           // SUBMIT FUNCTION CALL HERE
-          await submitChallengingFriend();
+          // await submitChallengingFriend();
+          challengeFriend(
+            getOpponentID(),
+            getChallengingScore(),
+            getChallengingFriendsAllQuestion()
+          );
 
+          
           router.navigate("scoreScreen");
+          clearFieldsAfterChallengeFriend()
         }
       }
     }

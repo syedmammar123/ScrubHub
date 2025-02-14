@@ -27,6 +27,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import useQuesStore from "@/store/quesStore";
 import CustomText from "@/components/CustomText";
 import ScrubLogo from "@/components/scrubLogo";
+
 let options = [
   "1. Vancomycin",
   "2. Penicillin",

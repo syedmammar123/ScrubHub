@@ -12,6 +12,7 @@ import {
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
+
 // Pick Random Questions from All Topics
 const pickRandQues = async (questions) => {
   const totalQuestions = questions.length;
@@ -144,6 +145,12 @@ const useQuesStore = create((set, get) => ({
   currentChallengerId: "",
   challengerUsername: "",
 
+  // type (ChallengingFriends)
+  challengingFriendsQuestions: [],
+  challengingFriendsIndex: 0,
+  challengingScore: 0,
+  opponentId: "",
+
   clearFields: () => {
     set({ currentFriendChallengeScore: null });
     set({ currentFriendChallengeIndex: 0 });
@@ -154,30 +161,59 @@ const useQuesStore = create((set, get) => ({
     set({ type: "" });
     set({ challengerUsername: "" });
   },
+  clearFieldsTest: () => {
+    set({ friendChallengeQuestions: [] });
+    set({ currentFriendChallengeIndex: 0 });
+    set({ currentFriendChallengeId: "" });
+    set({ currentChallengerId: "" });
+  },
+
+  clearFields2: () => {
+    set({ challengingScore: 0 });
+    set({ challengingFriendsQuestions: [] });
+    set({ challengingFriendsIndex: 0 });
+    set({ opponentId: "" });
+
+    set({ type: "" });
+  },
+
+  clearFieldsAfterChallengeFriend: ()=>{
+    // Clearing Fields
+    set({ challengingFriendsQuestions: [] });
+    set({ challengingFriendsIndex: 0 });
+    set({ opponentId: "" });
+  },
+  
   increaseFriendChallengeScore: () =>
     set((state) => ({
       currentFriendChallengeScore: state.currentFriendChallengeScore + 1,
-    })),
+  })),
+  
   increaseFriendChallengeIndex: () =>
     set((state) => ({
       currentFriendChallengeIndex: state.currentFriendChallengeIndex + 1,
-    })),
+  })),
+  
   getFriendChallengeScore: () => {
     const { currentFriendChallengeScore } = get();
     return currentFriendChallengeScore;
   },
+  
   getOpponentScore: () => {
     const { currentOpponentScore } = get();
     return currentOpponentScore;
   },
+  
   getChallengerUsername: () => {
     const { challengerUsername } = get();
     return challengerUsername;
   },
+  
   getFriendChallengeQuestion: () => {
     const { friendChallengeQuestions, currentFriendChallengeIndex } = get();
     return friendChallengeQuestions[currentFriendChallengeIndex];
   },
+  
   getFetchedFriendChallengeID: () => {
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
@@ -214,6 +250,7 @@ const useQuesStore = create((set, get) => ({
   //     }
   //   }
   // },
+  
   fetchChallengeFriendQuestions: (challenge) => {
     console.log("CHALLENGEIN STORE", challenge);
 
@@ -233,6 +270,7 @@ const useQuesStore = create((set, get) => ({
       }
     
   },
+  
   submitFriendChallenge: async () => {
     try {
       const docId = get().currentFriendChallengeId; // Get the document ID
@@ -248,30 +286,15 @@ const useQuesStore = create((set, get) => ({
     }
   },
 
-  // type (ChallengingFriends)
-  challengingFriendsQuestions: [],
-  challengingFriendsIndex: 0,
-  challengingScore: 0,
-  opponentId: "",
-
-  clearFields2: () => {
-    set({ challengingScore: 0 });
-    set({ challengingFriendsQuestions: [] });
-    set({ challengingFriendsIndex: 0 });
-    set({ opponentId: "" });
-
-    set({ type: "" });
-  },
-
   increaseChallengingFriendsScore: () =>
     set((state) => ({
       challengingScore: state.challengingScore + 1,
-    })),
+  })),
 
   increaseChallengingFriendsIndex: () =>
     set((state) => ({
       challengingFriendsIndex: state.challengingFriendsIndex + 1,
-    })),
+  })),
 
   getChallengingScore: () => {
     // Your Current Challenging Score
@@ -283,11 +306,17 @@ const useQuesStore = create((set, get) => ({
     const { challengingFriendsQuestions, challengingFriendsIndex } = get();
     return challengingFriendsQuestions[challengingFriendsIndex];
   },
+  
+  getChallengingFriendsAllQuestion: () => {
+    const { challengingFriendsQuestions } = get();
+    return challengingFriendsQuestions;
+  },
 
   getOpponentID: () => {
     const { opponentId } = get();
     return opponentId;
   },
+  
   fetchChallengingFriendsQuestions: (challenge, friendId) => {
     console.log("CHALLENGEIN STORE", challenge);
 
@@ -303,6 +332,9 @@ const useQuesStore = create((set, get) => ({
       return 0;
     }
   },
+
+  
+  
   submitChallengingFriend: async () => {
     const q = get().challengingFriendsQuestions;
     const oppId = get().opponentId;
@@ -315,7 +347,7 @@ const useQuesStore = create((set, get) => ({
         questions: q,
         opponentId: oppId,
         challengerId: userId,
-        opponentScore: 99,
+        opponentScore: null,
         challengerScore: get().challengingScore,
         status: "pending",
         timestamp: serverTimestamp(), // Add timestamp if needed
@@ -336,22 +368,28 @@ const useQuesStore = create((set, get) => ({
   },
 
   increaseScore: () => set((state) => ({ score: state.score + 1 })),
+  
   increaseChallengeScore: () =>
     set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
+  
   increaseReviewScore: () =>
     set((state) => ({ reviewScore: state.reviewScore + 1 })),
+  
   getScore: () => {
     const { score } = get();
     return score;
   },
+  
   getChallengeScore: () => {
     const { scoreChallenge } = get();
     return scoreChallenge;
   },
+  
   getReviewScore: () => {
     const { reviewScore } = get();
     return reviewScore;
   },
+  
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
 
@@ -429,6 +467,7 @@ const useQuesStore = create((set, get) => ({
       }
     }
   },
+  
   fetchReviewQuestions: async (system, topic) => {
     set({ isLoading: true });
 
@@ -468,6 +507,7 @@ const useQuesStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  
   submitQuestions: async () => {
     const batch = writeBatch(db);
     let system = get().fetchedQuestionSystem;
@@ -491,6 +531,8 @@ const useQuesStore = create((set, get) => ({
       });
       // Update User
       const userSolvedTopics = user.solvedTopics;
+      console.log(user);
+      
 
       console.log("User solved Topics", userSolvedTopics);
 
@@ -560,6 +602,7 @@ const useQuesStore = create((set, get) => ({
       console.log(error.message);
     }
   },
+  
   submitReviews: async () => {
     const batch = writeBatch(db); // Initialize batch
     set({ currentIndexReview: 0 });
@@ -602,6 +645,7 @@ const useQuesStore = create((set, get) => ({
     }
   },
   //
+  
   fetchChallengeQuestions: async () => {
     set({ isLoading: true });
     // Setting Index 0 for Questions
@@ -639,6 +683,7 @@ const useQuesStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
+  
   submitChallengeQuestions: async () => {
     try {
       const userId = useCurrentUserStore.getState().getUser().id;

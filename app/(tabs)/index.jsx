@@ -275,6 +275,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    height:60,
   },
 
   redButton: {
