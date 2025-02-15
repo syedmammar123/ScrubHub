@@ -37,6 +37,11 @@ const types = [
 ];
 
 let cardioTopics = [
+
+  "chordae tendineae rupture",
+  
+];
+let cardioTopics2 = [
   "atrial fibrillation",
   "test topic2",
   "acute pericarditis",
@@ -168,9 +173,7 @@ async function logErrorToFirestore(errorMessage) {
 async function updateDailyChallenge() {
   try {
     const { dailyChallengeQuestions, questionsToFetch } = await fetchDailyChallenge();
-    const selectedQuestions = dailyChallengeQuestions
-    console.log(selectedQuestions, questionsToFetch);
-    
+    const selectedQuestions = dailyChallengeQuestions   
 
     // If selectedQuestions are less than 15, log error & throw to fail GitHub Actions
     if (selectedQuestions?.length < 15) {
