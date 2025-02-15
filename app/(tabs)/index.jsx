@@ -50,16 +50,16 @@ export default function App() {
       console.log(questions);
       if (questions === 0) {
         router.navigate("challengeLeaderboard");
-        // setIsDailyChallengeFetching(false);
+        setIsDailyChallengeFetching(false);
       } else {
         const nextScreen = getQuestionType(getChallengeQuestion());
 
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
-          // setIsDailyChallengeFetching(false);
+          setIsDailyChallengeFetching(false);
           router.replace("wordscrambledchallenge");
         } else {
-          // setIsDailyChallengeFetching(false);
+          setIsDailyChallengeFetching(false);
           router.replace(nextScreen);
         }
       }
