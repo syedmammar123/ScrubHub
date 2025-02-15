@@ -2,10 +2,7 @@ name: Firestore Daily Update
 
 on:
   schedule:
-    - cron: "58 22 * * *"
-    - cron: "4 23 * * *"
-    - cron: "0 6 * * *"
-    - cron: "0 18 * * *"
+    - cron: "0 5 * * *"   # 12:00 AM New York Time (ET)
   workflow_dispatch:
 
 jobs:

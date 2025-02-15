@@ -37,11 +37,6 @@ const types = [
 ];
 
 let cardioTopics = [
-
-  "chordae tendineae rupture",
-  
-];
-let cardioTopics2 = [
   "atrial fibrillation",
   "test topic2",
   "acute pericarditis",
