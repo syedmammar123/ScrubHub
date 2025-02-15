@@ -6,7 +6,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
 import CustomText from "./CustomText";
@@ -17,6 +17,7 @@ import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
+import LoadingModal from "./LoadingModal";
 
 export default function Friend({
   position,
@@ -31,7 +32,10 @@ export default function Friend({
   id,
 }) {
   const router = useRouter("");
-  const { randomQues, loading, error, fetchRandomQues } = useGetRandomQues();
+  const { fetchRandomQues } = useGetRandomQues();
+  const [isQuestionFetching, setIsQuestionFetching] = useState(false);
+  const [error, setError] = useState(false);
+  const [friendId, setFriendId] = useState(false);
   const {
     getChallengingFriendsQuestion,
     fetchChallengingFriendsQuestions,
@@ -39,44 +43,52 @@ export default function Friend({
     clearFields2,
     setType,
   } = useQuesStore((state) => state);
-  
+
   const handleChallangeFriend = async (friendId) => {
+    setFriendId(friendId);
+    if (error) {
+      setError(false);
+    }
+    setIsQuestionFetching(true);
     // This Checks if User you are challenging is same as before
     const currentChallenge = getOpponentID();
     if (currentChallenge === "" || currentChallenge !== friendId) {
       // if it is not equal so we fetch again
       console.log("FETCHING");
       const questions = await fetchRandomQues(15);
-      if (!loading) {
-        console.log("RANDOM QUESRIONS", randomQues);
-        console.log(friendId);
-        clearFields2();
-        setType("ChallengingFriends");
-        let questionsLength = fetchChallengingFriendsQuestions(
-          questions,
-          friendId
-        );
-        if (questionsLength === 0) {
-          setErr(true);
-          // console.log("YES");
-        } else {
-          console.log("FETCH COMPLERE");
+      console.log("questions lENGTS", questions);
 
-          const nextScreen = getQuestionType(getChallengingFriendsQuestion());
-          console.log("NEXT SCREEN", nextScreen);
-          if (nextScreen === "wordscrambled") {
-            router.replace("wordscrambledchallengingfriend");
-          } else {
-            router.replace(nextScreen);
-          }
-        }
+      if (questions === 0) {
+        setError(true);
+        return;
+      }
+      console.log("RANDOM QUESRIONS", questions);
+      console.log(friendId);
+      clearFields2();
+      setType("ChallengingFriends");
+
+      let questionsLength = fetchChallengingFriendsQuestions(
+        questions,
+        friendId
+      );
+
+      console.log("FETCH COMPLERE");
+
+      const nextScreen = getQuestionType(getChallengingFriendsQuestion());
+      console.log("NEXT SCREEN", nextScreen);
+      if (nextScreen === "wordscrambled") {
+        router.replace("wordscrambledchallengingfriend");
+      } else {
+        router.replace(nextScreen);
       }
     } else {
       // Already Fetched Questions
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       if (nextScreen === "wordscrambled") {
+        setIsQuestionFetching(true);
         router.replace("wordscrambledchallengingfriend");
       } else {
+        setIsQuestionFetching(true);
         router.replace(nextScreen);
       }
     }
@@ -113,13 +125,13 @@ export default function Friend({
                   className="rounded-full bg-green-500 px-2 py-1 text-white"
                   onPress={() => handleChallangeFriend(id)}
                   // onPress={() => onChallenge(id)}
-                  disabled={loading}
+                  // disabled={loading}
                 >
-                  {loading ? (
+                  {/* {loading ? (
                     <ActivityIndicator size="small" color="white" />
-                  ) : (
-                    <CustomText style={styles.btnText}>Challenge</CustomText>
-                  )}
+                  ) : ( */}
+                  <CustomText style={styles.btnText}>Challenge</CustomText>
+                  {/* )} */}
                 </Pressable>
                 <Pressable
                   className=" rounded-full bg-red-500 px-2 py-1 text-white"
@@ -133,6 +145,16 @@ export default function Friend({
         )}
       </View>
       <View style={styles.divider}></View>
+      {friendId === id && (
+        <LoadingModal
+          isQuestionFetching={isQuestionFetching}
+          setIsQuestionFetching={setIsQuestionFetching}
+          error={error}
+          errorMsg={
+            "Error fetching questions. No questions available at the moment."
+          }
+        />
+      )}
     </>
   );
 }
