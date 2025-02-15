@@ -315,18 +315,6 @@ const types = [
   "testToOrder",
 ];
 
-const getRandomArray = (array) => {
-  let arr = [];
-  for (let i = 0; i < types.length; i++) {
-    arr.push({
-      topic: array[Math.floor(Math.random() * array.length)],
-      type: types[i],
-      subTopic: null,
-    });
-  }
-  return arr;
-};
-
 const getRandomItem = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
@@ -354,6 +342,87 @@ admin.initializeApp({
 });
 
 const firestore = admin.firestore();
+
+
+
+let cardioTopics = [
+    "atrial fibrillation",
+    "test topic2",
+    "acute pericarditis",
+    "av block (1st, 2nd, and 3rd degree blocks)",
+    "left or right bundle branch block",
+    "left right bundle branch block",
+    "cardiac arrest",
+    "sick sinus syndrome",
+    "wolff-parkinson-white syndrome",
+    "prolonged qt syndrome",
+    "carotid sinus hypersensitivity",
+    "chordae tendineae rupture",
+    "congestive heart failure",
+    "cor pulmonale",
+    "diastolic dysfunction",
+    "viral cardiomyopathy",
+    "systolic dysfunction",
+    "mitral valve dysfunction",
+    "heart failure secondary to myocardial infarction",
+    "cardiogenic pulmonary edema",
+    "alcoholic cardiomyopathy",
+    "acute coronary syndrome",
+    "ventricular free wall rupture post myocardial infarction",
+    "acute myocardial infarction",
+    "angina pectoris (stable and unstable)",
+    "myocarditis",
+    "coronary artery spasm",
+    "cardiomyopathy, dilated",
+    "pericardial effusion",
+    "ventricular free wall rupture post-myocardial infarction",
+    "chronic constrictive pericarditis",
+    "pericardial tamponade"
+]
+
+let pulmonaryTopics = [
+    "coronaviruses",
+    "influenza virus",
+    "parainfluenza virus",
+    "rhinoviruses",
+    "sinusitis",
+    "nasopharyngitis",
+    "epiglottitis",
+    "bordetella pertussis pneumonia",
+    "croup",
+    "acute laryngitis",
+    "acute laryngotracheitis",
+    "tracheitis",
+    "pharyngitis",
+    "streptococcal throat infections",
+    "tonsillitis",
+    "peritonsillar abscess",
+    "rhinitis, allergic",
+    "rhinitis, chronic",
+    "hospital-acquired pneumonia",
+    "ventilator-associated pneumonia",
+    "community-acquired pneumonia",
+    "acute bronchiolitis",
+    "bronchiolitis obliterans with organizing pneumonia (boop)",
+    "anthrax, pulmonary (bacillus anthracis)",
+    "aspiration pneumonia",
+    "aspiration pneumonitis",
+    "bronchitis, acute",
+    "acute upper respiratory infection",
+    "nontraumatic tamponade post-myocardial infarction",
+    "coxsackievirus"
+]
+
+let gastroTopics = ["test topic3"]
+
+let dataPool = [
+  {"cardiovascular":cardioTopics},
+  {"gastrointestinal":pulmonaryTopics},
+  {"pulmonary":gastroTopics},
+]
+// Read read/writes as well. 
+//check if it works and correct the final score screen's design. and check if clearing etc works as expected!
+
 
 async function fetchQuestionsByIndex() {
   try {
@@ -400,7 +469,7 @@ async function fetchQuestionsByIndex() {
 
 async function updateDailyChallenge() {
   try {
-    const selectedQuestions = await fetchQuestionsByIndex();
+    const selectedQuestions = await fetchDailyChallenge();
 
     const collectionRef = firestore.collection("dailyChallenge");
     const snapshot = await collectionRef.get();
@@ -423,5 +492,92 @@ async function updateDailyChallenge() {
   }
 }
 
+const sampleArray = [
+  { "cardiovascular": ["atrial fibrillation", "test topic2", "acute pericarditis"] },
+  { "neurology": ["stroke", "Alzheimer's", "Parkinson's"] }
+];
+
+const getRandomQuesArrayForDailyChallenge = (array) => {
+  //array=sampleArray or dataPool
+  let arr = [];
+  for (let i = 0; i < 15; i++) {
+    let index = Math.floor(Math.random() * array.length);
+    arr.push({
+      system: Object.keys(array[index])[0],
+      type: getRandomItem(types),
+      subTopic: getRandomItem(array[index][Object.keys(array[index])[0]]),
+    });
+  }
+  return arr;
+};
+
+async function fetchQuestionsDemo() {
+  try {
+    const selectedQuestions = [];
+    const topicPath = "Questions/cardiovascular/atrial fibrillation";
+
+    // Get all document IDs under "Questions->cardiovascular->atrial fibrillation"
+    const topicRef = firestore.collection(topicPath);
+    const querySnapshot = await topicRef.get();
+    const documentIds = querySnapshot.docs.map((doc) => doc.id);
+
+    if (documentIds.length === 0) {
+      console.log("No documents found in the specified path.");
+      return [];
+    }
+
+    const allQuestions = [];
+
+    // Iterate over document IDs to fetch question content
+    for (const docId of documentIds) {
+      const docRef = topicRef.doc(docId);
+      const docData = await docRef.get();
+
+      const questionData = docData.exists ? docData.data() || [] : [];
+
+      // Add all questions to the allQuestions array
+      allQuestions.push(questionData);
+    }
+
+    // Now, select questions at indices 0, 10, 20, ..., 80
+    for (let i = 0; i < allQuestions.length; i += 10) {
+      if (i < allQuestions.length) {
+        selectedQuestions.push(allQuestions[i]);
+      }
+    }
+
+    console.log("Selected questions:", selectedQuestions);
+    return selectedQuestions;
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return [];
+  }
+}
+
 // Call the function
-updateDailyChallenge();
+// updateDailyChallenge();
+
+
+const fetchDailyChallenge = async ()=>{
+
+  questionsToFetch = getRandomQuesArrayForDailyChallenge(dataPool)
+  const dailyChallengeQuestions = [];
+  const topicRef = firestore.collection("Questions")
+
+  for (let i = 0; i < questionsToFetch.length; i++) {
+    if (questionsToFetch[i].subTopic !== null) {
+      const questionsRef = topicRef
+        .doc(questionsToFetch[i].system)
+        .collection(questionsToFetch[i].subTopic)
+        .where("questionStyle", "==", questionsToFetch[i].type)
+        .limit(1);
+      const querySnapshot = await questionsRef.get();
+      const questionDocs = querySnapshot.docs;
+      dailyChallengeQuestions.push(questionDocs[0].data());
+    }
+  }
+
+  return dailyChallengeQuestions;
+}
+
+console.log(fetchDailyChallenge);

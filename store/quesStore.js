@@ -151,6 +151,7 @@ const useQuesStore = create((set, get) => ({
   challengingScore: 0,
   opponentId: "",
 
+  //this clears all fields related to attempt challenge
   clearFields: () => {
     set({ currentFriendChallengeScore: null });
     set({ currentFriendChallengeIndex: 0 });
@@ -161,27 +162,40 @@ const useQuesStore = create((set, get) => ({
     set({ type: "" });
     set({ challengerUsername: "" });
   },
-  clearFieldsTest: () => {
+
+  //this clears all the fields related to review
+  clearReviewFields: () => {
+    set({ fetchedReviewQuestionSystem: "" });
+    set({ fetchedReviewQuestionTopic: "" });
+    set({ reviewQuestions: [] });
+    set({ currentIndexReview: 0 });
+    set({ reviewScore: 0 });
+    set({ type: "" });  
+  },
+
+  clearFieldsAfterAttempt: () => {
     set({ friendChallengeQuestions: [] });
     set({ currentFriendChallengeIndex: 0 });
     set({ currentFriendChallengeId: "" });
     set({ currentChallengerId: "" });
   },
-
+  // clear field before we fetch questions for challenging friend from "Play with friends"
   clearFields2: () => {
-    set({ challengingScore: 0 });
     set({ challengingFriendsQuestions: [] });
     set({ challengingFriendsIndex: 0 });
     set({ opponentId: "" });
-
+    set({ challengingScore: 0 });
     set({ type: "" });
   },
 
+  // Clearing Fields after challenging friend from "Play with friends"
   clearFieldsAfterChallengeFriend: ()=>{
-    // Clearing Fields
+    
     set({ challengingFriendsQuestions: [] });
     set({ challengingFriendsIndex: 0 });
     set({ opponentId: "" });
+    set({ type: "" });
+
   },
   
   increaseFriendChallengeScore: () =>

@@ -74,8 +74,8 @@ export default function StatusButton({
     currentFriendChallengeScore,
     currentOpponentScore,
     clearFields,
-    clearFieldsTest,
-    clearFields2,
+    clearFieldsAfterAttempt,
+    clearReviewFields,
     clearFieldsAfterChallengeFriend,
     increaseChallengingFriendsIndex,
     increaseChallengingFriendsScore,
@@ -134,6 +134,10 @@ export default function StatusButton({
           }
           // Logic to submit Questions
           router.navigate("reviewScoreScreen");
+          
+         
+          clearReviewFields()
+
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
@@ -161,7 +165,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "challenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentChallengeIndex + 1 < 9) {
+        if (currentChallengeIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseChallengeScore();
           }
@@ -183,7 +187,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "friendchallenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentFriendChallengeIndex + 1 < 5) {
+        if (currentFriendChallengeIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseFriendChallengeScore();
           }
@@ -206,13 +210,13 @@ export default function StatusButton({
             currentFriendChallengeScore,
             currentOpponentScore
           );
-          // router.navigate("challengeLeaderboard");
+
           router.navigate("scoreScreen");
-          clearFieldsTest();
+          clearFieldsAfterAttempt();
         }
       } else if (getCurrentType() === "ChallengingFriends") {
         console.log("After Pressing Cont", challengingFriendsIndex);
-        if (challengingFriendsIndex + 1 < 5) {
+        if (challengingFriendsIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseChallengingFriendsScore();
           }
