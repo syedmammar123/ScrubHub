@@ -26,8 +26,8 @@ const statusIcon = {
 const DisplayUserContacts = ({ contacts }) => {
   return (
     <ScrollView className="p-4 pt-2 mb-4">
-      {contacts.map((contact) => (
-        <ContactItem key={contact.phoneNumber} contact={contact} />
+      {contacts.map((contact,index) => (
+        <ContactItem key={`${contact.phoneNumber}-${index}`}  contact={contact} />
       ))}
     </ScrollView>
   );
