@@ -39,10 +39,10 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
       if (getfetchedReviewTopic() === "reviewall") {
         const nextScreen = getQuestionType(getReviewQuestion());
         if (nextScreen === "wordscrambled") {
-          // setIsFetchingReview(false);
+          setIsFetchingReview(false);
           router.navigate("wordscramblereview");
         } else {
-          // setIsFetchingReview(false);
+          setIsFetchingReview(false);
           router.navigate(nextScreen);
         }
         console.log("NEXT SCREEN", nextScreen);
@@ -58,10 +58,10 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
         const nextScreen = getQuestionType(questions[0]);
 
         if (nextScreen === "wordscrambled") {
-          // setIsFetchingReview(false);
+          setIsFetchingReview(false);
           router.navigate("wordscramblereview");
         } else {
-          // setIsFetchingReview(false);
+          setIsFetchingReview(false);
           router.navigate(nextScreen);
         }
         console.log("NEXT SCREEN", nextScreen);

@@ -125,7 +125,7 @@ export default function Topics() {
 
         const nextScreen = getQuestionType(getCurrentQuestion());
         console.log(nextScreen);
-        // setIsQuestionFetching(false);
+        setIsQuestionFetching(false);
         router.navigate(nextScreen);
       } else {
         const questions = await fetchQuestions(system.toLowerCase(), topic);
