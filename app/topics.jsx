@@ -93,7 +93,6 @@ export default function Topics() {
           if (lengthOfQuestions > 0) {
             const nextScreen = getQuestionType(getReviewQuestion());
             setIsQuestionFetching(false);
-            setIsQuestionFetching(false);
             router.navigate(nextScreen);
           } else {
             console.log("NO QUESTIONS FETCHED");
@@ -150,20 +149,18 @@ export default function Topics() {
     try {
       const topics = await getDoc(topicsCollectionRef);
       setTopics(topics.data().topics);
-      if(topics.data().topics){
-        setHasTopics(true)
+      if (topics.data().topics) {
+        setHasTopics(true);
       }
     } catch (error) {
-      setHasTopics(false)
+      setHasTopics(false);
       setError(error.message);
       // console.error("Error fetching document:", error);
-
     } finally {
       setLoading(false);
-
     }
   };
-  
+
   const getInfo = async () => {
     try {
       const auth = getAuth();
@@ -264,111 +261,107 @@ export default function Topics() {
                 </View>
               </View>
             </>
+          ) : !hasTopics ? (
+            <View style={styles.noTopicsContainer}>
+              <CustomText style={styles.noTopicsText}>
+                Currently, there are no topics in this system.
+              </CustomText>
+            </View>
           ) : (
-
-            !hasTopics?( 
-              <View style={styles.noTopicsContainer}>
-                <CustomText style={styles.noTopicsText}>
-                  Currently, there are no topics in this system.
-                </CustomText>
-              </View>
-            ):(
-              <>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "90%",
-                    marginBottom: 20,
-                  }}
-                >
-                  <View>
-                    <CustomText
-                      style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}
-                    >
-                      {topics && "Choose From Topics..."}
-                    </CustomText>
-                  </View>
-                  <View>
-                    {topics && (
-                      <Pressable
-                        onPress={getRandom}
-                        disabled={isQuestionFetching}
-                        style={{
-                          backgroundColor: theme.barColor,
-                          paddingHorizontal: 40,
-                          paddingVertical: 10,
-                          borderWidth: 1,
-                          borderColor: theme.barBgColor,
-                          borderRadius: 10,
-                          // Shadow for iOS
-                          shadowColor: "#000", // Black shadow
-                          shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
-                          shadowOpacity: 0.1, // Opacity of the shadow
-                          shadowRadius: 10, // Blur effect of the shadow
-
-                          // Elevation for Android
-                          elevation: 20, // Adds shadow on Android
-                        }}
-                      >
-                        {isQuestionFetching && selectedTopic === "Random" ? (
-                          <ActivityIndicator
-                            style={styles.loadingIndicator}
-                            size={"small"}
-                            color="white"
-                          />
-                        ) : (
-                          <CustomText
-                            style={{
-                              // fontWeight: "bold",
-                              fontSize: 14,
-                              color: "white",
-                              fontFamily: "Poppins-Semi",
-                            }}
-                          >
-                            Random
-                          </CustomText>
-                        )}
-                      </Pressable>
-                    )}
-                  </View>
+            <>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "90%",
+                  marginBottom: 20,
+                }}
+              >
+                <View>
+                  <CustomText
+                    style={{ fontFamily: "Poppins-Semi", fontSize: 15 }}
+                  >
+                    {topics && "Choose From Topics..."}
+                  </CustomText>
                 </View>
-                <View style={styles.buttonContainer}>
-                  {/* Buttons */}
-                  {topics?.map((button, index) => (
-                    <TouchableOpacity
-                      onPress={() => handlePress(button)}
-                      key={index}
-                      style={[styles.button]}
+                <View>
+                  {topics && (
+                    <Pressable
+                      onPress={getRandom}
                       disabled={isQuestionFetching}
+                      style={{
+                        backgroundColor: theme.barColor,
+                        paddingHorizontal: 40,
+                        paddingVertical: 10,
+                        borderWidth: 1,
+                        borderColor: theme.barBgColor,
+                        borderRadius: 10,
+                        // Shadow for iOS
+                        shadowColor: "#000", // Black shadow
+                        shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
+                        shadowOpacity: 0.1, // Opacity of the shadow
+                        shadowRadius: 10, // Blur effect of the shadow
+
+                        // Elevation for Android
+                        elevation: 20, // Adds shadow on Android
+                      }}
                     >
-                      <CustomText style={styles.buttonText}>{button}</CustomText>
-                      {isQuestionFetching && selectedTopic === button ? (
-                        <View
-                          className="flex items-center rounded-full p-2 "
-                          style={{ backgroundColor: theme.barColor }}
-                        >
-                          <ActivityIndicator
-                            style={styles.loadingIndicator}
-                            size={"small"}
-                            color="white"
-                          />
-                        </View>
-                      ) : (
-                        <AntDesign
-                          name="rightcircle"
-                          size={24}
-                          color={theme.barColor}
+                      {isQuestionFetching && selectedTopic === "Random" ? (
+                        <ActivityIndicator
+                          style={styles.loadingIndicator}
+                          size={"small"}
+                          color="white"
                         />
+                      ) : (
+                        <CustomText
+                          style={{
+                            // fontWeight: "bold",
+                            fontSize: 14,
+                            color: "white",
+                            fontFamily: "Poppins-Semi",
+                          }}
+                        >
+                          Random
+                        </CustomText>
                       )}
-                    </TouchableOpacity>
-                  ))}
+                    </Pressable>
+                  )}
                 </View>
-              </>
-            )
-            
+              </View>
+              <View style={styles.buttonContainer}>
+                {/* Buttons */}
+                {topics?.map((button, index) => (
+                  <TouchableOpacity
+                    onPress={() => handlePress(button)}
+                    key={index}
+                    style={[styles.button]}
+                    disabled={isQuestionFetching}
+                  >
+                    <CustomText style={styles.buttonText}>{button}</CustomText>
+                    {isQuestionFetching && selectedTopic === button ? (
+                      <View
+                        className="flex items-center rounded-full p-2 "
+                        style={{ backgroundColor: theme.barColor }}
+                      >
+                        <ActivityIndicator
+                          style={styles.loadingIndicator}
+                          size={"small"}
+                          color="white"
+                        />
+                      </View>
+                    ) : (
+                      <AntDesign
+                        name="rightcircle"
+                        size={24}
+                        color={theme.barColor}
+                      />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
           )}
           {/* Error Modal */}
           <Modal
