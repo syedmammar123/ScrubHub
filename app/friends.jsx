@@ -407,40 +407,40 @@ export default function Friends() {
     ]);
   };
 
-  const handleChallengeFriend = (itemId) => {
-    console.log(itemId);
-    clearFields2();
-    setType("ChallengingFriends");
+  // const handleChallengeFriend = (itemId) => {
+  //   console.log(itemId);
+  //   clearFields2();
+  //   setType("ChallengingFriends");
 
-    const currentChallenge = getFetchedFriendChallengeID();
+  //   const currentChallenge = getFetchedFriendChallengeID();
 
-    if (currentChallenge === "") {
-      console.log("FETCHING");
-      // let questions = 9;
-      let challenge = q;
-      console.log("CHALLENGE", challenge);
-      let questions = fetchChallengingFriendsQuestions(challenge);
-      if (questions === 0) {
-        setErr(true);
-        // console.log("YES");
-      } else {
-        console.log("FETCH COMPLERE");
+  //   if (currentChallenge === "") {
+  //     console.log("FETCHING");
+  //     // let questions = 9;
+  //     let challenge = q;
+  //     console.log("CHALLENGE", challenge);
+  //     let questions = fetchChallengingFriendsQuestions(challenge);
+  //     if (questions === 0) {
+  //       setErr(true);
+  //       // console.log("YES");
+  //     } else {
+  //       console.log("FETCH COMPLERE");
 
-        const nextScreen = getQuestionType(getFriendChallengeQuestion());
+  //       const nextScreen = getQuestionType(getFriendChallengeQuestion());
 
-        console.log("NEXT SCREEN", nextScreen);
-        router.navigate(nextScreen);
-      }
-    } else {
-      // Already Fetched Questions
-      const nextScreen = getQuestionType(getFriendChallengeQuestion());
-      if (nextScreen === "wordscrambled") {
-        router.replace("wordscrambledfriendchallenge");
-      } else {
-        router.replace(nextScreen);
-      }
-    }
-  };
+  //       console.log("NEXT SCREEN", nextScreen);
+  //       router.navigate(nextScreen);
+  //     }
+  //   } else {
+  //     // Already Fetched Questions
+  //     const nextScreen = getQuestionType(getFriendChallengeQuestion());
+  //     if (nextScreen === "wordscrambled") {
+  //       router.replace("wordscrambledfriendchallenge");
+  //     } else {
+  //       router.replace(nextScreen);
+  //     }
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -480,15 +480,7 @@ export default function Friends() {
 
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          {/* <ScrubLogo /> */}
-          <View style={styles.logoContainer}>
-                
-                  <Image
-                    source={require("@/assets/scrubLogo.png")}
-                    style={styles.logoImage}
-                    resizeMode="contain"
-                  />
-              </View>
+          <ScrubLogo type={null} />
           {/* Tabs */}
           <View style={styles.tabs}>
             <Pressable onPress={() => setActive("friends")}>

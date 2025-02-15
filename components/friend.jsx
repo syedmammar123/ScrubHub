@@ -39,6 +39,7 @@ export default function Friend({
     clearFields2,
     setType,
   } = useQuesStore((state) => state);
+  
   const handleChallangeFriend = async (friendId) => {
     // This Checks if User you are challenging is same as before
     const currentChallenge = getOpponentID();
@@ -121,7 +122,7 @@ export default function Friend({
                   )}
                 </Pressable>
                 <Pressable
-                  className="rounded-full bg-red-500 px-2 py-1 text-white"
+                  className=" rounded-full bg-red-500 px-2 py-1 text-white"
                   onPress={() => onRemove(id)}
                 >
                   <CustomText style={styles.btnText}>Remove</CustomText>

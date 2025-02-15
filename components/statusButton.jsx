@@ -74,16 +74,22 @@ export default function StatusButton({
     currentFriendChallengeScore,
     currentOpponentScore,
     clearFields,
-    clearFields2,
+    clearFieldsAfterAttempt,
+    clearReviewFields,
+    clearFieldsAfterChallengeFriend,
     increaseChallengingFriendsIndex,
     increaseChallengingFriendsScore,
     getChallengingFriendsQuestion,
     challengingFriendsIndex,
     submitChallengingFriend,
+    challengingFriendsQuestions,
+    getChallengingScore,
+    getOpponentID,
+    getChallengingFriendsAllQuestion,
   } = useQuesStore((state) => state);
   const router = useRouter();
 
-  const { challengeCompleted } = useChallengeFriend();
+  const { challengeFriend,challengeCompleted } = useChallengeFriend();
 
   const handlePress = async () => {
     console.log("Type", questionType);
@@ -128,6 +134,10 @@ export default function StatusButton({
           }
           // Logic to submit Questions
           router.navigate("reviewScoreScreen");
+          
+         
+          clearReviewFields()
+
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
@@ -155,7 +165,7 @@ export default function StatusButton({
         }
       } else if (getCurrentType() === "challenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
-        if (currentChallengeIndex + 1 < 9) {
+        if (currentChallengeIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseChallengeScore();
           }
@@ -200,9 +210,9 @@ export default function StatusButton({
             currentFriendChallengeScore,
             currentOpponentScore
           );
-          clearFields();
-          // router.navigate("challengeLeaderboard");
+
           router.navigate("scoreScreen");
+          clearFieldsAfterAttempt();
         }
       } else if (getCurrentType() === "ChallengingFriends") {
         console.log("After Pressing Cont", challengingFriendsIndex);
@@ -225,9 +235,16 @@ export default function StatusButton({
           }
 
           // SUBMIT FUNCTION CALL HERE
-          await submitChallengingFriend();
+          // await submitChallengingFriend();
+          challengeFriend(
+            getOpponentID(),
+            getChallengingScore(),
+            getChallengingFriendsAllQuestion()
+          );
 
+          
           router.navigate("scoreScreen");
+          clearFieldsAfterChallengeFriend()
         }
       }
     }

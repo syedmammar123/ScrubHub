@@ -20,6 +20,7 @@ export default function ScoreScreen() {
     getChallengerUsername,
     getChallengingScore,
     getOpponentID,
+    getChallengingFriendsQuestion,
   } = useQuesStore((state) => state);
 
   const [score, setScore] = useState(getScore());
@@ -42,16 +43,17 @@ export default function ScoreScreen() {
 
   const challengingScore = getChallengingScore();
   const friendId = getOpponentID();
+  const questions = getChallengingFriendsQuestion();
 
-  useEffect(() => {
-    if (type === "ChallengingFriends") {
-      const isChallengeFriendSuccessfull = challengeFriend(
-        friendId,
-        challengingScore,
-        questions
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (type === "ChallengingFriends") {
+  //     const isChallengeFriendSuccessfull = challengeFriend(
+  //       friendId,
+  //       challengingScore,
+  //       questions
+  //     );
+  //   }
+  // }, []);
 
   const router = useRouter();
   return (
@@ -81,12 +83,20 @@ export default function ScoreScreen() {
             <View className="flex flex-col items-center">
               <CustomText
                 style={{
-                  color: score < 5 ? "#EF5555" : theme.barColor,
+                  color: score < 8 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
                   marginBottom: 30,
                 }}
               >
-                {friendChallengeScore ? friendChallengeScore : score}
+                
+                {/* {friendChallengeScore ? friendChallengeScore : score} */}
+               
+               {type === "ChallengingFriends" 
+                ? challengingScore  
+                : type === "friendchallenge" 
+                  ? friendChallengeScore  
+                  : score}
+                
                 <CustomText
                   style={{
                     color: "#3d3d3d",
@@ -158,7 +168,7 @@ export default function ScoreScreen() {
                   //   points.
                   // </CustomText>
                   <CustomText className="text-center text-lg font-semibold">
-                    Challenge is sent to your friend
+                    Challenge is sent to your friend!
                   </CustomText>
                 )}
               </View>

@@ -22,7 +22,7 @@ export default function FriendsLeaderboard() {
     <View style={styles.container}>
       <BackButton />
       <BackgroundImage>
-        <ScrubLogo />
+        <ScrubLogo type={null} />
         <ScrollView style={styles.lowerContainer}>
           {loading && (
             <View

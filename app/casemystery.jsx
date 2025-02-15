@@ -13,7 +13,7 @@ export default function casemystery() {
       <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo />
+          <ScrubLogo type={null} />
           <View style={styles.reviewBtnContainer}>
             <ReviewButton
               btnTitle="ALL SYSTEM"

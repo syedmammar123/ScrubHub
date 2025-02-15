@@ -20,6 +20,8 @@ import StatusButton from "@/components/statusButton";
 import CustomText from "@/components/CustomText";
 
 export default function ReviewScoreScreen() {
+  const router = useRouter();
+
   const { getReviewScore } = useQuesStore((state) => state);
   const [score, setScore] = useState(getReviewScore());
   return (
@@ -31,7 +33,7 @@ export default function ReviewScoreScreen() {
         {/* Content Container */}
         <View contentContainerStyle={styles.scrollContainer}>
           {/* Logo */}
-          <ScrubLogo />
+          <ScrubLogo type={null} />
 
           {/* Score Section */}
           <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -48,7 +50,7 @@ export default function ReviewScoreScreen() {
             <View>
               <CustomText
                 style={{
-                  color: score < 5 ? "#EF5555" : theme.barColor,
+                  color: score < 8 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
                   marginBottom: 70,
                 }}
@@ -66,6 +68,7 @@ export default function ReviewScoreScreen() {
                 </CustomText>
               </CustomText>
             </View>
+            
             <CustomText
               style={{
                 width: "80%",

@@ -26,7 +26,7 @@ const ChallengeFriend = () => {
       <StatusBar style="dark" />
       <BackgroundImage>
         <View contentContainerStyle={styles.scrollContainer} className="pt-14">
-          <ScrubLogo />
+          <ScrubLogo  type={null}/>
           <CustomText className="font-semibold text-center text-xl">
             Challenge a friend
           </CustomText>

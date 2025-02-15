@@ -129,6 +129,7 @@ export default function ProfileScreen() {
   const { clearUser, user } = useCurrentUserStore((state) => state);
 
   const TotalSolved = user?.totalSolved || null;
+  const TotalScore = user?.totalScore || null;
 
   const { showAlert: deleteAccountAlert } = CustomAlert({
     title: "Delete Account",
@@ -174,19 +175,11 @@ export default function ProfileScreen() {
       <View className={`flex w-full px-5 gap-5`}>
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
           <Feather name="check-circle" size={30} color="gray" />
-          {TotalSolved ? (
             <CustomText className={`text-xl`}>
-              Questions Solved:{" "}
-              <CustomText className={`font-bold`}>40</CustomText>
-              /60
+                Questions Solved:{" "}
+                <CustomText className={`font-bold`}>{TotalSolved!==null ?TotalSolved:0 }</CustomText>
+                /{TotalScore!==null ?TotalScore:0 }
             </CustomText>
-          ) : (
-            <CustomText className={`text-xl`}>
-              Questions Solved:{" "}
-              <CustomText className={`font-bold`}>0</CustomText>
-              /60
-            </CustomText>
-          )}
         </View>
 
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
