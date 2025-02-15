@@ -14,7 +14,7 @@ export default function questionmark() {
       <BackButton />
       <View style={{ flex: 1 }}>
         <BackgroundImage>
-          <ScrubLogo />
+          <ScrubLogo type={null} />
           <View style={styles.questionMarks}>
             <FontAwesome5
               style={{ marginBottom: 50 }}

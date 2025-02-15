@@ -83,7 +83,7 @@ export default function ScoreScreen() {
             <View className="flex flex-col items-center">
               <CustomText
                 style={{
-                  color: score < 5 ? "#EF5555" : theme.barColor,
+                  color: score < 8 ? "#EF5555" : theme.barColor,
                   fontSize: 60,
                   marginBottom: 30,
                 }}

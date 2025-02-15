@@ -16,7 +16,7 @@ const ChallengeFriendItem = ({ friend, friends }) => {
   const { challengeFriend, loading } = useChallengeFriend();
   
   const { questions, getScore } = useQuesStore((state) => state);
-
+  
   const handleChallengeFriend = (friendId) => {
     let score = getScore();
     const isChallengeFriendSuccessfull = challengeFriend(
