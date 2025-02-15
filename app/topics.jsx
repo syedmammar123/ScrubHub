@@ -111,7 +111,7 @@ export default function Topics() {
         } else {
           console.log("NO QUESTIONS FETCHED");
           setError(true);
-          setIsQuestionFetching(false);
+          // setIsQuestionFetching(false);
         }
       }
     } else {

@@ -688,7 +688,8 @@ const useQuesStore = create((set, get) => ({
       set({ currentChallengeId: challengeID });
       return documents.length;
     } catch (error) {
-      console.error("Error fetching documents: ", error);
+      console.log("Error fetching documents: ", error);
+      return 0;
     } finally {
       set({ isLoading: false });
     }

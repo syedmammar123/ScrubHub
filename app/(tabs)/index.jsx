@@ -21,6 +21,7 @@ import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
 import LottieView from "lottie-react-native";
+import LoadingModal from "@/components/LoadingModal";
 
 export default function App() {
   const state = useGetSolvedQues();
@@ -49,21 +50,26 @@ export default function App() {
       console.log(questions);
       if (questions === 0) {
         router.navigate("challengeLeaderboard");
-        setIsDailyChallengeFetching(false);
+        // setIsDailyChallengeFetching(false);
       } else {
         const nextScreen = getQuestionType(getChallengeQuestion());
 
         console.log("NEXT SCREEN", nextScreen);
-        setIsDailyChallengeFetching(false);
-        router.navigate(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          // setIsDailyChallengeFetching(false);
+          router.replace("wordscrambledchallenge");
+        } else {
+          // setIsDailyChallengeFetching(false);
+          router.replace(nextScreen);
+        }
       }
     } else {
       const nextScreen = getQuestionType(getChallengeQuestion());
       if (nextScreen === "wordscrambled") {
-        setIsDailyChallengeFetching(false);
+        // setIsDailyChallengeFetching(false);
         router.replace("wordscrambledchallenge");
       } else {
-        setIsDailyChallengeFetching(false);
+        // setIsDailyChallengeFetching(false);
         router.replace(nextScreen);
       }
     }
@@ -96,18 +102,19 @@ export default function App() {
   // console.log(user);
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="dark" />
+    <>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
 
-      {/* Curvy Lines Background */}
-      <BackgroundImage>
-        {/* Content Container */}
-        <SafeAreaView style={styles.contentContainer}>
-          {/* Logo */}
-          <ScrubLogo type={null} />
-          {/* Buttons */}
+        {/* Curvy Lines Background */}
+        <BackgroundImage>
+          {/* Content Container */}
+          <SafeAreaView style={styles.contentContainer}>
+            {/* Logo */}
+            <ScrubLogo type={null} />
+            {/* Buttons */}
 
-          {/* <TouchableOpacity style={[styles.button]} onPress={handleSave}>
+            {/* <TouchableOpacity style={[styles.button]} onPress={handleSave}>
             <View
               style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
             >
@@ -127,121 +134,133 @@ export default function App() {
             
           </TouchableOpacity> */}
 
-          {/* <LottieView
+            {/* <LottieView
             source={require("../../assets/tst.json")}
             autoPlay
             loop
             style={{ width: 100, height: 150 }}
           /> */}
 
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => {
-              setType("study");
-              handlePress("details");
-            }}
-          >
-            <View
-              style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => {
+                setType("study");
+                handlePress("details");
+              }}
             >
-              <Entypo name="graduation-cap" size={24} color="white" />
-            </View>
+              <View
+                style={[styles.redButton, styles.buttonStyle, styles.buttonFP]}
+              >
+                <Entypo name="graduation-cap" size={24} color="white" />
+              </View>
 
-            <CustomText
-              style={[
-                styles.redButton,
-                styles.buttonStyle,
-                styles.buttonText,
-                styles.buttonSP,
-              ]}
-            >
-              STUDY BY SYSTEM
-            </CustomText>
-          </TouchableOpacity>
-          {/* </Link> */}
+              <CustomText
+                style={[
+                  styles.redButton,
+                  styles.buttonStyle,
+                  styles.buttonText,
+                  styles.buttonSP,
+                ]}
+              >
+                STUDY BY SYSTEM
+              </CustomText>
+            </TouchableOpacity>
+            {/* </Link> */}
 
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => {
-              setType("review");
-              handlePress("review");
-            }}
-          >
-            <View
-              style={[styles.yellowButton, styles.buttonStyle, styles.buttonFP]}
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => {
+                setType("review");
+                handlePress("review");
+              }}
             >
-              <MaterialIcons name="reviews" size={24} color="white" />
-            </View>
+              <View
+                style={[
+                  styles.yellowButton,
+                  styles.buttonStyle,
+                  styles.buttonFP,
+                ]}
+              >
+                <MaterialIcons name="reviews" size={24} color="white" />
+              </View>
 
-            <CustomText
-              style={[
-                styles.yellowButton,
-                styles.buttonStyle,
-                styles.buttonText,
-                styles.buttonSP,
-              ]}
-            >
-              REVIEW
-            </CustomText>
-          </TouchableOpacity>
+              <CustomText
+                style={[
+                  styles.yellowButton,
+                  styles.buttonStyle,
+                  styles.buttonText,
+                  styles.buttonSP,
+                ]}
+              >
+                REVIEW
+              </CustomText>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => {
-              setType("challenge");
-              handleChallengePress();
-            }}
-          >
-            <View
-              style={[styles.purpleButton, styles.buttonStyle, styles.buttonFP]}
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => {
+                setType("challenge");
+                handleChallengePress();
+              }}
             >
-              <MaterialCommunityIcons
-                name="progress-question"
-                size={24}
-                color="white"
-              />
-            </View>
+              <View
+                style={[
+                  styles.purpleButton,
+                  styles.buttonStyle,
+                  styles.buttonFP,
+                ]}
+              >
+                <MaterialCommunityIcons
+                  name="progress-question"
+                  size={24}
+                  color="white"
+                />
+              </View>
 
-            <CustomText
-              style={[
-                styles.purpleButton,
-                styles.buttonStyle,
-                styles.buttonText,
-                styles.buttonSP,
-              ]}
-            >
-              {isDailyChallengeFetching ? (
-                <ActivityIndicator size="small" color="white" />
-              ) : (
-                "DAILY CHALLENGE"
-              )}
-            </CustomText>
-          </TouchableOpacity>
+              <CustomText
+                style={[
+                  styles.purpleButton,
+                  styles.buttonStyle,
+                  styles.buttonText,
+                  styles.buttonSP,
+                ]}
+              >
+                DAILY CHALLENGE
+              </CustomText>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.button]}
-            onPress={() => handlePress("friends")}
-          >
-            <View
-              style={[styles.blueButton, styles.buttonStyle, styles.buttonFP]}
+            <TouchableOpacity
+              style={[styles.button]}
+              onPress={() => handlePress("friends")}
             >
-              <FontAwesome5 name="user-friends" size={24} color="white" />
-            </View>
+              <View
+                style={[styles.blueButton, styles.buttonStyle, styles.buttonFP]}
+              >
+                <FontAwesome5 name="user-friends" size={24} color="white" />
+              </View>
 
-            <CustomText
-              style={[
-                styles.blueButton,
-                styles.buttonStyle,
-                styles.buttonText,
-                styles.buttonSP,
-              ]}
-            >
-              PLAY WITH YOUR FRIENDS
-            </CustomText>
-          </TouchableOpacity>
-        </SafeAreaView>
-      </BackgroundImage>
-    </View>
+              <CustomText
+                style={[
+                  styles.blueButton,
+                  styles.buttonStyle,
+                  styles.buttonText,
+                  styles.buttonSP,
+                ]}
+              >
+                PLAY WITH YOUR FRIENDS
+              </CustomText>
+            </TouchableOpacity>
+          </SafeAreaView>
+        </BackgroundImage>
+      </View>
+      <LoadingModal
+        isQuestionFetching={isDailyChallengeFetching}
+        setIsQuestionFetching={setIsDailyChallengeFetching}
+        errorMsg={
+          "Error fetching questions. No questions available at the moment."
+        }
+      />
+    </>
   );
 }
 
@@ -275,7 +294,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    height:60,
+    height: 60,
   },
 
   redButton: {

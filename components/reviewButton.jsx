@@ -14,6 +14,7 @@ import useQuesStore from "@/store/quesStore";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import CustomText from "./CustomText";
+import LoadingModal from "./LoadingModal";
 
 export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   const {
@@ -38,10 +39,10 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
       if (getfetchedReviewTopic() === "reviewall") {
         const nextScreen = getQuestionType(getReviewQuestion());
         if (nextScreen === "wordscrambled") {
-          setIsFetchingReview(false);
+          // setIsFetchingReview(false);
           router.navigate("wordscramblereview");
         } else {
-          setIsFetchingReview(false);
+          // setIsFetchingReview(false);
           router.navigate(nextScreen);
         }
         console.log("NEXT SCREEN", nextScreen);
@@ -50,17 +51,17 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
         const questions = await state.fetchRandomQues();
         if (questions.length === 0) {
           setError(true);
-          setIsFetchingReview(false);
+          // setIsFetchingReview(false);
           return;
         }
         setReviewAllQuestions(questions);
         const nextScreen = getQuestionType(questions[0]);
 
         if (nextScreen === "wordscrambled") {
-          setIsFetchingReview(false);
+          // setIsFetchingReview(false);
           router.navigate("wordscramblereview");
         } else {
-          setIsFetchingReview(false);
+          // setIsFetchingReview(false);
           router.navigate(nextScreen);
         }
         console.log("NEXT SCREEN", nextScreen);
@@ -92,33 +93,15 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
         </View>
       </TouchableOpacity>
       {/* Error Modal */}
-      <Modal
-        visible={error}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setError(false)}
-      >
-        <TouchableOpacity
-          style={styles.overlay}
-          onPress={() => setError(false)}
-          activeOpacity={1}
-        >
-          <View style={styles.modalContainer}>
-            {/* Circle with shadow */}
-            <View style={styles.iconCircle}>
-              <MaterialIcons name="cancel" size={55} color="#EF5555" />
-            </View>
 
-            {/* Title */}
-            <CustomText style={styles.title}>No Question Fetched!</CustomText>
-
-            {/* Description */}
-            <CustomText style={styles.description}>
-              Error fetching questions. No questions available at the moment.
-            </CustomText>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <LoadingModal
+        setIsQuestionFetching={setIsFetchingReview}
+        isQuestionFetching={isFetchingReview}
+        error={error}
+        errorMsg={
+          "Error fetching questions. No questions available at the moment."
+        }
+      />
     </View>
   );
 }
