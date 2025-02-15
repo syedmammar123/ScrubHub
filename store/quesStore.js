@@ -766,6 +766,8 @@ const useQuesStore = create((set, get) => ({
   // For Review All
   setReviewAllQuestions: (questions) => {
     set({ isLoading: true });
+    console.log("The len is",questions.length);
+    
 
     // Setting Index 0 for Questions
     set({ currentIndexReview: 0 });

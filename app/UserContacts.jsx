@@ -26,6 +26,11 @@ const UserContacts = () => {
   const [permissionDenied, setPermissionDenied] = useState(false);
 
   const requestContactsPermission = useCallback(async () => {
+    if (!user || !user.phoneNumber) {
+      console.error("User or phoneNumber is undefined");
+      return;
+    }
+    
     const { status } = await Contacts.requestPermissionsAsync();
 
     if (status === "granted") {
@@ -48,14 +53,15 @@ const UserContacts = () => {
               country,
             ),
           }));
-
-        setUserContacts(filteredContacts.slice(0, 10));
+          console.log(filteredContacts.length);
+          
+        setUserContacts(filteredContacts);
       }
     } else {
       console.log("Permission denied");
       setPermissionDenied(true);
     }
-  }, [user.phoneNumber]);
+  }, [user?.phoneNumber]);
 
   useEffect(() => {
     requestContactsPermission();
@@ -65,7 +71,7 @@ const UserContacts = () => {
     <View className="flex-1">
       <BackButton />
       <BackgroundImage>
-        <ScrubLogo />
+        <ScrubLogo type={null} />
         <View className="flex-1 items-center justify-center">
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
           {error && (

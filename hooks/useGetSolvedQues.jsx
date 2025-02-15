@@ -23,7 +23,9 @@ const useGetSolvedQues = () => {
         return [];
       }
       const randomMainTopics = getRandomSolvedQuesArray(solvedTopics);
-      //   console.log("randomMainTopics",randomMainTopics)
+
+        console.log("randomMainTopics",randomMainTopics.length)
+        console.log("randomMainTopics1",randomMainTopics)
 
       // Get random questions from each subtopic
       const randomQuestions = [];

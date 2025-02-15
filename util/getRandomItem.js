@@ -16,6 +16,15 @@ export const types = [
   "scrabble",
   "shortFacts",
   "testToOrder",
+  "firstLineTreatment",
+  "flowChart",
+  "lab",
+  "matchTheMicrobe",
+  "medicationUse",
+  "quickDiagnosis",
+  "scrabble",
+  "shortFacts",
+  "testToOrder",
 ];
 
 export const getRandomArray = (array, length) => {
@@ -32,7 +41,7 @@ export const getRandomItem = (array) => {
 
 export const getRandomSolvedQuesArray = (array) => {
   let arr = [];
-  for (let i = 0; i < types.length; i++) {
+  for (let i = 0; i < 15; i++) {
     let index = Math.floor(Math.random() * array.length);
     arr.push({
       topic: Object.keys(array[index])[0],

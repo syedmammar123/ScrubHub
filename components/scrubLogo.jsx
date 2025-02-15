@@ -6,7 +6,7 @@ const happy = {
   1: require("@/assets/animations/hearth unscreen.json"),
   2: require("@/assets/animations/lungh unscreen.json"),
   3: require("@/assets/animations/muscleh unscreen.json"),
-  3: require("@/assets/animations/xrayh unscreen.json"),
+  4: require("@/assets/animations/xrayh unscreen.json"),
 };
 const sad = {
   0: require("@/assets/animations/bloodcells unscreen.json"),
