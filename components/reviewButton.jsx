@@ -29,6 +29,10 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   const [isFetchingReview, setIsFetchingReview] = useState(false);
 
   const handlePress = async () => {
+    if (error) {
+      setError(false);
+    }
+
     setIsFetchingReview(true);
     if (getCurrentType() === "review") {
       if (getfetchedReviewTopic() === "reviewall") {
