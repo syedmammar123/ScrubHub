@@ -30,6 +30,9 @@ import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
 import CustomText from "@/components/CustomText";
+import LottieView from "lottie-react-native";
+import StatusButton from "@/components/statusButton";
+import LoadingModal from "@/components/LoadingModal";
 
 const buttons = [
   { label: "Topic 1" },
@@ -68,71 +71,72 @@ export default function Topics() {
   const [loading, setLoading] = useState(false);
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState(null);
   const [hasTopics, setHasTopics] = useState(false);
 
   const handlePress = async (topic) => {
-    setSelectedTopic(topic);
+    if (error) {
+      setError(false);
+    }
+
     setIsQuestionFetching(true);
     if (getCurrentType() === "review") {
-      if (currentIndexReview < 15) {
-        if (getfetchedReviewTopic() === topic) {
-          console.log("Already fetched");
+      if (getfetchedReviewTopic() === topic) {
+        console.log("Already fetched");
 
-          const nextScreen = getQuestionType(getReviewQuestion());
-          console.log("NEXT SCREEN", nextScreen);
+        const nextScreen = getQuestionType(getReviewQuestion());
+        console.log("NEXT SCREEN", nextScreen);
+        if (nextScreen === "wordscrambled") {
+          setIsQuestionFetching(false);
+          router.navigate("wordscramblereview");
+        } else {
           setIsQuestionFetching(false);
           router.navigate(nextScreen);
-        } else {
-          const lengthOfQuestions = await fetchReviewQuestions(
-            system.toLowerCase(),
-            topic
-          );
-          console.log("LENGTH GIVEN AT", lengthOfQuestions);
+        }
+      } else {
+        const lengthOfQuestions = await fetchReviewQuestions(
+          system.toLowerCase(),
+          topic
+        );
+        console.log("LENGTH GIVEN AT", lengthOfQuestions);
 
-          if (lengthOfQuestions > 0) {
-            const nextScreen = getQuestionType(getReviewQuestion());
+        if (lengthOfQuestions > 0) {
+          const nextScreen = getQuestionType(getReviewQuestion());
+          if (nextScreen === "wordscrambled") {
+            setIsQuestionFetching(false);
+            router.navigate("wordscramblereview");
+          } else {
             setIsQuestionFetching(false);
             router.navigate(nextScreen);
-          } else {
-            console.log("NO QUESTIONS FETCHED");
-            setError(true);
-            setIsQuestionFetching(false);
           }
+        } else {
+          console.log("NO QUESTIONS FETCHED");
+          setError(true);
+          // setIsQuestionFetching(false);
         }
-      } else {
-        setIsQuestionFetching(false);
-        router.navigate("/");
       }
     } else {
-      if (currentIndex < 15) {
-        console.log("FETCHED TOPICS", getfetchedQuestionTopic());
-        console.log("TOPIC", topic);
+      console.log("FETCHED TOPICS", getfetchedQuestionTopic());
+      console.log("TOPIC", topic);
 
-        if (getfetchedQuestionTopic() === topic) {
-          console.log("HIT");
-          console.log(getCurrentQuestion()?.questionStyle);
-          console.log("CALL", getQuestionType(getCurrentQuestion()));
+      if (getfetchedQuestionTopic() === topic) {
+        console.log("HIT");
+        console.log(getCurrentQuestion()?.questionStyle);
+        console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-          const nextScreen = getQuestionType(getCurrentQuestion());
-          console.log(nextScreen);
-          setIsQuestionFetching(false);
-          router.navigate(nextScreen);
-        } else {
-          const questions = await fetchQuestions(system.toLowerCase(), topic);
-          if (questions === 0) {
-            setIsQuestionFetching(false);
-            setError(true);
-            return;
-          }
-          const nextScreen = getQuestionType(getCurrentQuestion());
-
-          router.navigate(nextScreen);
-        }
+        const nextScreen = getQuestionType(getCurrentQuestion());
+        console.log(nextScreen);
+        // setIsQuestionFetching(false);
+        router.navigate(nextScreen);
       } else {
-        // 9 Questions solved already
-        setIsQuestionFetching(false);
-        router.navigate("/");
+        const questions = await fetchQuestions(system.toLowerCase(), topic);
+        if (questions === 0) {
+          // setIsQuestionFetching(false);
+          setError(true);
+          return;
+        }
+        const nextScreen = getQuestionType(getCurrentQuestion());
+
+        router.navigate(nextScreen);
       }
     }
   };
@@ -197,32 +201,29 @@ export default function Topics() {
   };
 
   const getRandom = async () => {
+    if (error) {
+      setError(false);
+    }
+
     setIsQuestionFetching(true);
-    setSelectedTopic("Random");
-    if (currentIndex < 8) {
-      if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
-        console.log("HIT");
-        console.log(getCurrentQuestion().questionStyle);
-        console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-        const nextScreen = getQuestionType(getCurrentQuestion());
+    if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
+      console.log("HIT");
+      console.log(getCurrentQuestion().questionStyle);
+      console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-        console.log(nextScreen);
-        setIsQuestionFetching(false);
-        setSelectedTopic(null);
-        router.navigate(nextScreen);
-      } else {
-        await fetchQuestions(system.toLowerCase(), topics);
-        const nextScreen = getQuestionType(getCurrentQuestion());
-        setSelectedTopic(null);
-        setIsQuestionFetching(false);
-        router.navigate(nextScreen);
-      }
-    } else {
-      // 9 Questions solved already
-      setSelectedTopic(null);
+      const nextScreen = getQuestionType(getCurrentQuestion());
+
+      console.log(nextScreen);
       setIsQuestionFetching(false);
-      router.navigate("/");
+
+      router.navigate(nextScreen);
+    } else {
+      await fetchQuestions(system.toLowerCase(), topics);
+      const nextScreen = getQuestionType(getCurrentQuestion());
+
+      setIsQuestionFetching(false);
+      router.navigate(nextScreen);
     }
   };
 
@@ -264,7 +265,7 @@ export default function Topics() {
           ) : !hasTopics ? (
             <View style={styles.noTopicsContainer}>
               <CustomText style={styles.noTopicsText}>
-                Currently, there are no topics in this system.
+                Oops! This system is still in med school. Check back soon!
               </CustomText>
             </View>
           ) : (
@@ -287,7 +288,7 @@ export default function Topics() {
                   </CustomText>
                 </View>
                 <View>
-                  {topics && (
+                  {topics && getCurrentType() === "study" && (
                     <Pressable
                       onPress={getRandom}
                       disabled={isQuestionFetching}
@@ -308,24 +309,16 @@ export default function Topics() {
                         elevation: 20, // Adds shadow on Android
                       }}
                     >
-                      {isQuestionFetching && selectedTopic === "Random" ? (
-                        <ActivityIndicator
-                          style={styles.loadingIndicator}
-                          size={"small"}
-                          color="white"
-                        />
-                      ) : (
-                        <CustomText
-                          style={{
-                            // fontWeight: "bold",
-                            fontSize: 14,
-                            color: "white",
-                            fontFamily: "Poppins-Semi",
-                          }}
-                        >
-                          Random
-                        </CustomText>
-                      )}
+                      <CustomText
+                        style={{
+                          // fontWeight: "bold",
+                          fontSize: 14,
+                          color: "white",
+                          fontFamily: "Poppins-Semi",
+                        }}
+                      >
+                        Random
+                      </CustomText>
                     </Pressable>
                   )}
                 </View>
@@ -340,7 +333,7 @@ export default function Topics() {
                     disabled={isQuestionFetching}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
-                    {isQuestionFetching && selectedTopic === button ? (
+                    {/* {isQuestionFetching && selectedTopic === button ? (
                       <View
                         className="flex items-center rounded-full p-2 "
                         style={{ backgroundColor: theme.barColor }}
@@ -351,20 +344,29 @@ export default function Topics() {
                           color="white"
                         />
                       </View>
-                    ) : (
-                      <AntDesign
-                        name="rightcircle"
-                        size={24}
-                        color={theme.barColor}
-                      />
-                    )}
+                    ) : ( */}
+                    <AntDesign
+                      name="rightcircle"
+                      size={24}
+                      color={theme.barColor}
+                    />
+                    {/* )} */}
                   </TouchableOpacity>
                 ))}
               </View>
             </>
           )}
           {/* Error Modal */}
-          <Modal
+          <LoadingModal
+            setIsQuestionFetching={setIsQuestionFetching}
+            isQuestionFetching={isQuestionFetching}
+            error={error}
+            errorMsg={
+              "Error fetching questions. No questions available at the moment."
+            }
+          />
+
+          {/* <Modal
             visible={error}
             transparent
             animationType="fade"
@@ -376,24 +378,24 @@ export default function Topics() {
               activeOpacity={1}
             >
               <View style={styles.modalContainer}>
-                {/* Circle with shadow */}
+                
                 <View style={styles.iconCircle}>
                   <MaterialIcons name="cancel" size={55} color="#EF5555" />
                 </View>
 
-                {/* Title */}
+               
                 <CustomText style={styles.title}>
                   No Question Fetched!
                 </CustomText>
 
-                {/* Description */}
+                 
                 <CustomText style={styles.description}>
                   Error fetching questions. No questions available at the
                   moment.
                 </CustomText>
               </View>
             </TouchableOpacity>
-          </Modal>
+          </Modal> */}
 
           {/* <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -474,10 +476,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    width: "90%",
+    flex: 1,
+    width: "100%",
     backgroundColor: "white",
     borderRadius: 20,
     padding: 30,
+    alignItems: "center",
+    justifyContent: "center",
     alignItems: "center",
     shadowColor: "#fff",
     shadowOffset: { width: 0, height: 4 },

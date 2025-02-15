@@ -44,6 +44,7 @@ export default function StatusButton({
   questionType,
   scoreIncrease,
   type, // To Go next after seeing score
+  setIsQuestionFetching,
 }) {
   const {
     getReviewQuestion,
@@ -89,7 +90,7 @@ export default function StatusButton({
   } = useQuesStore((state) => state);
   const router = useRouter();
 
-  const { challengeFriend,challengeCompleted } = useChallengeFriend();
+  const { challengeFriend, challengeCompleted } = useChallengeFriend();
 
   const handlePress = async () => {
     console.log("Type", questionType);
@@ -134,10 +135,8 @@ export default function StatusButton({
           }
           // Logic to submit Questions
           router.navigate("reviewScoreScreen");
-          
-         
-          clearReviewFields()
 
+          clearReviewFields();
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
@@ -242,25 +241,24 @@ export default function StatusButton({
             getChallengingFriendsAllQuestion()
           );
 
-          
           router.navigate("scoreScreen");
-          clearFieldsAfterChallengeFriend()
+          clearFieldsAfterChallengeFriend();
         }
       }
     }
   };
+  const handlePressType = () => {
+    if (type === "home") {
+      router.navigate("/");
+    } else if (type === "backTopics") {
+      setIsQuestionFetching(false);
+    } else {
+      handlePress();
+    }
+  };
   return (
     <View style={[styles.container, { width: width }]}>
-      <TouchableOpacity
-        onPress={
-          type === "home"
-            ? () => {
-                router.navigate("/");
-              }
-            : handlePress
-        }
-        style={styles.btn}
-      >
+      <TouchableOpacity onPress={handlePressType} style={styles.btn}>
         <CustomText style={styles.text}>{text}</CustomText>
       </TouchableOpacity>
       <TouchableOpacity disabled style={styles.lowerbox}></TouchableOpacity>

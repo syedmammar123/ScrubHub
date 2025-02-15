@@ -12,7 +12,6 @@ import {
 } from "@react-native-firebase/firestore";
 import useCurrentUserStore from "./currentUserStore";
 
-
 // Pick Random Questions from All Topics
 const pickRandQues = async (questions) => {
   const totalQuestions = questions.length;
@@ -170,7 +169,7 @@ const useQuesStore = create((set, get) => ({
     set({ reviewQuestions: [] });
     set({ currentIndexReview: 0 });
     set({ reviewScore: 0 });
-    set({ type: "" });  
+    set({ type: "" });
   },
 
   clearFieldsAfterAttempt: () => {
@@ -189,45 +188,43 @@ const useQuesStore = create((set, get) => ({
   },
 
   // Clearing Fields after challenging friend from "Play with friends"
-  clearFieldsAfterChallengeFriend: ()=>{
-    
+  clearFieldsAfterChallengeFriend: () => {
     set({ challengingFriendsQuestions: [] });
     set({ challengingFriendsIndex: 0 });
     set({ opponentId: "" });
     set({ type: "" });
-
   },
-  
+
   increaseFriendChallengeScore: () =>
     set((state) => ({
       currentFriendChallengeScore: state.currentFriendChallengeScore + 1,
-  })),
-  
+    })),
+
   increaseFriendChallengeIndex: () =>
     set((state) => ({
       currentFriendChallengeIndex: state.currentFriendChallengeIndex + 1,
-  })),
-  
+    })),
+
   getFriendChallengeScore: () => {
     const { currentFriendChallengeScore } = get();
     return currentFriendChallengeScore;
   },
-  
+
   getOpponentScore: () => {
     const { currentOpponentScore } = get();
     return currentOpponentScore;
   },
-  
+
   getChallengerUsername: () => {
     const { challengerUsername } = get();
     return challengerUsername;
   },
-  
+
   getFriendChallengeQuestion: () => {
     const { friendChallengeQuestions, currentFriendChallengeIndex } = get();
     return friendChallengeQuestions[currentFriendChallengeIndex];
   },
-  
+
   getFetchedFriendChallengeID: () => {
     const { currentFriendChallengeId } = get();
     return currentFriendChallengeId;
@@ -264,27 +261,26 @@ const useQuesStore = create((set, get) => ({
   //     }
   //   }
   // },
-  
+
   fetchChallengeFriendQuestions: (challenge) => {
     console.log("CHALLENGEIN STORE", challenge);
 
-      console.log("CALLED FROM friend Screen");
+    console.log("CALLED FROM friend Screen");
 
-      if (challenge.questions.length > 0) {
-        set({ currentFriendChallengeIndex: 0 });
-        set({ friendChallengeQuestions: challenge.questions });
-        set({ currentFriendChallengeScore: 0 });
-        set({ currentOpponentScore: challenge.challengerScore });
-        set({ currentFriendChallengeId: challenge.id });
-        set({ currentChallengerId: challenge.challengerId });
-        set({ challengerUsername: challenge.challengerUsername });
-        return challenge.questions.length;
-      } else {
-        return 0;
-      }
-    
+    if (challenge.questions.length > 0) {
+      set({ currentFriendChallengeIndex: 0 });
+      set({ friendChallengeQuestions: challenge.questions });
+      set({ currentFriendChallengeScore: 0 });
+      set({ currentOpponentScore: challenge.challengerScore });
+      set({ currentFriendChallengeId: challenge.id });
+      set({ currentChallengerId: challenge.challengerId });
+      set({ challengerUsername: challenge.challengerUsername });
+      return challenge.questions.length;
+    } else {
+      return 0;
+    }
   },
-  
+
   submitFriendChallenge: async () => {
     try {
       const docId = get().currentFriendChallengeId; // Get the document ID
@@ -303,12 +299,12 @@ const useQuesStore = create((set, get) => ({
   increaseChallengingFriendsScore: () =>
     set((state) => ({
       challengingScore: state.challengingScore + 1,
-  })),
+    })),
 
   increaseChallengingFriendsIndex: () =>
     set((state) => ({
       challengingFriendsIndex: state.challengingFriendsIndex + 1,
-  })),
+    })),
 
   getChallengingScore: () => {
     // Your Current Challenging Score
@@ -320,7 +316,7 @@ const useQuesStore = create((set, get) => ({
     const { challengingFriendsQuestions, challengingFriendsIndex } = get();
     return challengingFriendsQuestions[challengingFriendsIndex];
   },
-  
+
   getChallengingFriendsAllQuestion: () => {
     const { challengingFriendsQuestions } = get();
     return challengingFriendsQuestions;
@@ -330,7 +326,7 @@ const useQuesStore = create((set, get) => ({
     const { opponentId } = get();
     return opponentId;
   },
-  
+
   fetchChallengingFriendsQuestions: (challenge, friendId) => {
     console.log("CHALLENGEIN STORE", challenge);
 
@@ -347,8 +343,6 @@ const useQuesStore = create((set, get) => ({
     }
   },
 
-  
-  
   submitChallengingFriend: async () => {
     const q = get().challengingFriendsQuestions;
     const oppId = get().opponentId;
@@ -382,28 +376,28 @@ const useQuesStore = create((set, get) => ({
   },
 
   increaseScore: () => set((state) => ({ score: state.score + 1 })),
-  
+
   increaseChallengeScore: () =>
     set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
-  
+
   increaseReviewScore: () =>
     set((state) => ({ reviewScore: state.reviewScore + 1 })),
-  
+
   getScore: () => {
     const { score } = get();
     return score;
   },
-  
+
   getChallengeScore: () => {
     const { scoreChallenge } = get();
     return scoreChallenge;
   },
-  
+
   getReviewScore: () => {
     const { reviewScore } = get();
     return reviewScore;
   },
-  
+
   increaseCurrentIndex: () =>
     set((state) => ({ currentIndex: state.currentIndex + 1 })),
 
@@ -425,7 +419,10 @@ const useQuesStore = create((set, get) => ({
         let questions = [];
         console.log("Topics:", topic);
 
-        const queryPromises = topic.map(async (t) => {
+        const shuffledTopics = topic.sort(() => 0.5 - Math.random());
+        const selectedTopics = shuffledTopics.slice(0, 15);
+
+        const queryPromises = selectedTopics.map(async (t) => {
           const querySnapshot = await getDocs(
             collection(db, `Questions/${system}/${t}`)
           );
@@ -481,7 +478,7 @@ const useQuesStore = create((set, get) => ({
       }
     }
   },
-  
+
   fetchReviewQuestions: async (system, topic) => {
     set({ isLoading: true });
 
@@ -521,7 +518,7 @@ const useQuesStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  
+
   submitQuestions: async () => {
     const batch = writeBatch(db);
     let system = get().fetchedQuestionSystem;
@@ -546,7 +543,6 @@ const useQuesStore = create((set, get) => ({
       // Update User
       const userSolvedTopics = user.solvedTopics;
       console.log(user);
-      
 
       console.log("User solved Topics", userSolvedTopics);
 
@@ -616,7 +612,7 @@ const useQuesStore = create((set, get) => ({
       console.log(error.message);
     }
   },
-  
+
   submitReviews: async () => {
     const batch = writeBatch(db); // Initialize batch
     set({ currentIndexReview: 0 });
@@ -659,7 +655,7 @@ const useQuesStore = create((set, get) => ({
     }
   },
   //
-  
+
   fetchChallengeQuestions: async () => {
     set({ isLoading: true });
     // Setting Index 0 for Questions
@@ -692,12 +688,13 @@ const useQuesStore = create((set, get) => ({
       set({ currentChallengeId: challengeID });
       return documents.length;
     } catch (error) {
-      console.error("Error fetching documents: ", error);
+      console.log("Error fetching documents: ", error);
+      return 0;
     } finally {
       set({ isLoading: false });
     }
   },
-  
+
   submitChallengeQuestions: async () => {
     try {
       const userId = useCurrentUserStore.getState().getUser().id;
@@ -780,8 +777,7 @@ const useQuesStore = create((set, get) => ({
   // For Review All
   setReviewAllQuestions: (questions) => {
     set({ isLoading: true });
-    console.log("The len is",questions.length);
-    
+    console.log("The len is", questions.length);
 
     // Setting Index 0 for Questions
     set({ currentIndexReview: 0 });
