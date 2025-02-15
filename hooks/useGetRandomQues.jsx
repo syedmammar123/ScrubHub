@@ -3,13 +3,11 @@ import { getRandomArray, getRandomItem } from "../util/getRandomItem";
 import firestore from "@react-native-firebase/firestore";
 
 const useGetRandomQues = () => {
-  const [randomQues, setRandomQues] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [randomQues, setRandomQues] = useState([]);
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
 
   const fetchRandomQues = async (questionLength) => {
-    setLoading(true);
-    setError(null);
     try {
       // Get all document IDs from the Questions collection
       const topicRef = firestore().collection("Topics");
@@ -36,6 +34,7 @@ const useGetRandomQues = () => {
             : null,
         };
       });
+      console.log("CCALALLLED RANDOM FUNCTION");
 
       const selectedTopics = await Promise.all(subTopicPromises);
 
@@ -66,13 +65,11 @@ const useGetRandomQues = () => {
       // setRandomQues(randomQuestions);
     } catch (error) {
       console.log("Error fetching random questions:", error);
-      setError(error || "Error fetching random questions");
-    } finally {
-      setLoading(false);
+      return 0;
     }
   };
 
-  return { fetchRandomQues, randomQues, loading, error };
+  return { fetchRandomQues };
 };
 
 export default useGetRandomQues;
