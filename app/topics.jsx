@@ -109,10 +109,7 @@ export default function Topics() {
         console.log("FETCHED TOPICS", getfetchedQuestionTopic());
         console.log("TOPIC", topic);
 
-        if (
-          getfetchedQuestionTopic() === topic &&
-          getfetchedReviewTopic() !== topic
-        ) {
+        if (getfetchedQuestionTopic() === topic) {
           console.log("HIT");
           console.log(getCurrentQuestion()?.questionStyle);
           console.log("CALL", getQuestionType(getCurrentQuestion()));
