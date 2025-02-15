@@ -71,14 +71,13 @@ export default function Topics() {
   const [loading, setLoading] = useState(false);
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState(null);
   const [hasTopics, setHasTopics] = useState(false);
 
   const handlePress = async (topic) => {
     if (error) {
       setError(false);
     }
-    setSelectedTopic(topic);
+
     setIsQuestionFetching(true);
     if (getCurrentType() === "review") {
       if (getfetchedReviewTopic() === topic) {
@@ -86,8 +85,13 @@ export default function Topics() {
 
         const nextScreen = getQuestionType(getReviewQuestion());
         console.log("NEXT SCREEN", nextScreen);
-        setIsQuestionFetching(false);
-        router.navigate(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          setIsQuestionFetching(false);
+          router.navigate("wordscramblereview");
+        } else {
+          setIsQuestionFetching(false);
+          router.navigate(nextScreen);
+        }
       } else {
         const lengthOfQuestions = await fetchReviewQuestions(
           system.toLowerCase(),
@@ -97,8 +101,13 @@ export default function Topics() {
 
         if (lengthOfQuestions > 0) {
           const nextScreen = getQuestionType(getReviewQuestion());
-          setIsQuestionFetching(false);
-          router.navigate(nextScreen);
+          if (nextScreen === "wordscrambled") {
+            setIsQuestionFetching(false);
+            router.navigate("wordscramblereview");
+          } else {
+            setIsQuestionFetching(false);
+            router.navigate(nextScreen);
+          }
         } else {
           console.log("NO QUESTIONS FETCHED");
           setError(true);
@@ -197,31 +206,24 @@ export default function Topics() {
     }
 
     setIsQuestionFetching(true);
-    setSelectedTopic("Random");
-    if (currentIndex < 15) {
-      if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
-        console.log("HIT");
-        console.log(getCurrentQuestion().questionStyle);
-        console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-        const nextScreen = getQuestionType(getCurrentQuestion());
+    if (getfetchedQuestionTopic() === `${system.toLowerCase()}all`) {
+      console.log("HIT");
+      console.log(getCurrentQuestion().questionStyle);
+      console.log("CALL", getQuestionType(getCurrentQuestion()));
 
-        console.log(nextScreen);
-        setIsQuestionFetching(false);
-        setSelectedTopic(null);
-        router.navigate(nextScreen);
-      } else {
-        await fetchQuestions(system.toLowerCase(), topics);
-        const nextScreen = getQuestionType(getCurrentQuestion());
-        setSelectedTopic(null);
-        setIsQuestionFetching(false);
-        router.navigate(nextScreen);
-      }
-    } else {
-      // 9 Questions solved already
-      setSelectedTopic(null);
+      const nextScreen = getQuestionType(getCurrentQuestion());
+
+      console.log(nextScreen);
       setIsQuestionFetching(false);
-      router.navigate("/");
+
+      router.navigate(nextScreen);
+    } else {
+      await fetchQuestions(system.toLowerCase(), topics);
+      const nextScreen = getQuestionType(getCurrentQuestion());
+
+      setIsQuestionFetching(false);
+      router.navigate(nextScreen);
     }
   };
 
@@ -286,7 +288,7 @@ export default function Topics() {
                   </CustomText>
                 </View>
                 <View>
-                  {topics && (
+                  {topics && getCurrentType() === "study" && (
                     <Pressable
                       onPress={getRandom}
                       disabled={isQuestionFetching}
@@ -307,24 +309,16 @@ export default function Topics() {
                         elevation: 20, // Adds shadow on Android
                       }}
                     >
-                      {isQuestionFetching && selectedTopic === "Random" ? (
-                        <ActivityIndicator
-                          style={styles.loadingIndicator}
-                          size={"small"}
-                          color="white"
-                        />
-                      ) : (
-                        <CustomText
-                          style={{
-                            // fontWeight: "bold",
-                            fontSize: 14,
-                            color: "white",
-                            fontFamily: "Poppins-Semi",
-                          }}
-                        >
-                          Random
-                        </CustomText>
-                      )}
+                      <CustomText
+                        style={{
+                          // fontWeight: "bold",
+                          fontSize: 14,
+                          color: "white",
+                          fontFamily: "Poppins-Semi",
+                        }}
+                      >
+                        Random
+                      </CustomText>
                     </Pressable>
                   )}
                 </View>

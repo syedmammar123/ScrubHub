@@ -56,8 +56,13 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
         setReviewAllQuestions(questions);
         const nextScreen = getQuestionType(questions[0]);
 
-        setIsFetchingReview(false);
-        router.navigate(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          setIsFetchingReview(false);
+          router.navigate("wordscramblereview");
+        } else {
+          setIsFetchingReview(false);
+          router.navigate(nextScreen);
+        }
         console.log("NEXT SCREEN", nextScreen);
       }
     }
