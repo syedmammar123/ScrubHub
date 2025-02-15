@@ -77,18 +77,20 @@ export default function Friend({
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       console.log("NEXT SCREEN", nextScreen);
       if (nextScreen === "wordscrambled") {
+        setIsQuestionFetching(false);
         router.replace("wordscrambledchallengingfriend");
       } else {
+        setIsQuestionFetching(false);
         router.replace(nextScreen);
       }
     } else {
       // Already Fetched Questions
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       if (nextScreen === "wordscrambled") {
-        setIsQuestionFetching(true);
+        setIsQuestionFetching(false);
         router.replace("wordscrambledchallengingfriend");
       } else {
-        setIsQuestionFetching(true);
+        setIsQuestionFetching(false);
         router.replace(nextScreen);
       }
     }
