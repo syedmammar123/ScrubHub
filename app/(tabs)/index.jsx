@@ -119,6 +119,7 @@ export default function App() {
 
   // console.log(user);
   useEffect(() => {
+    setIsDailyChallengeFetching(false);
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         setIsDailyChallengeFetching(false); // Reset when app returns

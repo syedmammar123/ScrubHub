@@ -6,6 +6,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
+import { AppState } from "react-native";
 import React, { useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
@@ -82,36 +83,45 @@ export default function Friend({
           ""
         ).length;
 
-        router.replace({
+        router.navigate({
           pathname: nextScreen,
           params: { answerLength },
         });
-        setIsQuestionFetching(false);
+        // setIsQuestionFetching(false);
       } else {
-        setIsQuestionFetching(false);
-        router.replace(nextScreen);
+        // setIsQuestionFetching(false);
+        router.navigate(nextScreen);
       }
     } else {
       // Already Fetched Questions
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       if (nextScreen === "wordscrambled") {
-        setIsQuestionFetching(false);
+        // setIsQuestionFetching(false);
         const answerLength = getChallengingFriendsQuestion()?.answer?.replace(
           /\s/g,
           ""
         ).length;
 
-        router.replace({
+        router.navigate({
           pathname: nextScreen,
           params: { answerLength },
         });
       } else {
-        setIsQuestionFetching(false);
-        router.replace(nextScreen);
+        // setIsQuestionFetching(false);
+        router.navigate(nextScreen);
       }
     }
   };
+  // useEffect(() => {
+  //   // setIsQuestionFetching(false);
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsQuestionFetching(false); // Reset when app returns
+  //     }
+  //   });
 
+  //   return () => subscription.remove();
+  // }, []);
   return (
     <>
       <View style={styles.container}>
