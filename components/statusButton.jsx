@@ -130,9 +130,8 @@ export default function StatusButton({
             increaseReviewScore();
           }
 
-          if (getfetchedReviewTopic() !== "reviewall") {
-            await submitReviews();
-          }
+          await submitReviews();
+
           // Logic to submit Questions
           router.navigate("reviewScoreScreen");
 

@@ -330,7 +330,7 @@ export default function Topics() {
                     onPress={() => handlePress(button)}
                     key={index}
                     style={[styles.button]}
-                    disabled={isQuestionFetching}
+                    // disabled={isQuestionFetching}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
                     {/* {isQuestionFetching && selectedTopic === button ? (
