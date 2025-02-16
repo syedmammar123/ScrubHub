@@ -6,10 +6,10 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { theme } from "@/theme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import useQuesStore from "@/store/quesStore";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import { getQuestionType } from "@/util/utilQuesFunc";
@@ -83,6 +83,12 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
     }
   };
   const router = useRouter("");
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsFetchingReview(false);
+    }, [])
+  );
   return (
     <View>
       <TouchableOpacity
@@ -99,11 +105,7 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
           <MaterialIcons name="reviews" size={40} color="black" />
         </View>
         <View style={[styles.lowerBox, { backgroundColor: bgColor }]}>
-          {btnTitle === "REVIEW ALL" && isFetchingReview ? (
-            <ActivityIndicator size="large" color="black" />
-          ) : (
-            <CustomText style={styles.buttonText}>{btnTitle}</CustomText>
-          )}
+          <CustomText style={styles.buttonText}>{btnTitle}</CustomText>
         </View>
       </TouchableOpacity>
       {/* Error Modal */}

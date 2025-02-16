@@ -163,14 +163,14 @@ const useQuesStore = create((set, get) => ({
   },
 
   //this clears all the fields related to review
-  // clearReviewFields: () => {
-  //   set({ fetchedReviewQuestionSystem: "" });
-  //   set({ fetchedReviewQuestionTopic: "" });
-  //   set({ reviewQuestions: [] });
-  //   set({ currentIndexReview: 0 });
-  //   // set({ reviewScore: 0 });
-  //   set({ type: "" });
-  // },
+  clearReviewFields: () => {
+    set({ fetchedReviewQuestionSystem: "" });
+    set({ fetchedReviewQuestionTopic: "" });
+    set({ reviewQuestions: [] });
+    set({ currentIndexReview: 0 });
+    // set({ reviewScore: 0 });
+    set({ type: "" });
+  },
 
   clearFieldsAfterAttempt: () => {
     set({ friendChallengeQuestions: [] });
@@ -628,7 +628,6 @@ const useQuesStore = create((set, get) => ({
       set({ fetchedReviewQuestionSystem: "" });
       set({ currentIndexReview: 0 });
       set({ fetchedReviewQuestionTopic: "" });
-      set({ type: "" });
     } else {
       try {
         get().reviewQuestions.forEach((q) => {
@@ -653,7 +652,6 @@ const useQuesStore = create((set, get) => ({
         set({ fetchedReviewQuestionSystem: "" });
         set({ currentIndexReview: 0 });
         set({ fetchedReviewQuestionTopic: "" });
-        set({ type: "" });
         console.log("Batch update successful!");
       } catch (error) {
         console.error("Batch update failed:", error.message);
