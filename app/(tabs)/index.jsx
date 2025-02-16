@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Dimensions,
+  Text
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -24,6 +26,15 @@ import LoadingModal from "@/components/LoadingModal";
 import { AppState } from "react-native";
 
 export default function App() {
+
+  const { width } = Dimensions.get("window");
+
+  // Set a global default font size
+  Text.defaultProps = {
+    ...(Text.defaultProps || {}),
+    style: [{ fontSize: width < 370 ? 12 : 14, fontFamily: "Poppins-Regular" }],
+  };
+
   const state = useGetSolvedQues();
   const {
     setType,
@@ -367,7 +378,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.colorWhite,
     // fontWeight: "bold",
-    fontSize: 14,
+    // fontSize: 14,
     textAlign: "center",
     // fontFamily: "Poppins-Regular",
     fontFamily: "Poppins-Semi",
