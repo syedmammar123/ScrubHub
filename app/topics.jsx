@@ -73,15 +73,15 @@ export default function Topics() {
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
   const [hasTopics, setHasTopics] = useState(false);
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        setIsQuestionFetching(false); // Reset when app returns
-      }
-    });
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsQuestionFetching(false); // Reset when app returns
+  //     }
+  //   });
 
-    return () => subscription.remove();
-  }, []);
+  //   return () => subscription.remove();
+  // }, []);
   const handlePress = async (topic) => {
     if (error) {
       setError(false);
@@ -95,11 +95,19 @@ export default function Topics() {
         const nextScreen = getQuestionType(getReviewQuestion());
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
+          const answerLength = getReviewQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+          router.replace({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+
           setIsQuestionFetching(false);
-          router.replace("wordscramblereview");
         } else {
-          setIsQuestionFetching(false);
           router.replace(nextScreen);
+          setIsQuestionFetching(false);
         }
       } else {
         const lengthOfQuestions = await fetchReviewQuestions(
@@ -111,11 +119,18 @@ export default function Topics() {
         if (lengthOfQuestions > 0) {
           const nextScreen = getQuestionType(getReviewQuestion());
           if (nextScreen === "wordscrambled") {
+            const answerLength = getReviewQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
             setIsQuestionFetching(false);
-            router.replace("wordscramblereview");
           } else {
-            setIsQuestionFetching(false);
             router.replace(nextScreen);
+            setIsQuestionFetching(false);
           }
         } else {
           console.log("NO QUESTIONS FETCHED");
@@ -133,9 +148,21 @@ export default function Topics() {
         console.log("CALL", getQuestionType(getCurrentQuestion()));
 
         const nextScreen = getQuestionType(getCurrentQuestion());
-        console.log(nextScreen);
-        setIsQuestionFetching(false);
-        router.replace(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          const answerLength = getCurrentQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+
+          router.replace({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+          setIsQuestionFetching(false);
+        } else {
+          router.replace(nextScreen);
+          setIsQuestionFetching(false);
+        }
       } else {
         const questions = await fetchQuestions(system.toLowerCase(), topic);
         if (questions === 0) {
@@ -146,6 +173,7 @@ export default function Topics() {
         const nextScreen = getQuestionType(getCurrentQuestion());
 
         router.replace(nextScreen);
+        setIsQuestionFetching(false);
       }
     }
   };

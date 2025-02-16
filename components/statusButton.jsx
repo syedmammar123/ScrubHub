@@ -120,7 +120,18 @@ export default function StatusButton({
           increaseCurrentReviewIndex();
           const nextScreen = getQuestionType(getReviewQuestion());
           if (nextScreen === "wordscrambled") {
-            router.replace("wordscramblereview");
+            const answerLength = getReviewQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+            // router.replace({
+            //   pathname: "wordscramblereview",
+            //   params: { answerLength },
+            // });
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
           } else {
             router.replace(nextScreen);
           }
@@ -133,21 +144,36 @@ export default function StatusButton({
           await submitReviews();
 
           // Logic to submit Questions
-          router.navigate("reviewScoreScreen");
+          router.replace("reviewScoreScreen");
 
-          clearReviewFields();
+          // clearReviewFields();
         }
       } else if (getCurrentType() === "study") {
         console.log("After Pressing Cont", currentIndex);
+
         if (currentIndex + 1 < 15) {
           if (scoreIncrease) {
             increaseScore();
           }
           increaseCurrentIndex();
           const nextScreen = getQuestionType(getCurrentQuestion());
-          console.log("Navigating to:", nextScreen);
 
-          router.replace(nextScreen);
+          if (nextScreen === "wordscrambled") {
+            const answerLength = getCurrentQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+            // router.replace({
+            //   pathname: "wordscramblereview",
+            //   params: { answerLength },
+            // });
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
+          } else {
+            router.replace(nextScreen);
+          }
         } else {
           // Logic to submit Questions
           if (scoreIncrease) {
@@ -156,7 +182,7 @@ export default function StatusButton({
 
           await submitQuestions();
 
-          router.navigate("scoreScreen");
+          router.replace("scoreScreen");
         }
       } else if (getCurrentType() === "challenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
@@ -178,7 +204,7 @@ export default function StatusButton({
             increaseChallengeScore();
           }
           await submitChallengeQuestions();
-          router.navigate("challengeLeaderboard");
+          router.replace("challengeLeaderboard");
         }
       } else if (getCurrentType() === "friendchallenge") {
         console.log("After Pressing Cont", currentChallengeIndex);
@@ -206,7 +232,7 @@ export default function StatusButton({
             currentOpponentScore
           );
 
-          router.navigate("scoreScreen");
+          router.replace("scoreScreen");
           clearFieldsAfterAttempt();
         }
       } else if (getCurrentType() === "ChallengingFriends") {
@@ -237,7 +263,7 @@ export default function StatusButton({
             getChallengingFriendsAllQuestion()
           );
 
-          router.navigate("scoreScreen");
+          router.replace("scoreScreen");
           clearFieldsAfterChallengeFriend();
         }
       }
@@ -245,7 +271,7 @@ export default function StatusButton({
   };
   const handlePressType = () => {
     if (type === "home") {
-      router.navigate("/");
+      router.replace("/");
     } else if (type === "backTopics") {
       setIsQuestionFetching(false);
     } else {
