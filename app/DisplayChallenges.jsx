@@ -18,8 +18,9 @@ import { formatDateOnly, formatTimeOnly } from "@/util/getRandomItem";
 import { theme } from "@/theme";
 import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import CustomText from "@/components/CustomText";
+import { useCallback } from "react";
 
 const dummyData = [
   {
