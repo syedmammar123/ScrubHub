@@ -66,7 +66,7 @@ export default function Matching() {
   const [error, setError] = useState(false);
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(true);
-
+  const [colorsSet, setColorsSet] = useState(false);
   //Layout Calculation / X,Y Values States
   const [matchingOptionsLayout, setMatchingOptionsLayout] = useState([]);
   const [matchingDropLayout, setMatchingDropLayout] = useState([]);
@@ -261,6 +261,7 @@ export default function Matching() {
       console.log(updatedAnswers);
 
       setAnswers(updatedAnswers);
+      setColorsSet(true);
     }
   }, [checked]);
 
@@ -464,7 +465,7 @@ export default function Matching() {
                       />
                     </GestureDetector>
                   ))}
-                  {checked && (
+                  {colorsSet && (
                     <View
                       style={{
                         position: "absolute",
