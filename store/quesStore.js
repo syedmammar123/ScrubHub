@@ -615,7 +615,6 @@ const useQuesStore = create((set, get) => ({
 
   submitReviews: async () => {
     const batch = writeBatch(db); // Initialize batch
-    set({ currentIndexReview: 0 });
     let system = get().fetchedReviewQuestionSystem;
     let topic = get().fetchedReviewQuestionTopic;
     console.log(system);
