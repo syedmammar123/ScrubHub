@@ -526,6 +526,11 @@ const useQuesStore = create((set, get) => ({
     const user = useCurrentUserStore.getState().getUser();
     const userId = user.id;
     const userDocRef = doc(db, "Users", userId);
+    if (`${topic}` === `${system}all`) {
+      set({ currentIndex: 0 });
+      set({ fetchedQuestionSystem: "" });
+      set({ fetchedQuestionTopic: "" });
+    }
     try {
       get().questions.forEach((q) => {
         const docRef = doc(
