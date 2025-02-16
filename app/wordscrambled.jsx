@@ -483,7 +483,7 @@ export default function WordScrambled() {
                         />
                       </GestureDetector>
                     ))}
-                    {checked && (
+                    {answerCalculated && (
                       <View
                         style={{
                           position: "absolute",
