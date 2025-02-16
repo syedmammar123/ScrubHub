@@ -153,11 +153,8 @@ export default function StatusButton({
           if (scoreIncrease) {
             increaseScore();
           }
-          const system = `${getfetchedQuestionSystem()}all`;
-          const topic = getfetchedQuestionTopic();
-          if (topic !== system) {
-            await submitQuestions();
-          }
+
+          await submitQuestions();
 
           router.navigate("scoreScreen");
         }

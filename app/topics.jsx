@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { AppState } from "react-native";
 import {
   StyleSheet,
   Text,
@@ -72,7 +73,15 @@ export default function Topics() {
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
   const [hasTopics, setHasTopics] = useState(false);
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        setIsQuestionFetching(false); // Reset when app returns
+      }
+    });
 
+    return () => subscription.remove();
+  }, []);
   const handlePress = async (topic) => {
     if (error) {
       setError(false);
@@ -87,10 +96,10 @@ export default function Topics() {
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
           setIsQuestionFetching(false);
-          router.navigate("wordscramblereview");
+          router.replace("wordscramblereview");
         } else {
           setIsQuestionFetching(false);
-          router.navigate(nextScreen);
+          router.replace(nextScreen);
         }
       } else {
         const lengthOfQuestions = await fetchReviewQuestions(
@@ -103,10 +112,10 @@ export default function Topics() {
           const nextScreen = getQuestionType(getReviewQuestion());
           if (nextScreen === "wordscrambled") {
             setIsQuestionFetching(false);
-            router.navigate("wordscramblereview");
+            router.replace("wordscramblereview");
           } else {
             setIsQuestionFetching(false);
-            router.navigate(nextScreen);
+            router.replace(nextScreen);
           }
         } else {
           console.log("NO QUESTIONS FETCHED");
@@ -126,7 +135,7 @@ export default function Topics() {
         const nextScreen = getQuestionType(getCurrentQuestion());
         console.log(nextScreen);
         setIsQuestionFetching(false);
-        router.navigate(nextScreen);
+        router.replace(nextScreen);
       } else {
         const questions = await fetchQuestions(system.toLowerCase(), topic);
         if (questions === 0) {
@@ -136,7 +145,7 @@ export default function Topics() {
         }
         const nextScreen = getQuestionType(getCurrentQuestion());
 
-        router.navigate(nextScreen);
+        router.replace(nextScreen);
       }
     }
   };
@@ -291,7 +300,7 @@ export default function Topics() {
                   {topics && getCurrentType() === "study" && (
                     <Pressable
                       onPress={getRandom}
-                      disabled={isQuestionFetching}
+                      // disabled={isQuestionFetching}
                       style={{
                         backgroundColor: theme.barColor,
                         paddingHorizontal: 40,
