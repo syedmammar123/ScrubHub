@@ -20,6 +20,7 @@ import CustomText from "@/components/CustomText";
 import CustomTextInput from "@/components/CustomTextInput";
 
 export const avatars = {
+  0: require("@/assets/avatar0.png"),
   1: require("@/assets/avatar1.png"),
   2: require("@/assets/avatar2.png"),
   3: require("@/assets/avatar3.png"),

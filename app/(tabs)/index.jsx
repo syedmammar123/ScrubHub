@@ -274,7 +274,7 @@ export default function App() {
                   styles.buttonSP,
                 ]}
               >
-                PLAY WITH YOUR FRIENDS
+                PLAY WITH FRIENDS
               </CustomText>
             </TouchableOpacity>
           </SafeAreaView>

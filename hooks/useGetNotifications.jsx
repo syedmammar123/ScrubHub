@@ -28,7 +28,9 @@ const useGetNotifications = () => {
         return;
       }
 
-      const notifications = doc.data()?.notificationsArray || [];
+      const notifications = (doc.data()?.notificationsArray || [])
+      .sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate());      
+      
       setUserNotifications(notifications);
     } catch (error) {
       console.error("Error fetching notifications:", error);

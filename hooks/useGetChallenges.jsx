@@ -86,7 +86,7 @@ const useGetChallenges = () => {
       });
 
       console.log("Fetched Challenges:", formattedChallenges);
-      setUserChallenges(formattedChallenges);
+      setUserChallenges(formattedChallenges.sort((a,b)=>b.timestamp.toDate()-a.timestamp.toDate()));
     } catch (error) {
       console.error("Error fetching challenges:", error);
       setError(
