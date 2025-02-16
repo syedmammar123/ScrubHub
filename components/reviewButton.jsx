@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Modal,
   ActivityIndicator,
+  AppState,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { theme } from "@/theme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -84,6 +85,17 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   };
   const router = useRouter("");
 
+  useEffect(() => {
+    // setIsQuestionFetching(false);
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        setIsFetchingReview(false); // Reset when app returns
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
   useFocusEffect(
     useCallback(() => {
       setIsFetchingReview(false);
