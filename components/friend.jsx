@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { AppState } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Entypo from "@expo/vector-icons/Entypo";
 import { avatars } from "@/app/userInfoScreen";
 import CustomText from "./CustomText";
@@ -17,7 +17,7 @@ import { theme } from "@/theme";
 import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import { useEffect } from "react";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import LoadingModal from "./LoadingModal";
 
 export default function Friend({
@@ -122,6 +122,12 @@ export default function Friend({
 
   //   return () => subscription.remove();
   // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsQuestionFetching(false);
+    }, [])
+  );
   return (
     <>
       <View style={styles.container}>
