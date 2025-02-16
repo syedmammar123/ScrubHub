@@ -192,7 +192,7 @@ const useQuesStore = create((set, get) => ({
     set({ challengingFriendsQuestions: [] });
     set({ challengingFriendsIndex: 0 });
     set({ opponentId: "" });
-    set({ type: "" });
+    // set({ type: "" });
   },
 
   increaseFriendChallengeScore: () =>
