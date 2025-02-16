@@ -471,12 +471,16 @@ export default function Matching() {
                         position: "absolute",
                         zIndex: 10,
                         elevation: 10,
-                        top: -50,
+                        top: -80,
                         left: 0,
                         right: 0,
                       }}
                     >
-                      <ScrubLogo type={isMatchesCorrect} />
+                      <ScrubLogo
+                        // width={150}
+                        // height={150}
+                        type={isMatchesCorrect}
+                      />
                     </View>
                   )}
                 </View>
@@ -497,7 +501,7 @@ export default function Matching() {
                 ) : (
                   <StatusIcon icon="none" text={""} />
                 )}
-                {checked && !error ? (
+                {colorsSet && checked && !error ? (
                   <StatusIcon
                     icon={isMatchesCorrect ? "correct" : "cancel"}
                     text={

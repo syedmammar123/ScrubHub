@@ -15,7 +15,7 @@ const sad = {
   3: require("@/assets/animations/xrays unscreen.json"),
   4: require("@/assets/animations/lungs unscreen.json"),
 };
-export default function scrubLogo({ type }) {
+export default function scrubLogo({ type, width, height }) {
   const animation = useRef(null);
   // Pick a random animation based on 'type'
   const selectedAnimation = useMemo(() => {
@@ -35,7 +35,7 @@ export default function scrubLogo({ type }) {
           // source={require("@/assets/animations/hearth unscreen.json")}
           autoPlay
           loop
-          style={{ width: 200, height: 200 }}
+          style={{ width: width ? width : 200, height: height ? height : 200 }}
         />
       ) : (
         <Image

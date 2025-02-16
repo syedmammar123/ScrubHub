@@ -26,6 +26,7 @@ import {
 import useQuesStore from "@/store/quesStore";
 import CustomText from "@/components/CustomText";
 import ScrubLogo from "@/components/scrubLogo";
+import { useLocalSearchParams } from "expo-router";
 
 // Function to get a random letter
 const getRandomLetter = () => {
@@ -48,12 +49,20 @@ function calcLines(totalBoxes) {
 
 export default function WordScrambled() {
   //Question Fetch
-  const { getCurrentQuestion } = useQuesStore((state) => state);
+  const { answerLength } = useLocalSearchParams(); // Retrieve parameter
+  const {
+    getReviewQuestion,
+    getCurrentQuestion,
+    getCurrentType,
+    getChallengeQuestion,
+    getFriendChallengeQuestion,
+    getChallengingFriendsQuestion,
+  } = useQuesStore((state) => state);
 
   const [question, setQuestion] = useState({ letterChoices: [], answer: "" });
-  const [answerLength, setAnswerLength] = useState(
-    getCurrentQuestion()?.answer?.replace(/\s/g, "").length
-  );
+  // const [answerLength, setAnswerLength] = useState(
+  //   getCurrentQuestion()?.answer?.replace(/\s/g, "").length
+  // );
   const [answer, setAnswer] = useState("");
   const [noflines, setNofLines] = useState(-1);
   const [letterChoices, setLetterChoices] = useState([]);
@@ -66,7 +75,7 @@ export default function WordScrambled() {
   const [checked, setChecked] = useState(false);
   const [isMatchesCorrect, setIsMatchesCorrect] = useState(null);
   const [selected, setSelected] = useState(
-    Array(answerLength).fill({ value: -1, realIndex: -1 })
+    Array(Number(answerLength)).fill({ value: -1, realIndex: -1 })
   );
 
   console.log("Selected", selected);
@@ -274,9 +283,29 @@ export default function WordScrambled() {
 
   useEffect(() => {
     let q = {};
-    if (getCurrentQuestion()?.questionStyle === "scrabble") {
-      q = getCurrentQuestion();
-      setQuestion(q);
+    if (
+      getCurrentQuestion()?.questionStyle === "scrabble" ||
+      getReviewQuestion()?.questionStyle === "scrabble" ||
+      getChallengeQuestion()?.questionStyle === "scrabble" ||
+      getFriendChallengeQuestion()?.questionStyle === "scrabble" ||
+      getChallengingFriendsQuestion()?.questionStyle === "scrabble"
+    ) {
+      if (getCurrentType() === "review") {
+        q = getReviewQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "study") {
+        q = getCurrentQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "challenge") {
+        q = getChallengeQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "friendchallenge") {
+        q = getFriendChallengeQuestion();
+        setQuestion(q);
+      } else if (getCurrentType() === "ChallengingFriends") {
+        q = getChallengingFriendsQuestion();
+        setQuestion(q);
+      }
 
       const ans = q?.answer?.split(" ").join("").toLowerCase();
       console.log(q?.answer?.split(" "));
@@ -489,12 +518,16 @@ export default function WordScrambled() {
                           position: "absolute",
                           zIndex: 10,
                           elevation: 10,
-                          top: -50,
+                          top: -20,
                           left: 0,
                           right: 0,
                         }}
                       >
-                        <ScrubLogo type={isMatchesCorrect} />
+                        <ScrubLogo
+                          width={150}
+                          height={150}
+                          type={isMatchesCorrect}
+                        />
                       </View>
                     )}
                   </View>
@@ -516,7 +549,11 @@ export default function WordScrambled() {
                   )}
                   {checked && !error ? (
                     <StatusIcon
-                      icon={isMatchesCorrect ? "correct" : "cancel"}
+                      icon={
+                        answerCalculated && isMatchesCorrect
+                          ? "correct"
+                          : "cancel"
+                      }
                       text={
                         isMatchesCorrect ? "Amazing!" : `${question?.answer}`
                       }

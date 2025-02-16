@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -20,8 +20,8 @@ import useCurrentUserStore from "@/store/currentUserStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
 import useGetSolvedQues from "@/hooks/useGetSolvedQues";
 import CustomText from "@/components/CustomText";
-import LottieView from "lottie-react-native";
 import LoadingModal from "@/components/LoadingModal";
+import { AppState } from "react-native";
 
 export default function App() {
   const state = useGetSolvedQues();
@@ -50,27 +50,45 @@ export default function App() {
       console.log(questions);
       if (questions === 0) {
         router.navigate("challengeLeaderboard");
-        setIsDailyChallengeFetching(false);
+        // setIsDailyChallengeFetching(false);
       } else {
         const nextScreen = getQuestionType(getChallengeQuestion());
 
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
-          setIsDailyChallengeFetching(false);
-          router.replace("wordscrambledchallenge");
+          const answerLength = getChallengeQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+
+          router.replace({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+
+          // setIsDailyChallengeFetching(false);
         } else {
-          setIsDailyChallengeFetching(false);
           router.replace(nextScreen);
+          // setIsDailyChallengeFetching(false);
         }
       }
     } else {
       const nextScreen = getQuestionType(getChallengeQuestion());
       if (nextScreen === "wordscrambled") {
+        const answerLength = getChallengeQuestion()?.answer?.replace(
+          /\s/g,
+          ""
+        ).length;
+
+        router.replace({
+          pathname: nextScreen,
+          params: { answerLength },
+        });
+
         // setIsDailyChallengeFetching(false);
-        router.replace("wordscrambledchallenge");
       } else {
-        // setIsDailyChallengeFetching(false);
         router.replace(nextScreen);
+        // setIsDailyChallengeFetching(false);
       }
     }
   };
@@ -100,7 +118,16 @@ export default function App() {
   }
 
   // console.log(user);
+  useEffect(() => {
+    setIsDailyChallengeFetching(false);
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        setIsDailyChallengeFetching(false); // Reset when app returns
+      }
+    });
 
+    return () => subscription.remove();
+  }, []);
   return (
     <>
       <View style={styles.container}>

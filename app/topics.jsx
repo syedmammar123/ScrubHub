@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { AppState } from "react-native";
 import {
   StyleSheet,
@@ -16,7 +16,7 @@ import BackButton from "@/components/backButton";
 import BackgroundImage from "@/components/backgroundImage";
 import useQuesStore from "@/store/quesStore";
 import { getQuestionType } from "@/util/utilQuesFunc";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useGlobalSearchParams } from "expo-router";
@@ -31,8 +31,6 @@ import { db } from "@/config/firebase";
 import { getAuth } from "@react-native-firebase/auth";
 import ScrubLogo from "@/components/scrubLogo";
 import CustomText from "@/components/CustomText";
-import LottieView from "lottie-react-native";
-import StatusButton from "@/components/statusButton";
 import LoadingModal from "@/components/LoadingModal";
 
 const buttons = [
@@ -74,6 +72,7 @@ export default function Topics() {
   const [error, setError] = useState(false);
   const [hasTopics, setHasTopics] = useState(false);
   useEffect(() => {
+    setIsQuestionFetching(false);
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         setIsQuestionFetching(false); // Reset when app returns
@@ -95,11 +94,19 @@ export default function Topics() {
         const nextScreen = getQuestionType(getReviewQuestion());
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
-          setIsQuestionFetching(false);
-          router.replace("wordscramblereview");
+          const answerLength = getReviewQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+          router.navigate({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+
+          // setIsQuestionFetching(false);
         } else {
-          setIsQuestionFetching(false);
-          router.replace(nextScreen);
+          router.navigate(nextScreen);
+          // setIsQuestionFetching(false);
         }
       } else {
         const lengthOfQuestions = await fetchReviewQuestions(
@@ -111,11 +118,18 @@ export default function Topics() {
         if (lengthOfQuestions > 0) {
           const nextScreen = getQuestionType(getReviewQuestion());
           if (nextScreen === "wordscrambled") {
-            setIsQuestionFetching(false);
-            router.replace("wordscramblereview");
+            const answerLength = getReviewQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+            router.navigate({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
+            // setIsQuestionFetching(false);
           } else {
-            setIsQuestionFetching(false);
-            router.replace(nextScreen);
+            router.navigate(nextScreen);
+            // setIsQuestionFetching(false);
           }
         } else {
           console.log("NO QUESTIONS FETCHED");
@@ -133,9 +147,21 @@ export default function Topics() {
         console.log("CALL", getQuestionType(getCurrentQuestion()));
 
         const nextScreen = getQuestionType(getCurrentQuestion());
-        console.log(nextScreen);
-        setIsQuestionFetching(false);
-        router.replace(nextScreen);
+        if (nextScreen === "wordscrambled") {
+          const answerLength = getCurrentQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+
+          router.navigate({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+          // setIsQuestionFetching(false);
+        } else {
+          router.navigate(nextScreen);
+          // setIsQuestionFetching(false);
+        }
       } else {
         const questions = await fetchQuestions(system.toLowerCase(), topic);
         if (questions === 0) {
@@ -144,8 +170,21 @@ export default function Topics() {
           return;
         }
         const nextScreen = getQuestionType(getCurrentQuestion());
+        if (nextScreen === "wordscrambled") {
+          // setIsQuestionFetching(false);
+          const answerLength = getCurrentQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
 
-        router.replace(nextScreen);
+          router.navigate({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
+        } else {
+          // setIsQuestionFetching(false);
+          router.navigate(nextScreen);
+        }
       }
     }
   };
@@ -222,23 +261,53 @@ export default function Topics() {
       console.log("CALL", getQuestionType(getCurrentQuestion()));
 
       const nextScreen = getQuestionType(getCurrentQuestion());
+      if (nextScreen === "wordscrambled") {
+        const answerLength = getCurrentQuestion()?.answer?.replace(
+          /\s/g,
+          ""
+        ).length;
 
+        router.navigate({
+          pathname: nextScreen,
+          params: { answerLength },
+        });
+        // setIsQuestionFetching(false);
+      } else {
+        router.navigate(nextScreen);
+        // setIsQuestionFetching(false);
+      }
       console.log(nextScreen);
-      setIsQuestionFetching(false);
-
-      router.navigate(nextScreen);
+      // setIsQuestionFetching(false);
     } else {
       await fetchQuestions(system.toLowerCase(), topics);
       const nextScreen = getQuestionType(getCurrentQuestion());
 
-      setIsQuestionFetching(false);
-      router.navigate(nextScreen);
+      // setIsQuestionFetching(false);
+      if (nextScreen === "wordscrambled") {
+        const answerLength = getCurrentQuestion()?.answer?.replace(
+          /\s/g,
+          ""
+        ).length;
+
+        router.navigate({
+          pathname: nextScreen,
+          params: { answerLength },
+        });
+        // setIsQuestionFetching(false);
+      } else {
+        router.navigate(nextScreen);
+        // setIsQuestionFetching(false);
+      }
     }
   };
 
-  useEffect(() => {
-    getTopics();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setIsQuestionFetching(false);
+      getTopics(); // Fetch topics when screen comes into focus
+    }, [])
+  );
+  // console.log("TOPICS,=>", topics);
 
   return (
     <View style={styles.container}>
@@ -336,30 +405,20 @@ export default function Topics() {
                 {/* Buttons */}
                 {topics?.map((button, index) => (
                   <TouchableOpacity
-                    onPress={() => handlePress(button)}
-                    key={index}
+                    onPress={() => {
+                      console.log(`Button Pressed: ${button}`); // Debugging
+                      handlePress(button);
+                    }}
+                    key={`${button}-${index}`}
                     style={[styles.button]}
-                    // disabled={isQuestionFetching}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
-                    {/* {isQuestionFetching && selectedTopic === button ? (
-                      <View
-                        className="flex items-center rounded-full p-2 "
-                        style={{ backgroundColor: theme.barColor }}
-                      >
-                        <ActivityIndicator
-                          style={styles.loadingIndicator}
-                          size={"small"}
-                          color="white"
-                        />
-                      </View>
-                    ) : ( */}
+
                     <AntDesign
                       name="rightcircle"
                       size={24}
                       color={theme.barColor}
                     />
-                    {/* )} */}
                   </TouchableOpacity>
                 ))}
               </View>
@@ -374,43 +433,6 @@ export default function Topics() {
               "Error fetching questions. No questions available at the moment."
             }
           />
-
-          {/* <Modal
-            visible={error}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setError(false)}
-          >
-            <TouchableOpacity
-              style={styles.overlay}
-              onPress={() => setError(false)}
-              activeOpacity={1}
-            >
-              <View style={styles.modalContainer}>
-                
-                <View style={styles.iconCircle}>
-                  <MaterialIcons name="cancel" size={55} color="#EF5555" />
-                </View>
-
-               
-                <CustomText style={styles.title}>
-                  No Question Fetched!
-                </CustomText>
-
-                 
-                <CustomText style={styles.description}>
-                  Error fetching questions. No questions available at the
-                  moment.
-                </CustomText>
-              </View>
-            </TouchableOpacity>
-          </Modal> */}
-
-          {/* <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <CustomText>Topics Coming Soon...</CustomText>
-          </View> */}
         </ScrollView>
       </BackgroundImage>
     </View>
@@ -444,6 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F0f0f0",
     paddingHorizontal: 20,
     paddingVertical: 15,
+    zIndex: 999,
     shadowColor: "#000", // Black shadow
     shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
     shadowOpacity: 0.1, // Opacity of the shadow
