@@ -112,16 +112,16 @@ export default function Friend({
       }
     }
   };
-  // useEffect(() => {
-  //   // setIsQuestionFetching(false);
-  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
-  //     if (nextAppState === "active") {
-  //       setIsQuestionFetching(false); // Reset when app returns
-  //     }
-  //   });
+  useEffect(() => {
+    // setIsQuestionFetching(false);
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        setIsQuestionFetching(false); // Reset when app returns
+      }
+    });
 
-  //   return () => subscription.remove();
-  // }, []);
+    return () => subscription.remove();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
