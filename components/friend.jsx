@@ -87,10 +87,12 @@ export default function Friend({
           pathname: nextScreen,
           params: { answerLength },
         });
+        setTimeout(() => setIsQuestionFetching(false), 300);
         // setIsQuestionFetching(false);
       } else {
         // setIsQuestionFetching(false);
         router.navigate(nextScreen);
+        setTimeout(() => setIsQuestionFetching(false), 300);
       }
     } else {
       // Already Fetched Questions
@@ -106,22 +108,24 @@ export default function Friend({
           pathname: nextScreen,
           params: { answerLength },
         });
+        setTimeout(() => setIsQuestionFetching(false), 300);
       } else {
         // setIsQuestionFetching(false);
         router.navigate(nextScreen);
+        setTimeout(() => setIsQuestionFetching(false), 300);
       }
     }
   };
-  useEffect(() => {
-    // setIsQuestionFetching(false);
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        setIsQuestionFetching(false); // Reset when app returns
-      }
-    });
+  // useEffect(() => {
+  //   // setIsQuestionFetching(false);
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsQuestionFetching(false); // Reset when app returns
+  //     }
+  //   });
 
-    return () => subscription.remove();
-  }, []);
+  //   return () => subscription.remove();
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
