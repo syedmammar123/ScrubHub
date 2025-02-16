@@ -14,6 +14,8 @@ import CustomText from "@/components/CustomText";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { FontAwesome5 } from "@expo/vector-icons";
+import useDeleteUser from "@/hooks/useDeleteUser";
 
 const data = [
   {
@@ -127,6 +129,7 @@ const data = [
 export default function ProfileScreen() {
   const router = useRouter();
   const { clearUser, user } = useCurrentUserStore((state) => state);
+  const { loading, error, handleDeleteUser } = useDeleteUser();
 
   const TotalSolved = user?.totalSolved || null;
   const TotalScore = user?.totalScore || null;
@@ -138,6 +141,7 @@ export default function ProfileScreen() {
     cancelText: "Cancel",
     acceptText: "Confirm",
     onAccept: (uuid) => console.log("Account deleted successfully.", uuid),
+    // onAccept: () => handleDeleteUser()),
   });
 
   // const { randomQues, loading } = useGetRandomQues();
@@ -174,11 +178,20 @@ export default function ProfileScreen() {
 
       <View className={`flex w-full px-5 gap-5`}>
         <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
-          <Feather name="check-circle" size={30} color="gray" />
+          <FontAwesome5 name="stethoscope" size={30} color="gray" />
             <CustomText className={`text-xl`}>
-                Questions Solved:{" "}
+                Questions Attempted :{" "}
                 <CustomText className={`font-bold`}>{TotalSolved!==null ?TotalSolved:0 }</CustomText>
-                /{TotalScore!==null ?TotalScore:0 }
+                
+            </CustomText>
+        </View>
+        
+        <View className="border-b border-gray-300 pb-5 flex flex-row items-center gap-5">
+          <Feather name="target" size={30} color="gray" />
+            <CustomText className={`text-xl`}>
+                Correct Diagnoses :{" "}
+                <CustomText className={`font-bold`}>{TotalScore!==null ?TotalScore:0 }</CustomText>
+                
             </CustomText>
         </View>
 
@@ -206,13 +219,14 @@ export default function ProfileScreen() {
             Delete Account
           </CustomText>
         </TouchableOpacity>
-        <TouchableOpacity
+        
+        {/* <TouchableOpacity
           className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
           onPress={() => router.navigate("scoreScreen")}
         >
           <AntDesign name="deleteuser" size={30} color="red" />
           <CustomText className={`text-red-500 text-xl`}>Score</CustomText>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
