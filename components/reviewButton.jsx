@@ -49,9 +49,11 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
             pathname: nextScreen,
             params: { answerLength },
           });
+          setTimeout(() => setIsFetchingReview(false), 300);
         } else {
           // setIsFetchingReview(false);
           router.navigate(nextScreen);
+          setTimeout(() => setIsFetchingReview(false), 300);
         }
         console.log("NEXT SCREEN", nextScreen);
         // Questions Already Fetched
@@ -75,9 +77,10 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
             pathname: nextScreen,
             params: { answerLength },
           });
+          setTimeout(() => setIsFetchingReview(false), 300);
         } else {
-          // setIsFetchingReview(false);
           router.navigate(nextScreen);
+          setTimeout(() => setIsFetchingReview(false), 300);
         }
         console.log("NEXT SCREEN", nextScreen);
       }
@@ -85,17 +88,17 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
   };
   const router = useRouter("");
 
-  useEffect(() => {
-    // setIsQuestionFetching(false);
+  // useEffect(() => {
+  //   // setIsQuestionFetching(false);
 
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        setIsFetchingReview(false); // Reset when app returns
-      }
-    });
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsFetchingReview(false); // Reset when app returns
+  //     }
+  //   });
 
-    return () => subscription.remove();
-  }, []);
+  //   return () => subscription.remove();
+  // }, []);
   useFocusEffect(
     useCallback(() => {
       setIsFetchingReview(false);
@@ -105,6 +108,7 @@ export default function reviewButton({ btnTitle, bgColor, nextRoute }) {
     <View>
       <TouchableOpacity
         style={styles.button}
+        disabled={isFetchingReview}
         onPress={() => {
           if (nextRoute === "reviewall") {
             handlePress();
