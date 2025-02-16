@@ -518,12 +518,16 @@ export default function WordScrambled() {
                           position: "absolute",
                           zIndex: 10,
                           elevation: 10,
-                          top: -50,
+                          top: -20,
                           left: 0,
                           right: 0,
                         }}
                       >
-                        <ScrubLogo type={isMatchesCorrect} />
+                        <ScrubLogo
+                          width={150}
+                          height={150}
+                          type={isMatchesCorrect}
+                        />
                       </View>
                     )}
                   </View>
@@ -545,7 +549,11 @@ export default function WordScrambled() {
                   )}
                   {checked && !error ? (
                     <StatusIcon
-                      icon={isMatchesCorrect ? "correct" : "cancel"}
+                      icon={
+                        answerCalculated && isMatchesCorrect
+                          ? "correct"
+                          : "cancel"
+                      }
                       text={
                         isMatchesCorrect ? "Amazing!" : `${question?.answer}`
                       }

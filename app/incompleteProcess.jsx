@@ -431,12 +431,16 @@ export default function IncompleteProcess() {
                           position: "absolute",
                           zIndex: 10,
                           elevation: 10,
-                          top: 50,
+                          top: 30,
                           left: 0,
                           right: 0,
                         }}
                       >
-                        <ScrubLogo type={isMatchesCorrect} />
+                        <ScrubLogo
+                          width={150}
+                          height={150}
+                          type={isMatchesCorrect}
+                        />
                       </View>
                     )}
                   </View>

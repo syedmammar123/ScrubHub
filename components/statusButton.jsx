@@ -124,10 +124,7 @@ export default function StatusButton({
               /\s/g,
               ""
             ).length;
-            // router.replace({
-            //   pathname: "wordscramblereview",
-            //   params: { answerLength },
-            // });
+
             router.replace({
               pathname: nextScreen,
               params: { answerLength },
@@ -193,7 +190,15 @@ export default function StatusButton({
           increaseCurrentChallengeIndex();
           const nextScreen = getQuestionType(getChallengeQuestion());
           if (nextScreen === "wordscrambled") {
-            router.replace("wordscrambledchallenge");
+            const answerLength = getChallengeQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
           } else {
             router.replace(nextScreen);
           }
@@ -215,7 +220,15 @@ export default function StatusButton({
           increaseFriendChallengeIndex();
           const nextScreen = getQuestionType(getFriendChallengeQuestion());
           if (nextScreen === "wordscrambled") {
-            router.replace("wordscrambledfriendchallenge");
+            const answerLength = getFriendChallengeQuestion()?.answer?.replace(
+              /\s/g,
+              ""
+            ).length;
+
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
           } else {
             router.replace(nextScreen);
           }
@@ -244,7 +257,16 @@ export default function StatusButton({
           increaseChallengingFriendsIndex();
           const nextScreen = getQuestionType(getChallengingFriendsQuestion());
           if (nextScreen === "wordscrambled") {
-            router.replace("wordscrambledchallengingfriend");
+            const answerLength =
+              getChallengingFriendsQuestion()?.answer?.replace(
+                /\s/g,
+                ""
+              ).length;
+
+            router.replace({
+              pathname: nextScreen,
+              params: { answerLength },
+            });
           } else {
             router.replace(nextScreen);
           }

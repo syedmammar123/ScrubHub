@@ -77,8 +77,16 @@ export default function Friend({
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       console.log("NEXT SCREEN", nextScreen);
       if (nextScreen === "wordscrambled") {
+        const answerLength = getChallengingFriendsQuestion()?.answer?.replace(
+          /\s/g,
+          ""
+        ).length;
+
+        router.replace({
+          pathname: nextScreen,
+          params: { answerLength },
+        });
         setIsQuestionFetching(false);
-        router.replace("wordscrambledchallengingfriend");
       } else {
         setIsQuestionFetching(false);
         router.replace(nextScreen);
@@ -88,7 +96,15 @@ export default function Friend({
       const nextScreen = getQuestionType(getChallengingFriendsQuestion());
       if (nextScreen === "wordscrambled") {
         setIsQuestionFetching(false);
-        router.replace("wordscrambledchallengingfriend");
+        const answerLength = getChallengingFriendsQuestion()?.answer?.replace(
+          /\s/g,
+          ""
+        ).length;
+
+        router.replace({
+          pathname: nextScreen,
+          params: { answerLength },
+        });
       } else {
         setIsQuestionFetching(false);
         router.replace(nextScreen);

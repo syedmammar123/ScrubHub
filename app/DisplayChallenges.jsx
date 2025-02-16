@@ -175,7 +175,15 @@ const DisplayChallenges = ({}) => {
 
         console.log("NEXT SCREEN", nextScreen);
         if (nextScreen === "wordscrambled") {
-          router.replace("wordscrambledfriendchallenge");
+          const answerLength = getFriendChallengeQuestion()?.answer?.replace(
+            /\s/g,
+            ""
+          ).length;
+
+          router.replace({
+            pathname: nextScreen,
+            params: { answerLength },
+          });
         } else {
           router.replace(nextScreen);
         }
