@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Pressable,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { AppState } from "react-native";
 import React, { useState } from "react";
@@ -32,6 +33,10 @@ export default function Friend({
   onChallenge,
   id,
 }) {
+  const { width } = Dimensions.get("window");
+  console.log("width of phone",width);
+  
+
   const router = useRouter("");
   const { fetchRandomQues } = useGetRandomQues();
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
