@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
 import Entypo from "@expo/vector-icons/Entypo";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 import BackButton from "@/components/backButton";
 import ScrubLogo from "@/components/scrubLogo";
@@ -18,24 +20,21 @@ import useQuesStore from "@/store/quesStore";
 import { useRouter } from "expo-router";
 import CustomText from "@/components/CustomText";
 
+
 const buttons = [
-  { label: "CARDIOVASCULAR", icon: "graduation-cap", bgColor: "#EBA7A7" },
-  { label: "PULMONARY", icon: "graduation-cap", bgColor: "#9747FF" },
-  { label: "PSYCHIATRY", icon: "graduation-cap", bgColor: "#FFB800" },
-  { label: "GASTROINTESTINAL", icon: "graduation-cap", bgColor: "#70FF00" },
-  {
-    label: "MUSCULOSKELETAL & DERMATOLOGY",
-    icon: "graduation-cap",
-    bgColor: "#00C2FF",
-  },
-  { label: "RENAL", icon: "graduation-cap", bgColor: "#FFE500" },
-  { label: "NERVOUS", icon: "graduation-cap", bgColor: "#DCC5C6" },
-  {
-    label: "REPRODUCTIVE & PREGNANCY",
-    icon: "graduation-cap",
-    bgColor: "#EF477A",
-  },
+  { label: "CARDIOVASCULAR", icon: { name: "heart", lib: Entypo }, bgColor: "#EBA7A7" },
+  { label: "PULMONARY", icon: { name: "air", lib: Entypo }, bgColor: "#9747FF" },
+  { label: "PSYCHIATRY", icon: { name: "user-md", lib: FontAwesome5 }, bgColor: "#FFB800" },
+  { label: "GASTROINTESTINAL", icon: { name: "stethoscope", lib: FontAwesome5 }, bgColor: "#70FF00" },
+  { label: "MUSCULOSKELETAL & DERMATOLOGY", icon: { name: "medkit", lib: FontAwesome5 }, bgColor: "#00C2FF" },
+  { label: "RENAL", icon: { name: "tint", lib: FontAwesome5 }, bgColor: "#FFE500" },
+  { label: "NERVOUS", icon: { name: "brain", lib: FontAwesome5 }, bgColor: "#DCC5C6" },
+  { label: "REPRODUCTIVE & PREGNANCY", icon: { name: "heart", lib: FontAwesome5 }, bgColor: "#EF477A" },
 ];
+
+
+  const { width } = Dimensions.get("window");
+
 
 export default function App() {
   const { getCurrentType } = useQuesStore((state) => state);
@@ -56,6 +55,7 @@ export default function App() {
     router.push({ pathname: "topics", params: { system: system } });
   };
 
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -69,7 +69,9 @@ export default function App() {
 
           <View style={styles.buttonContainer}>
             {/* Buttons */}
-            {buttons.map((button, index) => (
+            {buttons.map((button, index) => {
+              const IconComponent = button.icon.lib;
+              return (
               <TouchableOpacity
                 onPress={() => handlePress(button.label)}
                 key={index}
@@ -81,7 +83,7 @@ export default function App() {
                     { backgroundColor: button.bgColor },
                   ]}
                 >
-                  <Entypo name={button.icon} size={24} color="black" />
+                  <IconComponent key={index} name={button.icon.name} size={24} color="balck" />
                 </View>
                 <View
                   style={[styles.lowerBox, { backgroundColor: button.bgColor }]}
@@ -96,7 +98,8 @@ export default function App() {
                   </CustomText>
                 </View>
               </TouchableOpacity>
-            ))}
+              )
+            })}
           </View>
         </ScrollView>
       </BackgroundImage>
@@ -149,7 +152,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.colorBlack,
     // fontWeight: "bold",
-    fontSize: 16,
+    // fontSize: 16,
+    fontSize: width < 370 ? 12 : 14,
     textAlign: "center",
     // fontFamily: "Poppins-Regular",
     fontFamily: "Poppins-Semi",

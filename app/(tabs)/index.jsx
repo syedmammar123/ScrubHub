@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Dimensions,
+  Text
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -24,6 +26,15 @@ import LoadingModal from "@/components/LoadingModal";
 import { AppState } from "react-native";
 
 export default function App() {
+
+  const { width } = Dimensions.get("window");
+
+  // Set a global default font size
+  Text.defaultProps = {
+    ...(Text.defaultProps || {}),
+    style: [{ fontSize: width < 370 ? 12 : 14, fontFamily: "Poppins-Regular" }],
+  };
+
   const state = useGetSolvedQues();
   const {
     setType,
@@ -113,20 +124,47 @@ export default function App() {
     await submitQuestions();
   };
 
-  if (!user) {
-    return <Redirect href="onboarding" />;
-  }
+    const isHydrated = useCurrentUserStore((state) => state.isHydrated);
+    
+    // Show loading state while store is hydrating
+    if (!isHydrated) {
+      return (
+        <View style={[styles.container, { justifyContent: 'center' }]}>
+          <ActivityIndicator size="large" color={theme.colorPrimary} />
+        </View>
+      );
+    }
+
+    // Now we can safely check user state
+    if (!user) {
+      return <Redirect href="onboarding" />;
+    }
 
   // console.log(user);
-  useEffect(() => {
+  // useEffect(() => {
+  //   setIsDailyChallengeFetching(false);
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsDailyChallengeFetching(false); // Reset when app returns
+  //     }
+  //   });
+
+  //   return () => subscription.remove();
+  // }, []);
+    useEffect(() => {
     setIsDailyChallengeFetching(false);
+    
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
-        setIsDailyChallengeFetching(false); // Reset when app returns
+        // Reset loading states
+        setIsDailyChallengeFetching(false);
+        useCurrentUserStore.getState().setHydrated(true);
       }
     });
 
-    return () => subscription.remove();
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   useFocusEffect(
@@ -167,12 +205,7 @@ export default function App() {
             
           </TouchableOpacity> */}
 
-            {/* <LottieView
-            source={require("../../assets/tst.json")}
-            autoPlay
-            loop
-            style={{ width: 100, height: 150 }}
-          /> */}
+         
 
             <TouchableOpacity
               style={[styles.button]}
@@ -373,7 +406,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.colorWhite,
     // fontWeight: "bold",
-    fontSize: 14,
+    // fontSize: 14,
     textAlign: "center",
     // fontFamily: "Poppins-Regular",
     fontFamily: "Poppins-Semi",

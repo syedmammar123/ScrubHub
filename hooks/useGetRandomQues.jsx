@@ -19,7 +19,7 @@ const useGetRandomQues = () => {
       // }
       // const randomMainTopics = getRandomArray(documentNames);
       const randomMainTopics = getRandomArray(
-        ["cardiovascular", "gastrointestinal"],
+        ["cardiovascular", "pulmonary"],
         questionLength
       );
 

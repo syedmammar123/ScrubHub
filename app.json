@@ -19,11 +19,17 @@
       "bundleIdentifier": "com.anonymous.scrubhubsaim",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      },
+      "icon":{
+        "dark": "./assets/icons/Dark.png",
+        "light": "./assets/icons/Light.png",
+        "tinted": "./assets/icons/Tinted.png"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "monochromeImage":"./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.scrubhubsaim",
@@ -42,6 +48,20 @@
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      [
+        "expo-splash-screen",
+        {
+          "image":"./assets/icons/splash-icon-light.png",
+          "imageWidth":200,
+          "resizeMode":"contain",
+          "backgroundColor":"#ffffff",
+          "dark":{
+            "image":"./assets/icons/splash-icon-dark.png",
+            "backgroundColor":"#000000"
+          }
+
+        }
+      ],
       [
         "expo-build-properties",
         {

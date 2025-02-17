@@ -30,6 +30,7 @@
     "expo-linking": "~7.0.3",
     "expo-router": "~4.0.11",
     "expo-sms": "~13.0.1",
+    "expo-splash-screen": "^0.29.22",
     "expo-status-bar": "~2.0.0",
     "libphonenumber-js": "^1.11.19",
     "lottie": "^0.0.1",
@@ -37,6 +38,7 @@
     "nativewind": "^4.1.23",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-error-boundary": "^5.0.0",
     "react-native": "0.76.7",
     "react-native-country-codes-picker": "^2.3.5",
     "react-native-gesture-handler": "~2.20.2",
@@ -48,8 +50,7 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-web": "~0.19.10",
     "tailwindcss": "^3.4.17",
-    "zustand": "^5.0.0",
-    "lottie-react-native": "7.1.0"
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.20",

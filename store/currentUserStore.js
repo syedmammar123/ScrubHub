@@ -2,14 +2,17 @@ import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+
 const useCurrentUserStore = create(
   persist(
     (set, get) => ({
-      user: null, // Initial state
+      user: null,
+      isHydrated: false, // Add this
       userNotifications: [],
       userChallenges: [],
+      setHydrated: () => set({ isHydrated: true }), // Add this
       setUser: (user, id) => {
-        set({ user: { ...user, id } }); // Properly set the `user` object
+        set({ user: { ...user, id } });
       },
       updateUser: (user) => {
         set({ user: user });
@@ -30,10 +33,14 @@ const useCurrentUserStore = create(
       },
     }),
     {
-      name: "currentUserStore", // Key for localStorage or AsyncStorage
+      name: "currentUserStore",
       storage: createJSONStorage(() => AsyncStorage),
-    },
-  ),
+      onRehydrateStorage: () => (state) => {
+        // When storage is rehydrated, set hydrated state
+        state?.setHydrated();
+      },
+    }
+  )
 );
 
 export default useCurrentUserStore;
