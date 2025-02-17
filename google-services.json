@@ -12,7 +12,36 @@
           "package_name": "com.anonymous.scrubhubsaim"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "22327794740-9ki6efac42v6kvim54p858m94ie130pn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.scrubhubsaim",
+            "certificate_hash": "2c6a771b3be7f36eebf4b1d24cadbd03ee36e71b"
+          }
+        },
+        {
+          "client_id": "22327794740-heu1kiafumcj3685ge780j54ouc7v3hf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.scrubhubsaim",
+            "certificate_hash": "ab2289d4743c1fb781285945580bb3e07adcede5"
+          }
+        },
+        {
+          "client_id": "22327794740-lls6jqre0lub9fa07bh42fv3ppsbgqvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.scrubhubsaim",
+            "certificate_hash": "6d4ed171f183f7e68f2ee288c5312f09e0f8aba9"
+          }
+        },
+        {
+          "client_id": "22327794740-ipa7ihvutghf819r3ijvgti9uk40a0vd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAGEGl_MuOhsEN2dfcBZj5BzDBTooNkRAQ"
@@ -20,7 +49,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22327794740-ipa7ihvutghf819r3ijvgti9uk40a0vd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "22327794740-udk1a28ops3khmlkcll08ug15scnnpta.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.scrubhubsaim"
+              }
+            }
+          ]
         }
       }
     }

@@ -128,7 +128,7 @@ const data = [
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { clearUser, user } = useCurrentUserStore((state) => state);
+  const { clearUser, user, isHydrated  } = useCurrentUserStore((state) => state);
   const { loading, error, handleDeleteUser } = useDeleteUser();
 
   const TotalSolved = user?.totalSolved || null;
@@ -153,8 +153,12 @@ export default function ProfileScreen() {
       await signOut(auth);
       console.log("User signed out successfully.");
 
-      clearUser();
-
+// Delay clearing user state after navigation
+      if (isHydrated) {
+        setTimeout(() => {
+          clearUser();
+        }, 100);
+      }
       router.navigate("/onboarding");
     } catch (error) {
       router.navigate("/onboarding");
