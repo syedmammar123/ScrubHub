@@ -14,8 +14,10 @@ import CustomText from "@/components/CustomText";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import useDeleteUser from "@/hooks/useDeleteUser";
+import { Linking } from "react-native";
+
 
 const data = [
   {
@@ -191,6 +193,22 @@ export default function ProfileScreen() {
     }
   };
 
+  const handleSupportEmail = () => {
+  const email = "scrubhub1234@gmail.com";
+  const subject = "Support Request";
+  const body = "Describe your issue here...";
+  const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  Linking.canOpenURL(mailto).then((supported) => {
+    if (supported) {
+      Linking.openURL(mailto);
+    } else {
+      Alert.alert("No email app found", "Please set up an email app to contact support.");
+    }
+  });
+};
+
+
 
   // console.log("solvedQues", solvedQues);
   // console.log("loading", loading);
@@ -231,6 +249,14 @@ export default function ProfileScreen() {
             App Version: <CustomText className={`font-bold`}>1.0.0</CustomText>
           </CustomText>
         </View>
+       
+        <TouchableOpacity
+          className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
+          onPress={handleSupportEmail}
+        >
+          <Entypo name="email" size={30} color="grey" />
+          <CustomText className={`text-blue-500 text-xl`}>Contact Support</CustomText>
+        </TouchableOpacity>
 
         <TouchableOpacity
           className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}

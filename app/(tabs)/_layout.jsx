@@ -5,7 +5,7 @@ import { theme } from "@/theme";
 
 export default function Layout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorGreen }}>
+    <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorBlueLight }}>
       <Tabs.Screen
         name="index"
         options={{

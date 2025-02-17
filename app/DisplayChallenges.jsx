@@ -259,10 +259,10 @@ const DisplayChallenges = ({}) => {
                         </View>
 
                         <View className="flex-row justify-between items-center mt-3">
-                          <CustomText className="text-xs text-gray-500">
+                          <CustomText className="text-sm text-gray-500">
                             {formatDateOnly(challenge.timestamp)}
                           </CustomText>
-                          <CustomText className="text-xs text-gray-500">
+                          <CustomText className="text-sm  text-gray-500">
                             {formatTimeOnly(challenge.timestamp)}
                           </CustomText>
                         </View>
