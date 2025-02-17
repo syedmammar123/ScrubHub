@@ -119,10 +119,10 @@ const NotificationsScreen = () => {
                           {notification.text}
                         </CustomText>
                         <View className="flex-row justify-between items-center mt-3">
-                          <CustomText className="text-xs text-gray-500">
+                          <CustomText className="text-sm text-gray-500">
                             {formatDateOnly(notification.timestamp)}
                           </CustomText>
-                          <CustomText className="text-xs text-gray-500">
+                          <CustomText className="text-sm text-gray-500">
                             {formatTimeOnly(notification.timestamp)}
                           </CustomText>
                         </View>

@@ -392,8 +392,8 @@ export default function Topics() {
                       // disabled={isQuestionFetching}
                       style={{
                         backgroundColor: theme.barColor,
-                        paddingHorizontal: 40,
-                        paddingVertical: 10,
+                        paddingHorizontal: 30,
+                        paddingVertical: 5,
                         borderWidth: 1,
                         borderColor: theme.barBgColor,
                         borderRadius: 10,
@@ -404,7 +404,7 @@ export default function Topics() {
                         shadowRadius: 10, // Blur effect of the shadow
 
                         // Elevation for Android
-                        elevation: 20, // Adds shadow on Android
+                        // elevation: 20, // Adds shadow on Android
                       }}
                     >
                       <CustomText
@@ -433,7 +433,6 @@ export default function Topics() {
                     style={[styles.button]}
                   >
                     <CustomText style={styles.buttonText}>{button}</CustomText>
-
                     <AntDesign
                       name="rightcircle"
                       size={24}
@@ -491,6 +490,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 }, // Offset of the shadow
     shadowOpacity: 0.1, // Opacity of the shadow
     shadowRadius: 10, // Blur effect of the shadow
+    borderRadius: 10,
 
     // Elevation for Android
     elevation: 5, // Adds shadow on Android
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
     elevation: 5, // Adds shadow on Android
   },
   buttonText: {
-    color: theme.colorBlack,
+    color: theme.colorGray,
     // fontWeight: "bold",
     fontSize: 16,
     width: "80%",

@@ -101,9 +101,18 @@ export default function Register() {
             >
               <CustomText style={styles.inviteButtonText}>Confirm</CustomText>
             </TouchableOpacity>
-            <CustomText style={[styles.subtitleText, { color: "black" }]}>
+            {/* <CustomText style={[styles.subtitleText, { color: "black" }]}>
               By providing my phone number, I hereby agree and accept the Terms
               of Service and Privacy Policy.
+            </CustomText> */}
+
+            <CustomText style={[styles.subtitleText, { color: "black" }]}>
+              By providing my phone number, I hereby agree and accept the { }
+              <CustomText 
+                style={styles.highlightedText} 
+                onPress={() => Linking.openURL('https://scrubhub1234.github.io/scrubhub-ploicy/')}>
+                Privacy Policy
+              </CustomText>.
             </CustomText>
             <CountryPickerModal
               setCountryCode={setCountryCode}
@@ -160,5 +169,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     fontFamily: "Poppins-Regular",
+  },
+   highlightedText: {
+    color: "red",
+    fontWeight: "bold",
   },
 });

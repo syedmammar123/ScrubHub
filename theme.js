@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const theme = {
   colorGreen: "#29b365",
+  colorBlueLight: "#815eff",
   colorWhite: "#fff",
   colorBlack: "#000000",
   colorGray: "#36454F",

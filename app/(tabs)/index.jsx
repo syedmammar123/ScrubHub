@@ -35,6 +35,7 @@ export default function App() {
   };
 
   const state = useGetSolvedQues();
+ 
   const {
     setType,
     fetchChallengeQuestions,
@@ -45,14 +46,18 @@ export default function App() {
     getCurrentType,
     submitReviews,
   } = useQuesStore((state) => state);
-  // const { getUser } = useCurrentUserStore((state) => state);
-  const [isDailyChallengeFetching, setIsDailyChallengeFetching] =
-    useState(false);
+  
+  const [isDailyChallengeFetching, setIsDailyChallengeFetching] = useState(false);
 
   const router = useRouter();
+  // const { getUser } = useCurrentUserStore((state) => state);
+  // const user = useCurrentUserStore((state) => state.user);
+    const { user } = useCurrentUserStore((state) => state);
+
   const handlePress = (screen) => {
     router.navigate(`${screen}`);
   };
+  
   const handleChallengePress = async () => {
     setIsDailyChallengeFetching(true);
     if (getFetchedChallengeID() === "") {
@@ -105,12 +110,10 @@ export default function App() {
       }
     }
   };
-  // const user = useCurrentUserStore((state) => state.user);
 
   // if (!user) {
   //    return <Redirect href="onboarding" />;
   //  }
-  const { user } = useCurrentUserStore((state) => state);
   // console.log(user);
 
   const handleSave = async () => {
@@ -126,20 +129,21 @@ export default function App() {
     await submitQuestions();
   };
 
-  const isHydrated = useCurrentUserStore((state) => state.isHydrated);
-
-  // Show loading state while store is hydrating
-  if (!isHydrated) {
-    return (
-      <View style={[styles.container, { justifyContent: "center" }]}>
-        <ActivityIndicator size="large" color={theme.colorPrimary} />
-      </View>
-    );
-  }
 
   // Now we can safely check user state
+  console.log("bhai bahar", );
+
+  useFocusEffect(
+      useCallback(() => {
+        if (isDailyChallengeFetching) {
+          setIsDailyChallengeFetching(false);
+        }
+      }, [])
+  );
+  
   if (!user) {
-    return <Redirect href="onboarding" />;
+    console.log("bhai andar", );
+    return <Redirect href="/onboarding" />;
   }
 
   // console.log(user);
@@ -169,13 +173,7 @@ export default function App() {
   //   };
   // }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (isDailyChallengeFetching) {
-        setIsDailyChallengeFetching(false);
-      }
-    }, [])
-  );
+
   return (
     <>
       <View style={styles.container}>
