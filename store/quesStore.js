@@ -445,8 +445,11 @@ const useQuesStore = create((set, get) => ({
         set({ questions: pickedQues });
         set({ fetchedQuestionSystem: system });
         set({ fetchedQuestionTopic: `${system}all` });
+
+        return pickedQues.length;
       } catch (error) {
-        console.error("Error fetching documents: ", error);
+        console.log("Error fetching documents: ", error);
+        return 0;
       } finally {
         set({ isLoading: false });
       }

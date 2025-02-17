@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Dimensions,
-  Text
+  Text,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { theme } from "@/theme";
@@ -26,7 +26,6 @@ import LoadingModal from "@/components/LoadingModal";
 import { AppState } from "react-native";
 
 export default function App() {
-
   const { width } = Dimensions.get("window");
 
   // Set a global default font size
@@ -61,6 +60,7 @@ export default function App() {
       console.log(questions);
       if (questions === 0) {
         router.navigate("challengeLeaderboard");
+        setTimeout(() => setIsDailyChallengeFetching(false), 300);
         // setIsDailyChallengeFetching(false);
       } else {
         const nextScreen = getQuestionType(getChallengeQuestion());
@@ -76,10 +76,11 @@ export default function App() {
             pathname: nextScreen,
             params: { answerLength },
           });
-
+          setTimeout(() => setIsDailyChallengeFetching(false), 300);
           // setIsDailyChallengeFetching(false);
         } else {
           router.replace(nextScreen);
+          setTimeout(() => setIsDailyChallengeFetching(false), 300);
           // setIsDailyChallengeFetching(false);
         }
       }
@@ -95,10 +96,11 @@ export default function App() {
           pathname: nextScreen,
           params: { answerLength },
         });
-
+        setTimeout(() => setIsDailyChallengeFetching(false), 300);
         // setIsDailyChallengeFetching(false);
       } else {
         router.replace(nextScreen);
+        setTimeout(() => setIsDailyChallengeFetching(false), 300);
         // setIsDailyChallengeFetching(false);
       }
     }
@@ -108,7 +110,7 @@ export default function App() {
   // if (!user) {
   //    return <Redirect href="onboarding" />;
   //  }
-  const user = useCurrentUserStore((state) => state.user);
+  const { user } = useCurrentUserStore((state) => state);
   // console.log(user);
 
   const handleSave = async () => {
@@ -124,21 +126,21 @@ export default function App() {
     await submitQuestions();
   };
 
-    const isHydrated = useCurrentUserStore((state) => state.isHydrated);
-    
-    // Show loading state while store is hydrating
-    if (!isHydrated) {
-      return (
-        <View style={[styles.container, { justifyContent: 'center' }]}>
-          <ActivityIndicator size="large" color={theme.colorPrimary} />
-        </View>
-      );
-    }
+  const isHydrated = useCurrentUserStore((state) => state.isHydrated);
 
-    // Now we can safely check user state
-    if (!user) {
-      return <Redirect href="onboarding" />;
-    }
+  // Show loading state while store is hydrating
+  if (!isHydrated) {
+    return (
+      <View style={[styles.container, { justifyContent: "center" }]}>
+        <ActivityIndicator size="large" color={theme.colorPrimary} />
+      </View>
+    );
+  }
+
+  // Now we can safely check user state
+  if (!user) {
+    return <Redirect href="onboarding" />;
+  }
 
   // console.log(user);
   // useEffect(() => {
@@ -151,25 +153,27 @@ export default function App() {
 
   //   return () => subscription.remove();
   // }, []);
-    useEffect(() => {
-    setIsDailyChallengeFetching(false);
-    
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        // Reset loading states
-        setIsDailyChallengeFetching(false);
-        useCurrentUserStore.getState().setHydrated(true);
-      }
-    });
+  //   useEffect(() => {
+  //   setIsDailyChallengeFetching(false);
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       // Reset loading states
+  //       setIsDailyChallengeFetching(false);
+  //       useCurrentUserStore.getState().setHydrated(true);
+  //     }
+  //   });
+
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
-      setIsDailyChallengeFetching(false);
+      if (isDailyChallengeFetching) {
+        setIsDailyChallengeFetching(false);
+      }
     }, [])
   );
   return (
@@ -204,8 +208,6 @@ export default function App() {
             </Text>
             
           </TouchableOpacity> */}
-
-         
 
             <TouchableOpacity
               style={[styles.button]}

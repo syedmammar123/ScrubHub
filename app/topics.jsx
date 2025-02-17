@@ -71,16 +71,16 @@ export default function Topics() {
   const [isQuestionFetching, setIsQuestionFetching] = useState(false);
   const [error, setError] = useState(false);
   const [hasTopics, setHasTopics] = useState(false);
-  useEffect(() => {
-    setIsQuestionFetching(false);
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        setIsQuestionFetching(false); // Reset when app returns
-      }
-    });
+  // useEffect(() => {
+  //   setIsQuestionFetching(false);
+  //   const subscription = AppState.addEventListener("change", (nextAppState) => {
+  //     if (nextAppState === "active") {
+  //       setIsQuestionFetching(false); // Reset when app returns
+  //     }
+  //   });
 
-    return () => subscription.remove();
-  }, []);
+  //   return () => subscription.remove();
+  // }, []);
   const handlePress = async (topic) => {
     if (error) {
       setError(false);
@@ -103,9 +103,10 @@ export default function Topics() {
             params: { answerLength },
           });
 
-          // setIsQuestionFetching(false);
+          setTimeout(() => setIsQuestionFetching(false), 300);
         } else {
           router.navigate(nextScreen);
+          setTimeout(() => setIsQuestionFetching(false), 300);
           // setIsQuestionFetching(false);
         }
       } else {
@@ -126,6 +127,8 @@ export default function Topics() {
               pathname: nextScreen,
               params: { answerLength },
             });
+
+            setTimeout(() => setIsQuestionFetching(false), 300);
             // setIsQuestionFetching(false);
           } else {
             router.navigate(nextScreen);
@@ -158,8 +161,10 @@ export default function Topics() {
             params: { answerLength },
           });
           // setIsQuestionFetching(false);
+          setTimeout(() => setIsQuestionFetching(false), 300);
         } else {
           router.navigate(nextScreen);
+          setTimeout(() => setIsQuestionFetching(false), 300);
           // setIsQuestionFetching(false);
         }
       } else {
@@ -181,9 +186,11 @@ export default function Topics() {
             pathname: nextScreen,
             params: { answerLength },
           });
+          setTimeout(() => setIsQuestionFetching(false), 300);
         } else {
           // setIsQuestionFetching(false);
           router.navigate(nextScreen);
+          setTimeout(() => setIsQuestionFetching(false), 300);
         }
       }
     }
@@ -271,17 +278,24 @@ export default function Topics() {
           pathname: nextScreen,
           params: { answerLength },
         });
+
+        setTimeout(() => setIsQuestionFetching(false), 300);
         // setIsQuestionFetching(false);
       } else {
         router.navigate(nextScreen);
         // setIsQuestionFetching(false);
       }
       console.log(nextScreen);
+
+      setTimeout(() => setIsQuestionFetching(false), 300);
       // setIsQuestionFetching(false);
     } else {
-      await fetchQuestions(system.toLowerCase(), topics);
+      const length = await fetchQuestions(system.toLowerCase(), topics);
+      if (length === 0) {
+        setError(true);
+        return;
+      }
       const nextScreen = getQuestionType(getCurrentQuestion());
-
       // setIsQuestionFetching(false);
       if (nextScreen === "wordscrambled") {
         const answerLength = getCurrentQuestion()?.answer?.replace(
@@ -293,9 +307,13 @@ export default function Topics() {
           pathname: nextScreen,
           params: { answerLength },
         });
+
+        setTimeout(() => setIsQuestionFetching(false), 300);
         // setIsQuestionFetching(false);
       } else {
         router.navigate(nextScreen);
+
+        setTimeout(() => setIsQuestionFetching(false), 300);
         // setIsQuestionFetching(false);
       }
     }
@@ -303,7 +321,9 @@ export default function Topics() {
 
   useFocusEffect(
     useCallback(() => {
-      setIsQuestionFetching(false);
+      if (isQuestionFetching) {
+        setIsQuestionFetching(false);
+      }
       getTopics(); // Fetch topics when screen comes into focus
     }, [])
   );
