@@ -110,7 +110,7 @@ export default function App() {
   // if (!user) {
   //    return <Redirect href="onboarding" />;
   //  }
-  const user = useCurrentUserStore((state) => state.user);
+  const { user } = useCurrentUserStore((state) => state);
   // console.log(user);
 
   const handleSave = async () => {
