@@ -16,9 +16,13 @@ import {
 
 export default function OnBoarding() {
   const router = useRouter();
-  const user = useCurrentUserStore((state) => state.user);
+  // const user = useCurrentUserStore((state) => state.user);
+  const { user } = useCurrentUserStore((state) => state);
 
+  console.log(console.log("onboarding par aya",user));
+  
   if (user) {
+    console.log("Oh shit user tou hai dear",user);
     return <Redirect href="/" />;
   }
 

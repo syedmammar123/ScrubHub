@@ -128,7 +128,7 @@ const data = [
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { clearUser, user, isHydrated  } = useCurrentUserStore((state) => state);
+  const { clearUser, user  } = useCurrentUserStore((state) => state);
   const { loading, error, handleDeleteUser } = useDeleteUser();
 
   const TotalSolved = user?.totalSolved || null;
@@ -147,30 +147,56 @@ export default function ProfileScreen() {
   // const { randomQues, loading } = useGetRandomQues();
   // const { loading, solvedQues } = useGetSolvedQues();
 
+//   const handleLogout = async () => {
+//     try {
+//       const auth = getAuth();
+//       await signOut(auth);
+//       console.log("User signed out successfully.");
+
+// // Delay clearing user state after navigation
+//       if (isHydrated) {
+//         setTimeout(() => {
+//           clearUser();
+//         }, 5000);
+//       }
+//       router.navigate("/onboarding");
+//     } catch (error) {
+//       router.navigate("/onboarding");
+//       console.error("Error during sign out:", error);
+//     }
+//   };
   const handleLogout = async () => {
     try {
       const auth = getAuth();
       await signOut(auth);
       console.log("User signed out successfully.");
 
-// Delay clearing user state after navigation
-      if (isHydrated) {
-        setTimeout(() => {
-          clearUser();
-        }, 100);
-      }
-      router.navigate("/onboarding");
+      clearUser() 
+      router.navigate("/onboarding"); 
+
+      
+
+      // if (isHydrated) {
+      //   clearUser(); // ✅ Clear state immediately
+
+      //   setTimeout(() => {
+      //     router.navigate("/onboarding"); // ✅ Navigate after 5 seconds
+      //   }, 5000);
+      // } else {
+      //   router.navigate("/onboarding"); // Immediate navigation if not hydrated
+      // }
     } catch (error) {
-      router.navigate("/onboarding");
       console.error("Error during sign out:", error);
+      router.navigate("/onboarding"); // Navigate immediately on error
     }
   };
+
 
   // console.log("solvedQues", solvedQues);
   // console.log("loading", loading);
 
   if (!user) {
-    return <Redirect href="onboarding" />;
+    return <Redirect href="/onboarding" />;
   }
 
   return (
