@@ -12,13 +12,18 @@ import {
   StyleSheet,
   Touchable,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 
 export default function OnBoarding() {
   const router = useRouter();
-  const user = useCurrentUserStore((state) => state.user);
+  // const user = useCurrentUserStore((state) => state.user);
+  const { user } = useCurrentUserStore((state) => state);
 
+  console.log(console.log("onboarding par aya",user));
+  
   if (user) {
+    console.log("Oh shit user tou hai dear",user);
     return <Redirect href="/" />;
   }
 
@@ -45,11 +50,19 @@ export default function OnBoarding() {
           color={theme.colorBlack}
           width={"100%"}
         />
-        <CustomText style={styles.termsText}>
+        {/* <CustomText style={styles.termsText}>
           By signing up you agree to our{" "}
           <CustomText style={styles.highlightedText}>Terms</CustomText> and{" "}
           <CustomText style={styles.highlightedText}>Privacy Policy</CustomText>
           . We protect your personal data.
+        </CustomText> */}
+        <CustomText style={styles.termsText}>
+          
+          By signing up, you agree to our{" "}
+          <CustomText
+          onPress={() => Linking.openURL('https://scrubhub1234.github.io/scrubhub-ploicy/')}
+          style={styles.highlightedText}>Privacy Policy</CustomText>. 
+          We protect your personal data.
         </CustomText>
       </View>
     </LinearGradient>

@@ -2,14 +2,22 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
+import useQuesStore from "@/store/quesStore";
 
 export default function BackButton() {
+  const { getCurrentType } = useQuesStore((state) => state);
+  let currType = getCurrentType()
+  console.log(currType);
+  
+
   const router = useRouter();
   const handlePress = () => {
     router.navigate("/");
   };
   return (
-    <TouchableOpacity style={styles.buttonCircleStyle} onPress={handlePress}>
+    <TouchableOpacity  style={[styles.buttonCircleStyle,
+      { marginTop: currType === "challenge" ? 30 : 60 }]} 
+      onPress={handlePress}>
       <Ionicons name="arrow-back" size={18} color="black" />
     </TouchableOpacity>
   );
@@ -19,11 +27,11 @@ const styles = StyleSheet.create({
   buttonCircleStyle: {
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: -20,
+    // marginBottom: -20,
     zIndex: 1,
     width: 30,
     height: 30,
-    marginTop: 60,
+    // marginTop:  60,
     borderRadius: 15,
     backgroundColor: "#F6F6F7",
     alignSelf: "flex-start",

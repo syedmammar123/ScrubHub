@@ -14,8 +14,10 @@ import CustomText from "@/components/CustomText";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import useDeleteUser from "@/hooks/useDeleteUser";
+import { Linking } from "react-native";
+
 
 const data = [
   {
@@ -128,7 +130,7 @@ const data = [
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { clearUser, user, isHydrated  } = useCurrentUserStore((state) => state);
+  const { clearUser, user  } = useCurrentUserStore((state) => state);
   const { loading, error, handleDeleteUser } = useDeleteUser();
 
   const TotalSolved = user?.totalSolved || null;
@@ -147,30 +149,72 @@ export default function ProfileScreen() {
   // const { randomQues, loading } = useGetRandomQues();
   // const { loading, solvedQues } = useGetSolvedQues();
 
+//   const handleLogout = async () => {
+//     try {
+//       const auth = getAuth();
+//       await signOut(auth);
+//       console.log("User signed out successfully.");
+
+// // Delay clearing user state after navigation
+//       if (isHydrated) {
+//         setTimeout(() => {
+//           clearUser();
+//         }, 5000);
+//       }
+//       router.navigate("/onboarding");
+//     } catch (error) {
+//       router.navigate("/onboarding");
+//       console.error("Error during sign out:", error);
+//     }
+//   };
   const handleLogout = async () => {
     try {
       const auth = getAuth();
       await signOut(auth);
       console.log("User signed out successfully.");
 
-// Delay clearing user state after navigation
-      if (isHydrated) {
-        setTimeout(() => {
-          clearUser();
-        }, 100);
-      }
-      router.navigate("/onboarding");
+      clearUser() 
+      router.navigate("/onboarding"); 
+
+      
+
+      // if (isHydrated) {
+      //   clearUser(); // ✅ Clear state immediately
+
+      //   setTimeout(() => {
+      //     router.navigate("/onboarding"); // ✅ Navigate after 5 seconds
+      //   }, 5000);
+      // } else {
+      //   router.navigate("/onboarding"); // Immediate navigation if not hydrated
+      // }
     } catch (error) {
-      router.navigate("/onboarding");
       console.error("Error during sign out:", error);
+      router.navigate("/onboarding"); // Navigate immediately on error
     }
   };
+
+  const handleSupportEmail = () => {
+  const email = "scrubhub1234@gmail.com";
+  const subject = "Support Request";
+  const body = "Describe your issue here...";
+  const mailto = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  Linking.canOpenURL(mailto).then((supported) => {
+    if (supported) {
+      Linking.openURL(mailto);
+    } else {
+      Alert.alert("No email app found", "Please set up an email app to contact support.");
+    }
+  });
+};
+
+
 
   // console.log("solvedQues", solvedQues);
   // console.log("loading", loading);
 
   if (!user) {
-    return <Redirect href="onboarding" />;
+    return <Redirect href="/onboarding" />;
   }
 
   return (
@@ -205,6 +249,14 @@ export default function ProfileScreen() {
             App Version: <CustomText className={`font-bold`}>1.0.0</CustomText>
           </CustomText>
         </View>
+       
+        <TouchableOpacity
+          className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}
+          onPress={handleSupportEmail}
+        >
+          <Entypo name="email" size={30} color="grey" />
+          <CustomText className={`text-blue-500 text-xl`}>Contact Support</CustomText>
+        </TouchableOpacity>
 
         <TouchableOpacity
           className={`border-b border-gray-300 pb-5 flex flex-row items-center gap-5`}

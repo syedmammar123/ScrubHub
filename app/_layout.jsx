@@ -53,7 +53,7 @@ export default function Layout() {
             name="(tabs)"
             options={{
               headerShown: false,
-              animation: "slide_from_bottom",
+              animation: "fade",
             }}
           />
           <Stack.Screen

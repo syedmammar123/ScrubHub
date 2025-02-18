@@ -11,8 +11,6 @@ export function ScrubButton({ title, onPress, color, width, className }) {
     onPress();
   };
 
-  console.log(theme.colorGreen);
-
   return (
     <Pressable
       onPress={handlePress}
