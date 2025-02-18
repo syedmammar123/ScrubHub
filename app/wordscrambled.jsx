@@ -121,139 +121,153 @@ export default function WordScrambled() {
   //   { length: answerLength < 10 ? answerLength + 4 : answerLength },
   //   () => useSharedValue(1)
   // );
-  const activeGesture = useSharedValue(-1);
+  // const activeGesture = useSharedValue(-1);
   const CreatePanGesture = (index) => {
-    return Gesture.Pan()
-      .onBegin(() => {
-        activeGesture.value = index;
-      })
-      .onUpdate((event) => {
-        translateValueX[index].value = event.translationX;
-        translateValueY[index].value = event.translationY;
-        if (translateValueY[index].value > 0) {
-          line.value = -1;
-        } else if (noflines === 1) {
-          line.value = 1;
-          ytranslated.value = -55 - letterLayout[index]?.y;
-        } else if (noflines === 2) {
-          if (0 - translateValueY[index].value - letterLayout[index]?.y > 115) {
-            line.value = 1;
-            ytranslated.value = -129 - letterLayout[index]?.y;
-          } else {
-            line.value = 2;
-            ytranslated.value = -55 - letterLayout[index]?.y;
-          }
-        } else if (noflines === 3) {
-          line.value = -1;
-          if (0 - translateValueY[index].value - letterLayout[index]?.y > 182) {
-            line.value = 1;
-            ytranslated.value = -205 - letterLayout[index]?.y;
-          } else if (
-            0 - translateValueY[index].value - letterLayout[index]?.y >
-            115
-          ) {
-            line.value = 2;
-            ytranslated.value = -129 - letterLayout[index]?.y;
-          } else {
-            line.value = 3;
-            ytranslated.value = -55 - letterLayout[index]?.y;
-          }
-        } else if (noflines === 4) {
-          console.log(
-            0 - translateValueY[index].value - letterLayout[index]?.y
-          );
+    return (
+      Gesture.Pan()
+        // .onStart(() => {
+        //   activeGesture.value = index;
+        // })
+        // .onBegin(() => {
 
-          line.value = -1;
-          if (0 - translateValueY[index].value - letterLayout[index]?.y > 251) {
+        // })
+        .onUpdate((event) => {
+          translateValueX[index].value = event.translationX;
+          translateValueY[index].value = event.translationY;
+          if (translateValueY[index].value > 0) {
+            line.value = -1;
+          } else if (noflines === 1) {
             line.value = 1;
-            ytranslated.value = -281 - letterLayout[index]?.y;
-          } else if (
-            0 - translateValueY[index].value - letterLayout[index]?.y >
-            183
-          ) {
-            line.value = 2;
-            ytranslated.value = -205 - letterLayout[index]?.y;
-          } else if (
-            0 - translateValueY[index].value - letterLayout[index]?.y >
-            115
-          ) {
-            line.value = 3;
-            ytranslated.value = -129 - letterLayout[index]?.y;
-          } else {
-            line.value = 4;
             ytranslated.value = -55 - letterLayout[index]?.y;
-          }
-        }
-      })
-      .onEnd((event) => {
-        const draggedX = letterLayout[index]?.x + event.translationX;
-
-        let isDropped = false;
-        if (line.value !== -1) {
-          for (
-            let i = (line.value - 1) * boxesPerLine;
-            i < line.value * boxesPerLine;
-            i++
-          ) {
-            const blank = blankInputLayout[i];
-
+          } else if (noflines === 2) {
             if (
-              blank &&
-              draggedX >= blank.x - 5 &&
-              draggedX + letterLayout[index]?.width <=
-                blank.x + blank.width + 10
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              115
             ) {
-              isDropped = true;
-              let presentBox = selected[i];
-              console.log(presentBox);
+              line.value = 1;
+              ytranslated.value = -129 - letterLayout[index]?.y;
+            } else {
+              line.value = 2;
+              ytranslated.value = -55 - letterLayout[index]?.y;
+            }
+          } else if (noflines === 3) {
+            line.value = -1;
+            if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              182
+            ) {
+              line.value = 1;
+              ytranslated.value = -205 - letterLayout[index]?.y;
+            } else if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              115
+            ) {
+              line.value = 2;
+              ytranslated.value = -129 - letterLayout[index]?.y;
+            } else {
+              line.value = 3;
+              ytranslated.value = -55 - letterLayout[index]?.y;
+            }
+          } else if (noflines === 4) {
+            console.log(
+              0 - translateValueY[index].value - letterLayout[index]?.y
+            );
 
-              // For Swapping boxes
-              if (selected[i].value !== -1) {
-                console.log("YES");
-                console.log("Index", index);
+            line.value = -1;
+            if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              251
+            ) {
+              line.value = 1;
+              ytranslated.value = -281 - letterLayout[index]?.y;
+            } else if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              183
+            ) {
+              line.value = 2;
+              ytranslated.value = -205 - letterLayout[index]?.y;
+            } else if (
+              0 - translateValueY[index].value - letterLayout[index]?.y >
+              115
+            ) {
+              line.value = 3;
+              ytranslated.value = -129 - letterLayout[index]?.y;
+            } else {
+              line.value = 4;
+              ytranslated.value = -55 - letterLayout[index]?.y;
+            }
+          }
+        })
+        .onEnd((event) => {
+          const draggedX = letterLayout[index]?.x + event.translationX;
 
-                translateValueX[selected[i].realIndex].value = withSpring(0);
-                translateValueY[selected[i].realIndex].value = withSpring(0);
+          let isDropped = false;
+          if (line.value !== -1) {
+            for (
+              let i = (line.value - 1) * boxesPerLine;
+              i < line.value * boxesPerLine;
+              i++
+            ) {
+              const blank = blankInputLayout[i];
+
+              if (
+                blank &&
+                draggedX >= blank.x - 5 &&
+                draggedX + letterLayout[index]?.width <=
+                  blank.x + blank.width + 10
+              ) {
+                isDropped = true;
+                let presentBox = selected[i];
+                console.log(presentBox);
+
+                // For Swapping boxes
+                if (selected[i].value !== -1) {
+                  console.log("YES");
+                  console.log("Index", index);
+
+                  translateValueX[selected[i].realIndex].value = withSpring(0);
+                  translateValueY[selected[i].realIndex].value = withSpring(0);
+                }
+                runOnJS(updatedAnswers)(i, index, letterChoices[index]);
+
+                translateValueY[index].value = withSpring(ytranslated.value);
+
+                //X Value For TranslateX,(Y Comes from Lines)
+                const ival = (line.value - 1) * boxesPerLine;
+                const off = i - ival;
+                const val = 5 + off * 65;
+
+                translateValueX[index].value = withSpring(
+                  val - letterLayout[index]?.x + 10
+                );
+
+                break;
               }
-              runOnJS(updatedAnswers)(i, index, letterChoices[index]);
-
-              translateValueY[index].value = withSpring(ytranslated.value);
-
-              //X Value For TranslateX,(Y Comes from Lines)
-              const ival = (line.value - 1) * boxesPerLine;
-              const off = i - ival;
-              const val = 5 + off * 65;
-
-              translateValueX[index].value = withSpring(
-                val - letterLayout[index]?.x + 10
-              );
-
-              break;
-            }
-          }
-        }
-
-        if (!isDropped) {
-          console.log("DETECTED AFTER BOX DROPPPED");
-          let i;
-          let flag = false;
-
-          for (i = 0; i < answerLength; i++) {
-            if (index === selected[i].realIndex) {
-              flag = true;
-              break;
             }
           }
 
-          if (flag) {
-            runOnJS(updatedAnswers)(i, -1, -1);
-          }
+          if (!isDropped) {
+            console.log("DETECTED AFTER BOX DROPPPED");
+            let i;
+            let flag = false;
 
-          translateValueX[index].value = withSpring(0);
-          translateValueY[index].value = withSpring(0);
-        }
-        activeGesture.value = -1;
-      });
+            for (i = 0; i < answerLength; i++) {
+              if (index === selected[i].realIndex) {
+                flag = true;
+                break;
+              }
+            }
+
+            if (flag) {
+              runOnJS(updatedAnswers)(i, -1, -1);
+            }
+
+            translateValueX[index].value = withSpring(0);
+            translateValueY[index].value = withSpring(0);
+          }
+          // activeGesture.value = -1;
+        })
+    );
   };
 
   const panGestureHandler = letterChoices.map((_, index) =>
@@ -263,11 +277,11 @@ export default function WordScrambled() {
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
       return {
-        zIndex: activeGesture.value === index ? 100 : 0,
         transform: [
           { translateX: translateValueX[index].value },
           { translateY: translateValueY[index].value },
         ],
+        // zIndex: activeGesture.value === index ? 1 : 0,
       };
     });
 
