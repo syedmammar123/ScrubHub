@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
-  Text,
   StyleSheet,
   Modal,
   FlatList,
   TouchableOpacity,
-  Image,
+  Text,
 } from "react-native";
-import countries from "../assets/countries.json";
-
+import { countryCodes } from "@/assets/countryCodes"; // Adjust path as needed
 import CustomText from "./CustomText";
 
 export default function CountryPickerModal({
@@ -17,6 +15,8 @@ export default function CountryPickerModal({
   setDropDownActive,
   setCountryCode,
 }) {
+  console.log("codes", countryCodes);
+
   return (
     <Modal
       visible={dropDownActive}
@@ -30,28 +30,19 @@ export default function CountryPickerModal({
       >
         <View style={styles.dropdownContainer}>
           <FlatList
-            data={countries}
-            keyExtractor={(item) => item.cca2} // Use the ISO alpha-2 code as a key
+            data={countryCodes}
+            keyExtractor={(item) => item.code} // Unique key
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.dropdownOption}
                 onPress={() => {
-                  const dialCode =
-                    item.idd.root + (item.idd.suffixes?.[0] || "");
-                  setCountryCode(dialCode);
+                  setCountryCode(item.dial_code);
                   setDropDownActive(false);
                 }}
               >
-                <Image
-                  source={{
-                    uri: `https://flagcdn.com/w40/${item.cca2.toLowerCase()}.png`,
-                  }}
-                  style={styles.flag}
-                />
+                <Text style={styles.flag}>{item.flag}</Text>
                 <CustomText style={styles.dropdownOptionText}>
-                  {`${item.name.common} (${item.idd.root}${
-                    item.idd.suffixes?.[0] || ""
-                  })`}
+                  {`${item.name.en} (${item.dial_code})`}
                 </CustomText>
               </TouchableOpacity>
             )}
@@ -76,38 +67,16 @@ const styles = StyleSheet.create({
     padding: 10,
     maxHeight: 300,
   },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   flag: {
-    width: 24,
-    height: 16,
+    fontSize: 24, // Make sure flag emoji is big enough
     marginRight: 10,
-    borderRadius: 2,
-  },
-  inviteSentContainer: {
-    width: "90%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    alignItems: "center",
-    paddingVertical: 60,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-
-    elevation: 6,
-    rowGap: 10,
   },
   dropdownOption: {
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
     flexDirection: "row",
+    alignItems: "center",
   },
   dropdownOptionText: { fontSize: 16, color: "black" },
 });

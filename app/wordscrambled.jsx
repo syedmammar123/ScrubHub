@@ -121,11 +121,15 @@ export default function WordScrambled() {
   //   { length: answerLength < 10 ? answerLength + 4 : answerLength },
   //   () => useSharedValue(1)
   // );
+  // const activeGesture = useSharedValue(-1);
   const CreatePanGesture = (index) => {
     return (
       Gesture.Pan()
+        // .onStart(() => {
+        //   activeGesture.value = index;
+        // })
         // .onBegin(() => {
-        //   zIndices[index].value = 100;
+
         // })
         .onUpdate((event) => {
           translateValueX[index].value = event.translationX;
@@ -261,7 +265,7 @@ export default function WordScrambled() {
             translateValueX[index].value = withSpring(0);
             translateValueY[index].value = withSpring(0);
           }
-          // zIndices[index].value = 1;
+          // activeGesture.value = -1;
         })
     );
   };
@@ -273,11 +277,11 @@ export default function WordScrambled() {
   const AnimatedStyle = (index) =>
     useAnimatedStyle(() => {
       return {
-        // zIndex: zIndices[index].value,
         transform: [
           { translateX: translateValueX[index].value },
           { translateY: translateValueY[index].value },
         ],
+        // zIndex: activeGesture.value === index ? 1 : 0,
       };
     });
 

@@ -111,6 +111,7 @@ const pickQues = async (system, topic, docs) => {
 
   return pickedQues;
 };
+
 const useQuesStore = create((set, get) => ({
   type: "",
 
@@ -149,6 +150,414 @@ const useQuesStore = create((set, get) => ({
   challengingFriendsIndex: 0,
   challengingScore: 0,
   opponentId: "",
+
+  // Setting any current Type (Study/Review/Challenge)
+  setType: (type) => set({ type: type }),
+
+  // Getting any current Type (Study/Review/Challenge)
+  getCurrentType: () => {
+    const { type } = get();
+    return type;
+  },
+
+  // FUNCTIONS FOR STUDY TYPE
+  increaseCurrentIndex: () =>
+    set((state) => ({ currentIndex: state.currentIndex + 1 })),
+
+  fetchQuestions: async (system, topic) => {
+    set({ isLoading: true });
+    // Setting Index 0 for Questions
+    set({ currentIndex: 0 });
+    set({ score: 0 });
+    if (Array.isArray(topic)) {
+      try {
+        let questions = [];
+        console.log("Topics:", topic);
+
+        const shuffledTopics = topic.sort(() => 0.5 - Math.random());
+        const selectedTopics = shuffledTopics.slice(0, 15);
+
+        const queryPromises = selectedTopics.map(async (t) => {
+          const querySnapshot = await getDocs(
+            collection(db, `Questions/${system}/${t}`)
+          );
+          console.log(
+            `Topic ${t} returned`,
+            querySnapshot.docs.length,
+            "questions"
+          );
+          return querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+        });
+        const allQuestions = await Promise.all(queryPromises);
+        questions = allQuestions.flat();
+
+        // console.log("Combined Questions:", questions);
+        const pickedQues = await pickRandQues(questions);
+
+        set({ questions: pickedQues });
+        set({ fetchedQuestionSystem: system });
+        set({ fetchedQuestionTopic: `${system}all` });
+
+        return pickedQues.length;
+      } catch (error) {
+        console.log("Error fetching documents: ", error);
+        return 0;
+      } finally {
+        set({ isLoading: false });
+      }
+    } else {
+      try {
+        const querySnapshot = await getDocs(
+          collection(db, `Questions/${system}/${topic}`)
+        );
+
+        let documents = [];
+        querySnapshot.forEach((doc) => {
+          documents.push({ id: doc.id, ...doc.data() });
+        });
+
+        const pickedQuestions = await pickQues(system, topic, documents);
+        console.log("PICKED QUESTIONS:", pickedQuestions.length);
+
+        if (pickedQuestions.length > 0) {
+          set({ questions: pickedQuestions });
+          set({ fetchedQuestionSystem: system });
+          set({ fetchedQuestionTopic: topic });
+        }
+
+        return pickedQuestions.length;
+      } catch (error) {
+        console.error("Error fetching documents: ", error);
+      } finally {
+        set({ isLoading: false });
+      }
+    }
+  },
+  submitQuestions: async () => {
+    const batch = writeBatch(db);
+    let system = get().fetchedQuestionSystem;
+    let topic = get().fetchedQuestionTopic;
+    const user = useCurrentUserStore.getState().getUser();
+    const userId = user.id;
+    const userDocRef = doc(db, "Users", userId);
+    if (`${topic}` === `${system}all`) {
+      set({ currentIndex: 0 });
+      set({ fetchedQuestionSystem: "" });
+      set({ fetchedQuestionTopic: "" });
+    }
+    try {
+      get().questions.forEach((q) => {
+        const docRef = doc(
+          db, // The Firestore database instance
+          "Users", // Collection name
+          userId,
+          "solved",
+          system,
+          topic,
+          q.id
+        );
+        const data = { ...q, submittedOn: serverTimestamp() };
+        batch.set(docRef, data); // Add to batch
+      });
+      // Update User
+      const userSolvedTopics = user.solvedTopics;
+      console.log(user);
+
+      console.log("User solved Topics", userSolvedTopics);
+
+      // Check if the system already exists
+      const systemIndex = userSolvedTopics.findIndex((entry) => entry[system]);
+      console.log("System is there?", systemIndex);
+
+      if (systemIndex === -1) {
+        // System does not exist, add it with the topics
+        userSolvedTopics.push({ [system]: [topic] });
+        console.log(userSolvedTopics);
+      } else {
+        // System exists, update its topics array
+        const existingTopics = userSolvedTopics[systemIndex][system];
+
+        // Check if the topic already exists
+        if (!existingTopics.includes(topic)) {
+          // Add the new topic to the system's array
+          userSolvedTopics[systemIndex][system].push(topic);
+          console.log(`Added topic: ${topic} to system: ${system}`);
+          console.log(userSolvedTopics);
+        } else {
+          console.log(`Topic: ${topic} already exists in system: ${system}`);
+          console.log(userSolvedTopics);
+        }
+      }
+
+      // Update the Firestore document
+      // console.log("After Submission", newUser);
+      let score = user.totalScore;
+      if (score === null) {
+        score = get().score;
+      } else {
+        score += get().score;
+      }
+
+      let totalSolved = user.totalSolved;
+      if (totalSolved === null) {
+        totalSolved = 15;
+      } else {
+        totalSolved += 15;
+      }
+
+      const userDocRef = doc(db, "Users", userId);
+
+      await updateDoc(userDocRef, {
+        totalScore: score,
+        solvedTopics: userSolvedTopics,
+        totalSolved: totalSolved,
+      });
+      const newUser = {
+        ...user,
+        totalScore: score,
+        totalSolved: totalSolved,
+        solvedTopics: userSolvedTopics,
+      };
+      useCurrentUserStore.getState().updateUser(newUser);
+
+      // Commit the batch operation
+      await batch.commit();
+      set({ currentIndex: 0 });
+      set({ fetchedQuestionSystem: "" });
+      set({ fetchedQuestionTopic: "" });
+      // set({ score: 0 });
+      // console.log("SAVED");
+    } catch (error) {
+      console.log(error.message);
+    }
+  },
+  increaseScore: () => set((state) => ({ score: state.score + 1 })),
+  getScore: () => {
+    const { score } = get();
+    return score;
+  },
+  // getFetchedQuestionSystem
+  getfetchedQuestionSystem: () => {
+    const { fetchedQuestionSystem } = get();
+    return fetchedQuestionSystem;
+  },
+  // Getting Question Fetch Flag to not fetch/fetch require Questions again(study)
+  getfetchedQuestionTopic: () => {
+    const { fetchedQuestionTopic } = get();
+    return fetchedQuestionTopic;
+  },
+  // Getting any current Question(study)
+  getCurrentQuestion: () => {
+    const { questions, currentIndex } = get();
+    return questions[currentIndex];
+  },
+
+  // FUNCTIONS FOR REVIEW TYPE
+  increaseCurrentReviewIndex: () =>
+    set((state) => ({ currentIndexReview: state.currentIndexReview + 1 })),
+  increaseReviewScore: () =>
+    set((state) => ({ reviewScore: state.reviewScore + 1 })),
+  getReviewScore: () => {
+    const { reviewScore } = get();
+    return reviewScore;
+  },
+  fetchReviewQuestions: async (system, topic) => {
+    set({ isLoading: true });
+
+    // Setting Index 0 for Questions
+    set({ currentIndexReview: 0 });
+    set({ reviewScore: 0 });
+    try {
+      const curUser = useCurrentUserStore.getState().getUser();
+      const getPrevQuesRef = collection(
+        db,
+        "Users",
+        curUser.id,
+        "solved",
+        system,
+        topic
+      );
+      const docs = await getDocs(getPrevQuesRef);
+
+      if (docs.docs.length > 0) {
+        let questionsPicked = docs.docs.map((doc) => {
+          return doc.data();
+        });
+        let finalQuestions = reviewQues(questionsPicked);
+        // console.log(reviewQues(questionsPicked));
+        set({ reviewQuestions: finalQuestions });
+
+        set({ fetchedReviewQuestionSystem: system });
+
+        set({ fetchedReviewQuestionTopic: topic });
+      }
+
+      console.log(docs.docs.length);
+      return docs.docs.length;
+    } catch (error) {
+      console.error("Error fetching documents: ", error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  submitReviews: async () => {
+    const batch = writeBatch(db); // Initialize batch
+    let system = get().fetchedReviewQuestionSystem;
+    let topic = get().fetchedReviewQuestionTopic;
+    console.log(system);
+    console.log(topic);
+    if (topic === "reviewall") {
+      set({ fetchedReviewQuestionSystem: "" });
+      set({ currentIndexReview: 0 });
+      set({ fetchedReviewQuestionTopic: "" });
+    } else {
+      try {
+        get().reviewQuestions.forEach((q) => {
+          const docRef = doc(
+            db, // Firestore database instance
+            "Users", // Collection name
+            useCurrentUserStore.getState().getUser().id,
+            "solved",
+            system,
+            topic,
+            q.id
+          );
+
+          batch.update(docRef, {
+            isReviewed: true,
+            lastReviewed: serverTimestamp(), // Current timestamp
+          });
+        });
+
+        // Commit batch update
+        await batch.commit();
+        set({ fetchedReviewQuestionSystem: "" });
+        set({ currentIndexReview: 0 });
+        set({ fetchedReviewQuestionTopic: "" });
+        console.log("Batch update successful!");
+      } catch (error) {
+        console.error("Batch update failed:", error.message);
+      }
+    }
+  },
+  // Getting any current Question(study)
+  getReviewQuestion: () => {
+    const { reviewQuestions, currentIndexReview } = get();
+    return reviewQuestions[currentIndexReview];
+  },
+  // Getting Question Fetch Flag to not fetch/fetch require Questions again(review)
+  getfetchedReviewTopic: () => {
+    const { fetchedReviewQuestionTopic } = get();
+    return fetchedReviewQuestionTopic;
+  },
+
+  // For Review All
+  setReviewAllQuestions: (questions) => {
+    set({ isLoading: true });
+    console.log("The len is", questions.length);
+
+    // Setting Index 0 for Questions
+    set({ currentIndexReview: 0 });
+    set({ reviewQuestions: questions });
+    set({ fetchedReviewQuestionSystem: "reviewall" });
+    set({ fetchedReviewQuestionTopic: "reviewall" });
+  },
+
+  // BELOW FUNCTIONS ARE FOR DAILY CHALLENGE
+  increaseCurrentChallengeIndex: () =>
+    set((state) => ({
+      currentChallengeIndex: state.currentChallengeIndex + 1,
+    })),
+  increaseChallengeScore: () =>
+    set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
+
+  getChallengeScore: () => {
+    const { scoreChallenge } = get();
+    return scoreChallenge;
+  },
+
+  fetchChallengeQuestions: async () => {
+    set({ isLoading: true });
+    // Setting Index 0 for Questions
+
+    try {
+      // Getting dailyChallenge ID First Here
+      const querySnapshot = await getDocs(collection(db, `dailyChallenge`));
+      const challengeID = querySnapshot.docs[0].id;
+      console.log("ID OF Challenge", querySnapshot.docs[0].id);
+
+      // Last Daily Challenge ID Now from User here
+
+      const curUser = useCurrentUserStore.getState().getUser();
+
+      const userChallengeId = curUser.lastDailyChallengeID;
+      console.log(curUser);
+
+      console.log(
+        "Current User Challenge ID Current",
+        curUser.lastDailyChallengeID
+      );
+
+      if (challengeID === userChallengeId) {
+        return 0; // Length 0 which after checking navigates user to Leaderboard
+      }
+      let documents = querySnapshot.docs[0].data().questions;
+
+      set({ currentChallengeIndex: 0 });
+      set({ challengeQuestions: documents });
+      set({ currentChallengeId: challengeID });
+      return documents.length;
+    } catch (error) {
+      console.log("Error fetching documents: ", error);
+      return 0;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  submitChallengeQuestions: async () => {
+    try {
+      const userId = useCurrentUserStore.getState().getUser().id;
+
+      const userDocRef = doc(db, "Users", userId);
+
+      await updateDoc(userDocRef, {
+        lastDailyChallengeID: get().currentChallengeId,
+        lastChallengeScore: get().scoreChallenge,
+      });
+
+      // Update User in Store
+      const updatedUser = {
+        ...useCurrentUserStore.getState().getUser(),
+        lastDailyChallengeID: get().currentChallengeId,
+      };
+      useCurrentUserStore.getState().updateUser(updatedUser);
+      console.log("UPDTAED USER", updatedUser);
+
+      set({ currentChallengeIndex: 0 });
+      set({ challengeQuestions: [] });
+      set({ currentChallengeId: "" });
+      console.log("Challenge updated successfully!");
+    } catch (error) {
+      console.error("Error updating challenge:", error.message);
+    }
+  },
+
+  // Getting any current Question(Challenge)
+  getChallengeQuestion: () => {
+    const { challengeQuestions, currentChallengeIndex } = get();
+    return challengeQuestions[currentChallengeIndex];
+  },
+
+  // Getting any current Question(Challenge)
+  getFetchedChallengeID: () => {
+    const { currentChallengeId } = get();
+    return currentChallengeId;
+  },
 
   //this clears all fields related to attempt challenge
   clearFields: () => {
@@ -373,424 +782,6 @@ const useQuesStore = create((set, get) => ({
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-  },
-
-  increaseScore: () => set((state) => ({ score: state.score + 1 })),
-
-  increaseChallengeScore: () =>
-    set((state) => ({ scoreChallenge: state.scoreChallenge + 1 })),
-
-  increaseReviewScore: () =>
-    set((state) => ({ reviewScore: state.reviewScore + 1 })),
-
-  getScore: () => {
-    const { score } = get();
-    return score;
-  },
-
-  getChallengeScore: () => {
-    const { scoreChallenge } = get();
-    return scoreChallenge;
-  },
-
-  getReviewScore: () => {
-    const { reviewScore } = get();
-    return reviewScore;
-  },
-
-  increaseCurrentIndex: () =>
-    set((state) => ({ currentIndex: state.currentIndex + 1 })),
-
-  increaseCurrentReviewIndex: () =>
-    set((state) => ({ currentIndexReview: state.currentIndexReview + 1 })),
-
-  increaseCurrentChallengeIndex: () =>
-    set((state) => ({
-      currentChallengeIndex: state.currentChallengeIndex + 1,
-    })),
-
-  fetchQuestions: async (system, topic) => {
-    set({ isLoading: true });
-    // Setting Index 0 for Questions
-    set({ currentIndex: 0 });
-    set({ score: 0 });
-    if (Array.isArray(topic)) {
-      try {
-        let questions = [];
-        console.log("Topics:", topic);
-
-        const shuffledTopics = topic.sort(() => 0.5 - Math.random());
-        const selectedTopics = shuffledTopics.slice(0, 15);
-
-        const queryPromises = selectedTopics.map(async (t) => {
-          const querySnapshot = await getDocs(
-            collection(db, `Questions/${system}/${t}`)
-          );
-          console.log(
-            `Topic ${t} returned`,
-            querySnapshot.docs.length,
-            "questions"
-          );
-          return querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-        });
-        const allQuestions = await Promise.all(queryPromises);
-        questions = allQuestions.flat();
-
-        // console.log("Combined Questions:", questions);
-        const pickedQues = await pickRandQues(questions);
-
-        set({ questions: pickedQues });
-        set({ fetchedQuestionSystem: system });
-        set({ fetchedQuestionTopic: `${system}all` });
-
-        return pickedQues.length;
-      } catch (error) {
-        console.log("Error fetching documents: ", error);
-        return 0;
-      } finally {
-        set({ isLoading: false });
-      }
-    } else {
-      try {
-        const querySnapshot = await getDocs(
-          collection(db, `Questions/${system}/${topic}`)
-        );
-
-        let documents = [];
-        querySnapshot.forEach((doc) => {
-          documents.push({ id: doc.id, ...doc.data() });
-        });
-
-        const pickedQuestions = await pickQues(system, topic, documents);
-        console.log("PICKED QUESTIONS:", pickedQuestions.length);
-
-        if (pickedQuestions.length > 0) {
-          set({ questions: pickedQuestions });
-          set({ fetchedQuestionSystem: system });
-          set({ fetchedQuestionTopic: topic });
-        }
-
-        return pickedQuestions.length;
-      } catch (error) {
-        console.error("Error fetching documents: ", error);
-      } finally {
-        set({ isLoading: false });
-      }
-    }
-  },
-
-  fetchReviewQuestions: async (system, topic) => {
-    set({ isLoading: true });
-
-    // Setting Index 0 for Questions
-    set({ currentIndexReview: 0 });
-    set({ reviewScore: 0 });
-    try {
-      const curUser = useCurrentUserStore.getState().getUser();
-      const getPrevQuesRef = collection(
-        db,
-        "Users",
-        curUser.id,
-        "solved",
-        system,
-        topic
-      );
-      const docs = await getDocs(getPrevQuesRef);
-
-      if (docs.docs.length > 0) {
-        let questionsPicked = docs.docs.map((doc) => {
-          return doc.data();
-        });
-        let finalQuestions = reviewQues(questionsPicked);
-        // console.log(reviewQues(questionsPicked));
-        set({ reviewQuestions: finalQuestions });
-
-        set({ fetchedReviewQuestionSystem: system });
-
-        set({ fetchedReviewQuestionTopic: topic });
-      }
-
-      console.log(docs.docs.length);
-      return docs.docs.length;
-    } catch (error) {
-      console.error("Error fetching documents: ", error);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
-  submitQuestions: async () => {
-    const batch = writeBatch(db);
-    let system = get().fetchedQuestionSystem;
-    let topic = get().fetchedQuestionTopic;
-    const user = useCurrentUserStore.getState().getUser();
-    const userId = user.id;
-    const userDocRef = doc(db, "Users", userId);
-    if (`${topic}` === `${system}all`) {
-      set({ currentIndex: 0 });
-      set({ fetchedQuestionSystem: "" });
-      set({ fetchedQuestionTopic: "" });
-    }
-    try {
-      get().questions.forEach((q) => {
-        const docRef = doc(
-          db, // The Firestore database instance
-          "Users", // Collection name
-          userId,
-          "solved",
-          system,
-          topic,
-          q.id
-        );
-        const data = { ...q, submittedOn: serverTimestamp() };
-        batch.set(docRef, data); // Add to batch
-      });
-      // Update User
-      const userSolvedTopics = user.solvedTopics;
-      console.log(user);
-
-      console.log("User solved Topics", userSolvedTopics);
-
-      // Check if the system already exists
-      const systemIndex = userSolvedTopics.findIndex((entry) => entry[system]);
-      console.log("System is there?", systemIndex);
-
-      if (systemIndex === -1) {
-        // System does not exist, add it with the topics
-        userSolvedTopics.push({ [system]: [topic] });
-        console.log(userSolvedTopics);
-      } else {
-        // System exists, update its topics array
-        const existingTopics = userSolvedTopics[systemIndex][system];
-
-        // Check if the topic already exists
-        if (!existingTopics.includes(topic)) {
-          // Add the new topic to the system's array
-          userSolvedTopics[systemIndex][system].push(topic);
-          console.log(`Added topic: ${topic} to system: ${system}`);
-          console.log(userSolvedTopics);
-        } else {
-          console.log(`Topic: ${topic} already exists in system: ${system}`);
-          console.log(userSolvedTopics);
-        }
-      }
-
-      // Update the Firestore document
-      // console.log("After Submission", newUser);
-      let score = user.totalScore;
-      if (score === null) {
-        score = get().score;
-      } else {
-        score += get().score;
-      }
-
-      let totalSolved = user.totalSolved;
-      if (totalSolved === null) {
-        totalSolved = 15;
-      } else {
-        totalSolved += 15;
-      }
-
-      const userDocRef = doc(db, "Users", userId);
-
-      await updateDoc(userDocRef, {
-        totalScore: score,
-        solvedTopics: userSolvedTopics,
-        totalSolved: totalSolved,
-      });
-      const newUser = {
-        ...user,
-        totalScore: score,
-        totalSolved: totalSolved,
-        solvedTopics: userSolvedTopics,
-      };
-      useCurrentUserStore.getState().updateUser(newUser);
-
-      // Commit the batch operation
-      await batch.commit();
-      set({ currentIndex: 0 });
-      set({ fetchedQuestionSystem: "" });
-      set({ fetchedQuestionTopic: "" });
-      // set({ score: 0 });
-      // console.log("SAVED");
-    } catch (error) {
-      console.log(error.message);
-    }
-  },
-
-  submitReviews: async () => {
-    const batch = writeBatch(db); // Initialize batch
-    let system = get().fetchedReviewQuestionSystem;
-    let topic = get().fetchedReviewQuestionTopic;
-    console.log(system);
-    console.log(topic);
-    if (topic === "reviewall") {
-      set({ fetchedReviewQuestionSystem: "" });
-      set({ currentIndexReview: 0 });
-      set({ fetchedReviewQuestionTopic: "" });
-    } else {
-      try {
-        get().reviewQuestions.forEach((q) => {
-          const docRef = doc(
-            db, // Firestore database instance
-            "Users", // Collection name
-            useCurrentUserStore.getState().getUser().id,
-            "solved",
-            system,
-            topic,
-            q.id
-          );
-
-          batch.update(docRef, {
-            isReviewed: true,
-            lastReviewed: serverTimestamp(), // Current timestamp
-          });
-        });
-
-        // Commit batch update
-        await batch.commit();
-        set({ fetchedReviewQuestionSystem: "" });
-        set({ currentIndexReview: 0 });
-        set({ fetchedReviewQuestionTopic: "" });
-        console.log("Batch update successful!");
-      } catch (error) {
-        console.error("Batch update failed:", error.message);
-      }
-    }
-  },
-  //
-
-  fetchChallengeQuestions: async () => {
-    set({ isLoading: true });
-    // Setting Index 0 for Questions
-
-    try {
-      // Getting dailyChallenge ID First Here
-      const querySnapshot = await getDocs(collection(db, `dailyChallenge`));
-      const challengeID = querySnapshot.docs[0].id;
-      console.log("ID OF Challenge", querySnapshot.docs[0].id);
-
-      // Last Daily Challenge ID Now from User here
-
-      const curUser = useCurrentUserStore.getState().getUser();
-
-      const userChallengeId = curUser.lastDailyChallengeID;
-      console.log(curUser);
-
-      console.log(
-        "Current User Challenge ID Current",
-        curUser.lastDailyChallengeID
-      );
-
-      if (challengeID === userChallengeId) {
-        return 0; // Length 0 which after checking navigates user to Leaderboard
-      }
-      let documents = querySnapshot.docs[0].data().questions;
-
-      set({ currentChallengeIndex: 0 });
-      set({ challengeQuestions: documents });
-      set({ currentChallengeId: challengeID });
-      return documents.length;
-    } catch (error) {
-      console.log("Error fetching documents: ", error);
-      return 0;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
-
-  submitChallengeQuestions: async () => {
-    try {
-      const userId = useCurrentUserStore.getState().getUser().id;
-
-      const userDocRef = doc(db, "Users", userId);
-
-      await updateDoc(userDocRef, {
-        lastDailyChallengeID: get().currentChallengeId,
-        lastChallengeScore: get().scoreChallenge,
-      });
-
-      // Update User in Store
-      const updatedUser = {
-        ...useCurrentUserStore.getState().getUser(),
-        lastDailyChallengeID: get().currentChallengeId,
-      };
-      useCurrentUserStore.getState().updateUser(updatedUser);
-      console.log("UPDTAED USER", updatedUser);
-
-      set({ currentChallengeIndex: 0 });
-      set({ challengeQuestions: [] });
-      set({ currentChallengeId: "" });
-      console.log("Challenge updated successfully!");
-    } catch (error) {
-      console.error("Error updating challenge:", error.message);
-    }
-  },
-
-  // Getting any current Question(study)
-  getCurrentQuestion: () => {
-    const { questions, currentIndex } = get();
-    return questions[currentIndex];
-  },
-
-  // Getting any current Question(study)
-  getReviewQuestion: () => {
-    const { reviewQuestions, currentIndexReview } = get();
-    return reviewQuestions[currentIndexReview];
-  },
-
-  // Getting any current Question(Challenge)
-  getChallengeQuestion: () => {
-    const { challengeQuestions, currentChallengeIndex } = get();
-    return challengeQuestions[currentChallengeIndex];
-  },
-
-  // Getting any current Question(Challenge)
-  getFetchedChallengeID: () => {
-    const { currentChallengeId } = get();
-    return currentChallengeId;
-  },
-
-  // Setting if user is reviwing/Studying/taking challenge
-  setType: (type) => set({ type: type }),
-
-  // Getting any current Question reviwing/Studying
-  getCurrentType: () => {
-    const { type } = get();
-    return type;
-  },
-
-  // getFetchedQuestionSystem
-  getfetchedQuestionSystem: () => {
-    const { fetchedQuestionSystem } = get();
-    return fetchedQuestionSystem;
-  },
-
-  // Getting Question Fetch Flag to not fetch/fetch require Questions again(study)
-  getfetchedQuestionTopic: () => {
-    const { fetchedQuestionTopic } = get();
-    return fetchedQuestionTopic;
-  },
-
-  // Getting Question Fetch Flag to not fetch/fetch require Questions again(review)
-  getfetchedReviewTopic: () => {
-    const { fetchedReviewQuestionTopic } = get();
-    return fetchedReviewQuestionTopic;
-  },
-
-  // For Review All
-  setReviewAllQuestions: (questions) => {
-    set({ isLoading: true });
-    console.log("The len is", questions.length);
-
-    // Setting Index 0 for Questions
-    set({ currentIndexReview: 0 });
-    set({ reviewQuestions: questions });
-    set({ fetchedReviewQuestionSystem: "reviewall" });
-    set({ fetchedReviewQuestionTopic: "reviewall" });
   },
 }));
 
