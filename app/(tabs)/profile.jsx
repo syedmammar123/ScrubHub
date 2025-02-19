@@ -143,7 +143,7 @@ export default function ProfileScreen() {
     cancelText: "Cancel",
     acceptText: "Confirm",
     onAccept: (uuid) => console.log("Account deleted successfully.", uuid),
-    // onAccept: () => handleDeleteUser()),
+    // onAccept: () => handleDeleteUser(),
   });
 
   // const { randomQues, loading } = useGetRandomQues();
